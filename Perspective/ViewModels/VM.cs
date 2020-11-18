@@ -56,7 +56,7 @@ namespace Perspective.ViewModels
 
         public Dictionary<string, List<string>> dictonary_tag_files { get; set; } = new Dictionary<string, List<string>>();
 
-        private string _path = @"C:\Users\sean_wu\Downloads";
+        private string _path = @"D:\Download";
         public string path
         {
             get { return _path; }

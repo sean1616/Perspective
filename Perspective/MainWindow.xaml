@@ -39,13 +39,14 @@
                 x:Name="btn_addTagWindow"
                 Click="Btn_addTagWindow_Click"
                 Content="Tag"
-                    Style="{DynamicResource BtnStyle_FilePicBox}" />
+                Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button Grid.Row="1" Style="{DynamicResource BtnStyle_FilePicBox}" />
         </Grid>
         <Grid
             Grid.Row="1"
             Grid.Column="1"
-            Background="#FFFBFBFB" Margin="5,0,-5,0">
+            Margin="5,0,-5,0"
+            Background="#FFFBFBFB">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -88,22 +89,28 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <Button x:Name="btn_tag"
-                                    Content="{Binding}"
-                                    Margin="0,0,5,5"
-                                    Click="Btn_tag_Click"
-                                    PreviewMouseRightButtonDown="btn_tag_PreviewMouseRightButtonDown" />
+                            <Button
+                                x:Name="btn_tag"
+                                Margin="0,0,5,5"
+                                Click="Btn_tag_Click"
+                                Content="{Binding}"
+                                PreviewMouseRightButtonDown="btn_tag_PreviewMouseRightButtonDown" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <ToggleButton Content="Delete" Grid.Column="1" IsChecked="{Binding _isTagRemoveMode}"/>
-                <Button x:Name="btn_saveTag"
-                        Content="Save" 
-                        Grid.Column="2" Click="btn_saveTag_Click"/>
+                <ToggleButton
+                    Grid.Column="1"
+                    Content="Delete"
+                    IsChecked="{Binding _isTagRemoveMode}" />
+                <Button
+                    x:Name="btn_saveTag"
+                    Grid.Column="2"
+                    Click="btn_saveTag_Click"
+                    Content="Save" />
             </Grid>
 
-            
+
 
             <!--<StackPanel
                 x:Name="stkpanel_tags"
@@ -113,25 +120,28 @@
 
             <StackPanel Grid.Row="2">
                 <StackPanel Orientation="Horizontal">
-                    <ToggleButton x:Name="btn_1"
-                                  Width="120"
-                                  Height="120"
-                                  Checked="Btn_1_Checked"
-                                  Content="{Binding list_fileNames[0], FallbackValue=Dowload}"
-                                  Style="{DynamicResource TBtn_FileBox}" />
-                    <ToggleButton x:Name="btn_3"
-                                  Width="120"
-                                  Height="120"
-                                  Checked="Btn_1_Checked"
-                                  Content="{Binding list_fileNames[1]}"
-                                  Style="{DynamicResource TBtn_FileBox}" />
-                    <ToggleButton x:Name="btn_4"
-                                  Width="120"
-                                  Height="120"
-                                  Checked="Btn_1_Checked"
-                                  Content="{Binding list_fileNames[2], FallbackValue=Dowload123456789}"
-                                  Style="{DynamicResource TBtn_FileBox}" />
-                    
+                    <ToggleButton
+                        x:Name="btn_1"
+                        Width="120"
+                        Height="120"
+                        Checked="Btn_1_Checked"
+                        Content="{Binding list_fileNames[0], FallbackValue=File1}"
+                        Style="{DynamicResource TBtn_FileBox}" />
+                    <ToggleButton
+                        x:Name="btn_2"
+                        Width="120"
+                        Height="120"
+                        Checked="Btn_1_Checked"
+                        Content="{Binding list_fileNames[1], FallbackValue=File2}"
+                        Style="{DynamicResource TBtn_FileBox}" />
+                    <ToggleButton
+                        x:Name="btn_3"
+                        Width="120"
+                        Height="120"
+                        Checked="Btn_1_Checked"
+                        Content="{Binding list_fileNames[2], FallbackValue=File3}"
+                        Style="{DynamicResource TBtn_FileBox}" />
+
                 </StackPanel>
                 <StackPanel Orientation="Horizontal">
                     <Button Width="120" Height="120" />

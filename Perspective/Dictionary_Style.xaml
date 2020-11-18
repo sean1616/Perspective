@@ -184,14 +184,15 @@
                                     <ColumnDefinition Width="7*" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
-                                <TextBlock Grid.Row="1"
-                                           Grid.Column="1"
-                                           FontSize="14"
-                                           TextWrapping="Wrap"
-                                           FontFamily="Segoe Print"
-                                           VerticalAlignment="Bottom"
-                                           HorizontalAlignment="Center"
-                                           Text="{TemplateBinding Content}" />
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    FontFamily="Segoe Print"
+                                    FontSize="14"
+                                    Text="{TemplateBinding Content}"
+                                    TextWrapping="Wrap" />
                             </Grid>
                         </Border>
                     </Grid>

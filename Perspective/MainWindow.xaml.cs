@@ -28,15 +28,31 @@ namespace Perspective
         Window_AddTags _window_addTags;
         ItemsControl itemsControl = new ItemsControl();
 
+        string currentPath = Directory.GetCurrentDirectory();
+        string tagsDirectoryPath = "";
+
         public MainWindow()
         {           
             InitializeComponent();
 
             this.DataContext = vm;
 
+            tagsDirectoryPath = currentPath + @"\Tags";
+
             Binding myBinding = new Binding("list_files[1]");
             myBinding.Source = vm;
             //btn_2.SetBinding(Button.ContentProperty, myBinding);
+        }
+
+        Style style_tag;
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
+            //btn_tag.Style = style_tag;
+
+            SearchDirectory(vm.path);
+
+            GetSavedTags();
         }
 
         private void Txt_path_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -86,6 +102,16 @@ namespace Perspective
             vm.list_fileNames.Add(System.IO.Path.GetFileName(path));
 
             Console.WriteLine("Processed file '{0}'.", path);
+        }
+
+        public void ProcessGetFilesInDirectory(string targetDirectory)
+        {
+            // Process the list of files found in the directory.
+            string[] fileEntries = Directory.GetFiles(targetDirectory);
+            foreach (string fileName in fileEntries)
+            {
+                ProcessFile(fileName);
+            }
         }
 
         // Process all files in the directory passed in, recurse on any directories
@@ -144,13 +170,13 @@ namespace Perspective
 
         private void Btn_tag_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = (Button)sender;
-            string tag = btn.Content.ToString();
-            foreach (string s in vm.list_selected_files)
-            {
-                if (!vm.dictonary_tag_files.ContainsKey(tag))
-                    vm.dictonary_tag_files[tag].Add(s);
-            }
+            //Button btn = (Button)sender;
+            //string tag = btn.Content.ToString();
+            //foreach (string s in vm.list_selected_files)
+            //{
+            //    if (!vm.dictonary_tag_files.ContainsKey(tag))
+            //        vm.dictonary_tag_files[tag].Add(s);
+            //}
         }
 
         private void Btn_1_Checked(object sender, RoutedEventArgs e)
@@ -161,52 +187,101 @@ namespace Perspective
             int.TryParse(tbtn.Name.Split('_')[1], out file_no);
 
             if (vm.list_files.Count < file_no) return;
-            if (!vm.list_selected_files.Contains(vm.list_files[--file_no]))
+
+            string selectedFile_path = vm.list_files[--file_no];
+            if (!vm.list_selected_files.Contains(selectedFile_path))
             {
-                vm.list_selected_files.Add(tbtn.Content.ToString());
+                vm.list_selected_files.Add(selectedFile_path);
             }
             
         }
         
-        Style style_tag;
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
-            //btn_tag.Style = style_tag;
-
-            SearchDirectory(vm.path);
-        }
+        
                 
         
         private void btn_tag_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
+            Button btn = (Button)sender;
+            string tag = btn.Content.ToString();
+
             if (vm._isTagRemoveMode)
-            {
-                Button btn = (Button)sender;
-                string tag = btn.Content.ToString();
+            {                
                 if (vm.list_tags.Contains(tag)) vm.list_tags.Remove(tag);
             }
             else
-            {
+            {                
+                string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
 
+                using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
+                {
+                    foreach (string s in vm.list_selected_files)
+                    {
+                        vm.dictonary_tag_files[tag].Add(s);
+                        file.WriteLine(s);  //寫入選取的檔案or資料夾 路徑
+                    }
+                }
             }
         }
 
         private void btn_saveTag_Click(object sender, RoutedEventArgs e)
-        {
-            string currentPath = Directory.GetCurrentDirectory();
-            string tagsDirectoryPath = currentPath + @"\Tags";
-            Directory.CreateDirectory(tagsDirectoryPath);
+        {            
+            
 
-            string tag = "123";
             if (vm.list_tags.Count <= 0) return;
-            string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
-            using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
+
+            if (Directory.Exists(tagsDirectoryPath))
             {
-                file.WriteLine(vm.list_files[0]);
+                string[] tagsPath = Directory.GetFiles(tagsDirectoryPath);
+                List<string> tags_already = new List<string>();
+                foreach (string s in tagsPath)
+                {
+                    tags_already.Add(Path.GetFileNameWithoutExtension(s));
+                }
+
+                foreach(string s in vm.list_tags)
+                {
+                    string tagTxtPath = tagsDirectoryPath + @"\" + s + @".txt";
+                    if (!tags_already.Contains(s))  //若tag未有文字檔
+                    {                        
+                        using (StreamWriter sw = File.CreateText(@tagTxtPath)) { }  //建立空的文件檔
+                    }
+
+                    if (vm.list_files.Count <= 0)  //若未選取檔案or資料夾
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
+                        {
+                            foreach(string str in vm.list_selected_files)
+                            {
+                                file.WriteLine(str);  //寫入選取的檔案or資料夾 路徑
+                            }
+                            
+                        }
+                    }
+                }
             }
+            else
+                Directory.CreateDirectory(tagsDirectoryPath);
+                                   
         }
 
-        
+        private void GetSavedTags()
+        {           
+            if (Directory.Exists(tagsDirectoryPath))
+            {
+                vm.list_tags = new System.Collections.ObjectModel.ObservableCollection<string>();
+                string[] tagsPath = Directory.GetFiles(tagsDirectoryPath);
+                foreach (string s in tagsPath)
+                {
+                    string tag = Path.GetFileNameWithoutExtension(s);
+                    vm.list_tags.Add(tag);
+                    vm.dictonary_tag_files.Add(tag, new List<string>());
+                }
+            }
+            
+        }
     }
 }

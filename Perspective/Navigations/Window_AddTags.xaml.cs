@@ -38,7 +38,10 @@ namespace Perspective.Navigations
         private void Btn_addTag_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(txt_newTagName.Text))
+            {
                 vm.list_tags.Add(txt_newTagName.Text);
+                vm.dictonary_tag_files.Add(txt_newTagName.Text, new List<string>());
+            }                
         }
 
         private void Txt_newTagName_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -48,6 +51,7 @@ namespace Perspective.Navigations
                 if (!string.IsNullOrEmpty(txt_newTagName.Text))
                 {
                     vm.list_tags.Add(txt_newTagName.Text);
+                    vm.dictonary_tag_files.Add(txt_newTagName.Text, new List<string>());
                 }                        
             }
         }
