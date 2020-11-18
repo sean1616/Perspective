@@ -12,7 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 using System.Windows.Controls.Primitives;
 using Perspective.ViewModels;
 using Perspective.Navigations;
@@ -36,41 +36,46 @@ namespace Perspective
 
             Binding myBinding = new Binding("list_files[1]");
             myBinding.Source = vm;
-            btn_2.SetBinding(Button.ContentProperty, myBinding);
+            //btn_2.SetBinding(Button.ContentProperty, myBinding);
         }
 
         private void Txt_path_PreviewKeyDown(object sender, KeyEventArgs e)
         {            
             if (e.Key == Key.Enter)
             {
-                try
-                {
-                    TextBox tbk = (TextBox)sender;
-                    string path = tbk.Text;
-
-                    vm.list_files.Clear();
-
-                    if (File.Exists(@path))
-                    {
-                        // This path is a file
-                        ProcessFile(@path);
-                    }
-                    else if (Directory.Exists(@path))
-                    {
-                        // This path is a directory
-                        ProcessDirectory(@path);
-                    }
-                    else
-                    {
-                        Console.WriteLine("{0} is not a valid file or directory.", path);
-                    }
-
-                    //取得本資料夾路徑
-                    //string thisFld = System.IO.Directory.GetParent(@tbk.Text).FullName.ToString();
-
-                }
-                catch { }
+                TextBox tbk = (TextBox)sender;
+                SearchDirectory(tbk.Text);
             }
+        }
+
+        private void SearchDirectory(string path)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(path)) return;
+
+                vm.list_files.Clear();
+
+                if (File.Exists(@path))
+                {
+                    // This path is a file
+                    ProcessFile(@path);
+                }
+                else if (Directory.Exists(@path))
+                {
+                    // This path is a directory
+                    ProcessDirectory(@path);
+                }
+                else
+                {
+                    Console.WriteLine("{0} is not a valid file or directory.", path);
+                }
+
+                //取得本資料夾路徑
+                //string thisFld = System.IO.Directory.GetParent(@tbk.Text).FullName.ToString();
+
+            }
+            catch { }
         }
 
         // Insert logic for processing found files here.
@@ -78,6 +83,7 @@ namespace Perspective
         {
             string filename = System.IO.Path.GetFileNameWithoutExtension(path);
             vm.list_files.Add(filename);
+            vm.list_fileNames.Add(System.IO.Path.GetFileName(path));
 
             Console.WriteLine("Processed file '{0}'.", path);
         }
@@ -90,7 +96,12 @@ namespace Perspective
 
             foreach(string s in directories)
             {
-                vm.list_files.Add(s);
+                if (Directory.Exists(@s))
+                {
+                    // This path is a directory
+                    vm.list_files.Add(s);
+                    vm.list_fileNames.Add(Path.GetFileName(s));
+                }                
             }
 
 
@@ -137,7 +148,8 @@ namespace Perspective
             string tag = btn.Content.ToString();
             foreach (string s in vm.list_selected_files)
             {
-                vm.dictonary_tag_files[tag].Add(s);
+                if (!vm.dictonary_tag_files.ContainsKey(tag))
+                    vm.dictonary_tag_files[tag].Add(s);
             }
         }
 
@@ -161,6 +173,40 @@ namespace Perspective
         {
             style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
             //btn_tag.Style = style_tag;
+
+            SearchDirectory(vm.path);
         }
+                
+        
+        private void btn_tag_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (vm._isTagRemoveMode)
+            {
+                Button btn = (Button)sender;
+                string tag = btn.Content.ToString();
+                if (vm.list_tags.Contains(tag)) vm.list_tags.Remove(tag);
+            }
+            else
+            {
+
+            }
+        }
+
+        private void btn_saveTag_Click(object sender, RoutedEventArgs e)
+        {
+            string currentPath = Directory.GetCurrentDirectory();
+            string tagsDirectoryPath = currentPath + @"\Tags";
+            Directory.CreateDirectory(tagsDirectoryPath);
+
+            string tag = "123";
+            if (vm.list_tags.Count <= 0) return;
+            string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
+            using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
+            {
+                file.WriteLine(vm.list_files[0]);
+            }
+        }
+
+        
     }
 }

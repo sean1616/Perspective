@@ -21,6 +21,17 @@ namespace Perspective.ViewModels
             }
         }
 
+        private ObservableCollection<string> _list_fileNames = new ObservableCollection<string>();
+        public ObservableCollection<string> list_fileNames
+        {
+            get { return _list_fileNames; }
+            set
+            {
+                _list_fileNames = value;
+                OnPropertyChanged_Normal("list_fileNames");
+            }
+        }
+
         private ObservableCollection<string> _list_selected_files = new ObservableCollection<string>();
         public ObservableCollection<string> list_selected_files
         {
@@ -44,6 +55,18 @@ namespace Perspective.ViewModels
         }
 
         public Dictionary<string, List<string>> dictonary_tag_files { get; set; } = new Dictionary<string, List<string>>();
-       
+
+        private string _path = @"C:\Users\sean_wu\Downloads";
+        public string path
+        {
+            get { return _path; }
+            set
+            {
+                _path = value;
+                OnPropertyChanged_Normal("path");
+            }
+        }
+
+        public bool _isTagRemoveMode { get; set; } = false;
     }
 }
