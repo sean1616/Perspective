@@ -21,6 +21,17 @@ namespace Perspective.ViewModels
             }
         }
 
+        private ObservableCollection<string> _list_folderFileNames = new ObservableCollection<string>();
+        public ObservableCollection<string> list_folderFileNames
+        {
+            get { return _list_folderFileNames; }
+            set
+            {
+                _list_folderFileNames = value;
+                OnPropertyChanged_Normal("list_folderFileNames");
+            }
+        }
+
         private ObservableCollection<string> _list_fileNames = new ObservableCollection<string>();
         public ObservableCollection<string> list_fileNames
         {
@@ -29,6 +40,17 @@ namespace Perspective.ViewModels
             {
                 _list_fileNames = value;
                 OnPropertyChanged_Normal("list_fileNames");
+            }
+        }
+
+        private ObservableCollection<string> _list_folderNames = new ObservableCollection<string>();
+        public ObservableCollection<string> list_folderNames
+        {
+            get { return _list_folderNames; }
+            set
+            {
+                _list_folderNames = value;
+                OnPropertyChanged_Normal("list_folderNames");
             }
         }
 
@@ -54,7 +76,7 @@ namespace Perspective.ViewModels
             }
         }
 
-        public Dictionary<string, List<string>> dictonary_tag_files { get; set; } = new Dictionary<string, List<string>>();
+        public Dictionary<string, ObservableCollection<string>> dictonary_tag_files { get; set; } = new Dictionary<string, ObservableCollection<string>>();
 
         private string _path = @"D:\Download";
         public string path

@@ -11,6 +11,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using System.Collections.ObjectModel;
 using Perspective.ViewModels;
 
 namespace Perspective.Navigations
@@ -40,7 +41,7 @@ namespace Perspective.Navigations
             if (!string.IsNullOrEmpty(txt_newTagName.Text))
             {
                 vm.list_tags.Add(txt_newTagName.Text);
-                vm.dictonary_tag_files.Add(txt_newTagName.Text, new List<string>());
+                vm.dictonary_tag_files.Add(txt_newTagName.Text, new ObservableCollection<string>());
             }                
         }
 
@@ -51,7 +52,7 @@ namespace Perspective.Navigations
                 if (!string.IsNullOrEmpty(txt_newTagName.Text))
                 {
                     vm.list_tags.Add(txt_newTagName.Text);
-                    vm.dictonary_tag_files.Add(txt_newTagName.Text, new List<string>());
+                    vm.dictonary_tag_files.Add(txt_newTagName.Text, new ObservableCollection<string>());
                 }                        
             }
         }

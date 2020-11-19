@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Collections.ObjectModel;
 
 using System.Windows.Controls.Primitives;
 using Perspective.ViewModels;
@@ -163,41 +164,50 @@ namespace Perspective
 
                     //stkpanel_tags.Children.Add(btn_tag);
 
-                    vm.dictonary_tag_files.Add(_window_addTags.NewTagName, new List<string>());
+                    vm.dictonary_tag_files.Add(_window_addTags.NewTagName, new ObservableCollection<string>());
                 }                    
             }
         }
 
         private void Btn_tag_Click(object sender, RoutedEventArgs e)
         {
-            //Button btn = (Button)sender;
-            //string tag = btn.Content.ToString();
-            //foreach (string s in vm.list_selected_files)
-            //{
-            //    if (!vm.dictonary_tag_files.ContainsKey(tag))
-            //        vm.dictonary_tag_files[tag].Add(s);
-            //}
+            Button btn = (Button)sender;
+            string tag = btn.Content.ToString();
+
+            vm.list_files.Clear();
+            vm.list_fileNames.Clear();
+
+            string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
+
+            string[] lines = System.IO.File.ReadAllLines(tagTxtPath);
+
+            foreach(string s in lines)
+            {
+                if (vm.dictonary_tag_files.ContainsKey(tag))
+                {
+                    vm.list_files.Add(s);
+                    vm.list_fileNames.Add(Path.GetFileName(s));
+                }
+            }
+            
+                 
         }
 
         private void Btn_1_Checked(object sender, RoutedEventArgs e)
         {
             ToggleButton tbtn = (ToggleButton)sender;
+                       
+            string selected_fileName = tbtn.Content.ToString();
+            
+            int file_no = vm.list_fileNames.IndexOf(selected_fileName);
 
-            int file_no = 0;
-            int.TryParse(tbtn.Name.Split('_')[1], out file_no);
+            string selectedFile_path = vm.list_files[file_no];
 
-            if (vm.list_files.Count < file_no) return;
-
-            string selectedFile_path = vm.list_files[--file_no];
             if (!vm.list_selected_files.Contains(selectedFile_path))
             {
                 vm.list_selected_files.Add(selectedFile_path);
-            }
-            
-        }
-        
-        
-                
+            }            
+        } 
         
         private void btn_tag_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -212,12 +222,18 @@ namespace Perspective
             {                
                 string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
 
+                string[] lines = System.IO.File.ReadAllLines(tagTxtPath);
+                
+
                 using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
                 {
                     foreach (string s in vm.list_selected_files)
                     {
-                        vm.dictonary_tag_files[tag].Add(s);
-                        file.WriteLine(s);  //寫入選取的檔案or資料夾 路徑
+                        if (!lines.Contains(s))
+                        {
+                            vm.dictonary_tag_files[tag].Add(s);
+                            file.WriteLine(s);  //寫入選取的檔案or資料夾 路徑
+                        }                        
                     }
                 }
             }
@@ -225,8 +241,6 @@ namespace Perspective
 
         private void btn_saveTag_Click(object sender, RoutedEventArgs e)
         {            
-            
-
             if (vm.list_tags.Count <= 0) return;
 
             if (Directory.Exists(tagsDirectoryPath))
@@ -278,10 +292,46 @@ namespace Perspective
                 {
                     string tag = Path.GetFileNameWithoutExtension(s);
                     vm.list_tags.Add(tag);
-                    vm.dictonary_tag_files.Add(tag, new List<string>());
+                    vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
                 }
+            }            
+        }
+
+        private void btn_tagClear_Click(object sender, RoutedEventArgs e)
+        {
+            vm.list_fileNames.Clear();
+            vm.list_files.Clear();
+            vm.list_selected_files.Clear();
+
+            string[] keys = vm.dictonary_tag_files.Keys.ToArray();
+            foreach(string key in keys)
+            {
+                vm.dictonary_tag_files[key] = new ObservableCollection<string>();
             }
+            SearchDirectory(vm.path);
             
+        }
+
+        private void btn_RefreshTags_Click(object sender, RoutedEventArgs e)
+        {
+            foreach(string tag in vm.list_tags)
+            {
+                string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
+                string[] files_in_lines = System.IO.File.ReadAllLines(tagTxtPath);
+
+                IEnumerable<string> distinctAges = files_in_lines.Distinct();
+
+                File.WriteAllText(tagTxtPath, string.Empty);
+
+                using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
+                {
+                    foreach (string s in distinctAges)
+                    {
+                        file.WriteLine(s);  //寫入選取的檔案or資料夾 路徑
+                    }
+                }
+                   
+            }
         }
     }
 }
