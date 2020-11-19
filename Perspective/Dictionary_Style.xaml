@@ -27,34 +27,28 @@
     <SolidColorBrush x:Key="Button.Disabled.Border" Color="#FFADB2B5" />
     <SolidColorBrush x:Key="Button.Disabled.Foreground" Color="#FF838383" />
 
-    <Style x:Key="BtnStyle_TxtCenter"
-           TargetType="{x:Type Button}">
-        <Setter Property="FocusVisualStyle"
-                Value="{StaticResource FocusVisual}" />
-        <Setter Property="Background"
-                Value="{StaticResource Button.Static.Background}" />
-        <Setter Property="BorderBrush"
-                Value="{StaticResource Button.Static.Border}" />
-        <Setter Property="Foreground"
-                Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
-        <Setter Property="BorderThickness"
-                Value="1" />
-        <Setter Property="HorizontalContentAlignment"
-                Value="Center" />
-        <Setter Property="VerticalContentAlignment"
-                Value="Center" />
-        <Setter Property="Padding"
-                Value="1" />
+    <Style x:Key="BtnStyle_TxtCenter" TargetType="{x:Type Button}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+        <Setter Property="Background" Value="{StaticResource Button.Static.Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="1" />
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type Button}">
-                    <Border x:Name="border"
-                            BorderThickness="{TemplateBinding BorderThickness}"
-                            SnapsToDevicePixels="true"
-                            Background="White">
+                    <Border
+                        x:Name="border"
+                        Background="White"
+                        BorderThickness="{TemplateBinding BorderThickness}"
+                        SnapsToDevicePixels="true">
                         <Grid>
-                            <Border BorderBrush="#FF1B1B1B" BorderThickness="0.5"
-                                    CornerRadius="5">
+                            <Border
+                                BorderBrush="#FF1B1B1B"
+                                BorderThickness="0.5"
+                                CornerRadius="5">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition />
@@ -66,51 +60,32 @@
                                         <RowDefinition Height="3*" />
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
-                                    <Viewbox Grid.Row="1"
-                                             Grid.Column="1">
-                                        <TextBlock HorizontalAlignment="Center"
-                                                   VerticalAlignment="Center"
-                                                   FontFamily="Segoe Print"
-                                                   Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}"
-                                                    />
+                                    <Viewbox Grid.Row="1" Grid.Column="1">
+                                        <TextBlock
+                                            HorizontalAlignment="Center"
+                                            VerticalAlignment="Center"
+                                            FontFamily="Segoe Print"
+                                            Text="{Binding Content, RelativeSource={RelativeSource TemplatedParent}}" />
                                     </Viewbox>
                                 </Grid>
                             </Border>
                         </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
-                        <Trigger Property="IsDefaulted"
-                                 Value="true">
-                            <Setter TargetName="border"
-                                    Property="BorderBrush"
-                                    Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
+                        <Trigger Property="IsDefaulted" Value="true">
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.HighlightBrushKey}}" />
                         </Trigger>
-                        <Trigger Property="IsMouseOver"
-                                 Value="true">
-                            <Setter TargetName="border"
-                                    Property="Background"
-                                    Value="{StaticResource Button.MouseOver.Background}" />
-                            <Setter TargetName="border"
-                                    Property="BorderBrush"
-                                    Value="{StaticResource Button.MouseOver.Border}" />
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Button.MouseOver.Background}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.MouseOver.Border}" />
                         </Trigger>
-                        <Trigger Property="IsPressed"
-                                 Value="true">
-                            <Setter TargetName="border"
-                                    Property="Background"
-                                    Value="{StaticResource Button.Pressed.Background}" />
-                            <Setter TargetName="border"
-                                    Property="BorderBrush"
-                                    Value="{StaticResource Button.Pressed.Border}" />
+                        <Trigger Property="IsPressed" Value="true">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Button.Pressed.Background}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.Pressed.Border}" />
                         </Trigger>
-                        <Trigger Property="IsEnabled"
-                                 Value="false">
-                            <Setter TargetName="border"
-                                    Property="Background"
-                                    Value="{StaticResource Button.Disabled.Background}" />
-                            <Setter TargetName="border"
-                                    Property="BorderBrush"
-                                    Value="{StaticResource Button.Disabled.Border}" />
+                        <Trigger Property="IsEnabled" Value="false">
+                            <Setter TargetName="border" Property="Background" Value="{StaticResource Button.Disabled.Background}" />
+                            <Setter TargetName="border" Property="BorderBrush" Value="{StaticResource Button.Disabled.Border}" />
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>
@@ -132,7 +107,11 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Border
                         x:Name="border"
+                        Margin="5"
+                        Background="White"
+                        BorderBrush="Black"
                         BorderThickness="{TemplateBinding BorderThickness}"
+                        CornerRadius="8"
                         SnapsToDevicePixels="true">
                         <Grid>
                             <Grid.RowDefinitions>
@@ -241,6 +220,70 @@
             </Setter.Value>
         </Setter>
     </Style>
+
+    <Style x:Key="TBtn_DirBox" TargetType="{x:Type ToggleButton}">
+        <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
+        <Setter Property="Background" Value="{StaticResource Button.Static.Background}" />
+        <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}" />
+        <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
+        <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="HorizontalContentAlignment" Value="Center" />
+        <Setter Property="VerticalContentAlignment" Value="Center" />
+        <Setter Property="Padding" Value="1" />
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="{x:Type ToggleButton}">
+                    <Grid
+                        Width="120"
+                        Height="120"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top">
+                        <Border
+                            x:Name="border"
+                            Margin="10"
+                            Background="White"
+                            BorderBrush="Black"
+                            BorderThickness="1">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition />
+                                    <RowDefinition Height="7*" />
+                                    <RowDefinition />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="7*" />
+                                    <ColumnDefinition />
+                                </Grid.ColumnDefinitions>
+                                <TextBlock
+                                    Grid.Row="1"
+                                    Grid.Column="1"
+                                    HorizontalAlignment="Center"
+                                    VerticalAlignment="Bottom"
+                                    FontFamily="Segoe Print"
+                                    FontSize="14"
+                                    Text="{TemplateBinding Content}"
+                                    TextAlignment="Center"
+                                    TextWrapping="Wrap" />
+                            </Grid>
+                        </Border>
+                    </Grid>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="Button.IsDefaulted" Value="true" />
+                        <Trigger Property="IsMouseOver" Value="true">
+                            <Setter TargetName="border" Property="Background" Value="#FFD5EDFB" />
+                        </Trigger>
+                        <Trigger Property="IsPressed" Value="true" />
+                        <Trigger Property="IsEnabled" Value="false" />
+                        <Trigger Property="IsChecked" Value="true">
+                            <Setter TargetName="border" Property="Background" Value="#FFA8DAF7" />
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="TBtn_FileBox" TargetType="{x:Type ToggleButton}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}" />
         <Setter Property="Background" Value="{StaticResource Button.Static.Background}" />
@@ -283,6 +326,7 @@
                                     FontFamily="Segoe Print"
                                     FontSize="14"
                                     Text="{TemplateBinding Content}"
+                                    TextAlignment="Center"
                                     TextWrapping="Wrap" />
                             </Grid>
                         </Border>

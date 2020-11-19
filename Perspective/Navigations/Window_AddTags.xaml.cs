@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,12 +23,16 @@ namespace Perspective.Navigations
     public partial class Window_AddTags : Window
     {
         VM vm = new VM();
+        string currentPath = Directory.GetCurrentDirectory();
+        string tagsDirectoryPath = "";
 
         public Window_AddTags(VM vm)
         {
             InitializeComponent();
 
             this.vm = vm;
+
+            tagsDirectoryPath = currentPath + @"\Tags";
         }
 
         string _NewTagName = "";
@@ -38,10 +43,15 @@ namespace Perspective.Navigations
 
         private void Btn_addTag_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(txt_newTagName.Text))
+            string tag = txt_newTagName.Text;
+            if (!string.IsNullOrEmpty(tag))
             {
-                vm.list_tags.Add(txt_newTagName.Text);
-                vm.dictonary_tag_files.Add(txt_newTagName.Text, new ObservableCollection<string>());
+                vm.list_tags.Add(tag);
+                vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
+
+                string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+                if (!File.Exists(tagTxtPath))
+                    using (StreamWriter sw = File.CreateText(@tagTxtPath)) { }  //建立空的文件檔
             }                
         }
 
@@ -49,14 +59,17 @@ namespace Perspective.Navigations
         {
             if (e.Key == Key.Enter)
             {
-                if (!string.IsNullOrEmpty(txt_newTagName.Text))
+                string tag = txt_newTagName.Text;
+                if (!string.IsNullOrEmpty(tag))
                 {
-                    vm.list_tags.Add(txt_newTagName.Text);
-                    vm.dictonary_tag_files.Add(txt_newTagName.Text, new ObservableCollection<string>());
+                    vm.list_tags.Add(tag);
+                    vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
+
+                    string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+                    if (!File.Exists(tagTxtPath))
+                        using (StreamWriter sw = File.CreateText(@tagTxtPath)) { }  //建立空的文件檔
                 }                        
             }
         }
-
-        
     }
 }

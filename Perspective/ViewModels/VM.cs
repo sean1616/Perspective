@@ -19,18 +19,7 @@ namespace Perspective.ViewModels
                 _list_files = value;
                 OnPropertyChanged_Normal("list_files");
             }
-        }
-
-        private ObservableCollection<string> _list_folderFileNames = new ObservableCollection<string>();
-        public ObservableCollection<string> list_folderFileNames
-        {
-            get { return _list_folderFileNames; }
-            set
-            {
-                _list_folderFileNames = value;
-                OnPropertyChanged_Normal("list_folderFileNames");
-            }
-        }
+        }       
 
         private ObservableCollection<string> _list_fileNames = new ObservableCollection<string>();
         public ObservableCollection<string> list_fileNames
@@ -43,14 +32,25 @@ namespace Perspective.ViewModels
             }
         }
 
-        private ObservableCollection<string> _list_folderNames = new ObservableCollection<string>();
-        public ObservableCollection<string> list_folderNames
+        private ObservableCollection<string> _list_directories = new ObservableCollection<string>();
+        public ObservableCollection<string> list_directories
         {
-            get { return _list_folderNames; }
+            get { return _list_directories; }
             set
             {
-                _list_folderNames = value;
-                OnPropertyChanged_Normal("list_folderNames");
+                _list_directories = value;
+                OnPropertyChanged_Normal("list_directories");
+            }
+        }
+
+        private ObservableCollection<string> _list_dirNames = new ObservableCollection<string>();
+        public ObservableCollection<string> list_dirNames
+        {
+            get { return _list_dirNames; }
+            set
+            {
+                _list_dirNames = value;
+                OnPropertyChanged_Normal("list_dirNames");
             }
         }
 
@@ -62,6 +62,17 @@ namespace Perspective.ViewModels
             {
                 _list_selected_files = value;
                 OnPropertyChanged_Normal("list_selected_files");
+            }
+        }
+
+        private ObservableCollection<string> _list_selected_dirs = new ObservableCollection<string>();
+        public ObservableCollection<string> list_selected_dirs
+        {
+            get { return _list_selected_dirs; }
+            set
+            {
+                _list_selected_dirs = value;
+                OnPropertyChanged_Normal("list_selected_dirs");
             }
         }
 

@@ -55,6 +55,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Functions\ListCollection.cs" />
     <Compile Include="Navigations\Window_AddTags.xaml.cs">
       <DependentUpon>Window_AddTags.xaml</DependentUpon>
     </Compile>
