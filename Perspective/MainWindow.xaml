@@ -75,8 +75,9 @@
                     Text="{Binding path}" />
                 <Viewbox HorizontalAlignment="Left" />
 
-                <Button Grid.Column="1" />
-                <Button Grid.Column="2" />
+                <Button Grid.Column="1" Content="V"/>
+                <Button x:Name="btn_check_path"
+                        Grid.Column="2" Content="O" Click="btn_check_path_Click"/>
             </Grid>
 
             <Grid Grid.Row="1">
@@ -109,6 +110,7 @@
                                 x:Name="btn_tag"
                                 Margin="0,0,5,5"
                                 Click="Btn_tag_Click"
+                                MouseDown="btn_tag_MouseDown"
                                 Content="{Binding}"
                                 PreviewMouseRightButtonDown="btn_tag_PreviewMouseRightButtonDown" />
                         </DataTemplate>
@@ -157,6 +159,7 @@
                                         Width="120"
                                         Height="120"
                                         Checked="tbtn_directories_Checked"
+                                        MouseDoubleClick="tbtn_directories_MouseDoubleClick"
                                         Content="{Binding}"
                                         Style="{DynamicResource TBtn_DirBox}"
                                         Unchecked="tbtn_directories_Unchecked" />
@@ -184,6 +187,7 @@
                                         Width="120"
                                         Height="120"
                                         Checked="tbtn_files_Checked"
+                                        MouseDoubleClick="tbtn_files_MouseDoubleClick"
                                         Content="{Binding}"
                                         Style="{DynamicResource TBtn_FileBox}"
                                         Unchecked="tbtn_files_Unchecked" />

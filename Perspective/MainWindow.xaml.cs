@@ -13,8 +13,9 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Collections.ObjectModel;
-
+using System.Diagnostics;
 using System.Windows.Controls.Primitives;
+using Perspective.Functions;
 using Perspective.ViewModels;
 using Perspective.Navigations;
 
@@ -27,6 +28,7 @@ namespace Perspective
     {
         VM vm = new VM();
         Window_AddTags _window_addTags;
+        ListCollection listCollection;
         ItemsControl itemsControl = new ItemsControl();
 
         string currentPath = Directory.GetCurrentDirectory();
@@ -43,6 +45,8 @@ namespace Perspective
             Binding myBinding = new Binding("list_files[1]");
             myBinding.Source = vm;
             //btn_2.SetBinding(Button.ContentProperty, myBinding);
+
+            listCollection = new ListCollection(vm);
         }
 
         Style style_tag;
@@ -63,6 +67,11 @@ namespace Perspective
                 TextBox tbk = (TextBox)sender;
                 SearchDirectory(tbk.Text);
             }
+        }
+
+        private void btn_check_path_Click(object sender, RoutedEventArgs e)
+        {
+            SearchDirectory(vm.path);
         }
 
         private void SearchDirectory(string path)
@@ -178,18 +187,19 @@ namespace Perspective
             Button btn = (Button)sender;
             string tag = btn.Content.ToString();
 
+            string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+
             if (vm._isTagRemoveMode)
             {
-                if (vm.list_tags.Contains(tag)) vm.list_tags.Remove(tag);
+                //if (vm.list_tags.Contains(tag)) vm.list_tags.Remove(tag);
+                listCollection.RemoveTag(tag, tagTxtPath);
                 return;
             }
-
+                        
             vm.list_directories.Clear();
             vm.list_dirNames.Clear();
             vm.list_files.Clear();
-            vm.list_fileNames.Clear();
-
-            string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+            vm.list_fileNames.Clear();            
 
             string[] lines;
             if (File.Exists(tagTxtPath))
@@ -216,6 +226,38 @@ namespace Perspective
             }
             
                  
+        }
+
+        //當標籤中鍵點擊時
+        private void btn_tag_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.MiddleButton == MouseButtonState.Pressed)
+            {
+                foreach(string s in vm.list_selected_dirs)
+                {
+                    string line = null;
+                    string line_to_delete = "the line i want to delete";
+
+                    using (StreamReader reader = new StreamReader("C:\\input"))
+                    {
+                        using (StreamWriter writer = new StreamWriter("C:\\output"))
+                        {
+                            while ((line = reader.ReadLine()) != null)
+                            {
+                                if (String.Compare(line, line_to_delete) == 0)
+                                    continue;
+
+                                writer.WriteLine(line);
+                            }
+                        }
+                    }
+                }
+
+                foreach(string s in vm.list_selected_files)
+                {
+
+                }
+            }
         }
 
         private void tbtn_directories_Checked(object sender, RoutedEventArgs e)
@@ -280,6 +322,43 @@ namespace Perspective
             {
                 vm.list_selected_files.Remove(selectedFile_path);
             }
+        }
+
+        private void tbtn_directories_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ToggleButton tbtn = (ToggleButton)sender;
+
+            string selected_fileName = tbtn.Content.ToString();
+
+            int dir_no = vm.list_dirNames.IndexOf(selected_fileName);
+
+            string selectedDir_path = vm.list_directories[dir_no];
+
+            if (Directory.Exists(selectedDir_path))
+            {
+                // opens the folder in explorer
+                Process.Start(selectedDir_path);
+            }
+
+            tbtn.IsChecked = false;
+        }
+
+        private void tbtn_files_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            ToggleButton tbtn = (ToggleButton)sender;
+
+            string selected_fileName = tbtn.Content.ToString();
+
+            int file_no = vm.list_fileNames.IndexOf(selected_fileName);
+
+            string selectedFile_path = vm.list_files[file_no];
+
+            if (File.Exists(selectedFile_path))
+            {
+                Process.Start(selectedFile_path);
+            }
+
+            tbtn.IsChecked = false;
         }
 
         private void btn_tag_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
@@ -425,5 +504,7 @@ namespace Perspective
         {
             System.Diagnostics.Process.Start(tagsDirectoryPath);
         }
+
+        
     }
 }
