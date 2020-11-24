@@ -5,11 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Perspective"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="clr-namespace:Perspective.UI"
     xmlns:vm="clr-namespace:Perspective.ViewModels"
     Title="MainWindow"
-    Width="1000"
+    Width="1200"
     Height="600"
     Loaded="Window_Loaded"
+    SizeChanged="Window_SizeChanged"
     mc:Ignorable="d">
 
     <Window.DataContext>
@@ -46,6 +48,12 @@
                 Click="Btn_open_tags_location_Click"
                 Content="Tags Location"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button
+                x:Name="btn_test"
+                Grid.Row="2"
+                Click="Btn_test_Click"
+                Content="Test"
+                Style="{DynamicResource BtnStyle_FilePicBox}" />
         </Grid>
         <Grid
             Grid.Row="1"
@@ -75,8 +83,9 @@
                     Text="{Binding path}" />
                 <Viewbox HorizontalAlignment="Left" />
 
-                <Button Grid.Column="1" />
-                <Button Grid.Column="2" />
+                <Button Grid.Column="1" Content="V"/>
+                <Button x:Name="btn_check_path"
+                        Grid.Column="2" Content="O" Click="btn_check_path_Click"/>
             </Grid>
 
             <Grid Grid.Row="1">
@@ -109,6 +118,7 @@
                                 x:Name="btn_tag"
                                 Margin="0,0,5,5"
                                 Click="Btn_tag_Click"
+                                MouseDown="btn_tag_MouseDown"
                                 Content="{Binding}"
                                 PreviewMouseRightButtonDown="btn_tag_PreviewMouseRightButtonDown" />
                         </DataTemplate>
@@ -137,30 +147,50 @@
             </Grid>
 
             <Border Grid.Row="2" Background="White" />
-            <ScrollViewer Grid.Row="2">
+            <ScrollViewer x:Name="viewer" Grid.Row="2">
                 <StackPanel>
                     <ItemsControl
                         x:Name="itms_directories"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                        ItemsSource="{Binding list_dirNames}">
+                        ItemsSource="{Binding list_DataModels}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
-                                <UniformGrid Columns="9" />
+                                <UniformGrid Columns="{Binding unigrid_column}" />
                             </ItemsPanelTemplate>
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
+<<<<<<< HEAD
+                                <uc:UC_FileBox
+                                    Width="140"
+                                    Height="160"
+                                    MouseDoubleClick="UC_FileBox_MouseDoubleClick"
+                                    imgSource="../Resources/folder.png"
+                                    str_btn_text="{Binding Names}"
+                                    vis_btn_remove="{Binding Visibility_btn_remove}" />
+                                <!--<ToggleButton
+                                    x:Name="tbtn_directories"
+                                    Width="140"
+                                    Height="160"
+                                    Checked="tbtn_directories_Checked"
+                                    Content="{Binding Names}"
+                                    Style="{DynamicResource TBtn_DirBox}"
+                                    Tag="../Resources/folder.png"
+                                    Unchecked="tbtn_directories_Unchecked" />-->
+=======
                                 <Viewbox>
                                     <ToggleButton
                                         x:Name="tbtn_directories"
                                         Width="120"
                                         Height="120"
                                         Checked="tbtn_directories_Checked"
+                                        MouseDoubleClick="tbtn_directories_MouseDoubleClick"
                                         Content="{Binding}"
                                         Style="{DynamicResource TBtn_DirBox}"
                                         Unchecked="tbtn_directories_Unchecked" />
                                 </Viewbox>
+>>>>>>> 511b80c08caf414464d536ed94bdbfcd3d546416
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -184,6 +214,7 @@
                                         Width="120"
                                         Height="120"
                                         Checked="tbtn_files_Checked"
+                                        MouseDoubleClick="tbtn_files_MouseDoubleClick"
                                         Content="{Binding}"
                                         Style="{DynamicResource TBtn_FileBox}"
                                         Unchecked="tbtn_files_Unchecked" />

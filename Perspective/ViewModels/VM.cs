@@ -5,11 +5,25 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Perspective.ViewModels;
+using Perspective.Models;
 
 namespace Perspective.ViewModels
 {
     public class VM : NotifyBase
     {
+        public bool _isTagEditMode { get; set; } = false;
+
+        private ObservableCollection<DataModel> _list_DataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.1" } };
+        public ObservableCollection<DataModel> list_DataModels
+        {
+            get { return _list_DataModels; }
+            set
+            {
+                _list_DataModels = value;
+                OnPropertyChanged_Normal("list_DataModels");
+            }
+        }
+
         private ObservableCollection<string> _list_files = new ObservableCollection<string>();
         public ObservableCollection<string> list_files
         {
@@ -97,6 +111,17 @@ namespace Perspective.ViewModels
             {
                 _path = value;
                 OnPropertyChanged_Normal("path");
+            }
+        }
+
+        private int _unigrid_column = 9;
+        public int unigrid_column
+        {
+            get { return _unigrid_column; }
+            set
+            {
+                _unigrid_column = value;
+                OnPropertyChanged_Normal("unigrid_column");
             }
         }
 

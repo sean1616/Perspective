@@ -61,3 +61,5 @@ D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Perspective.c
 D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Perspective.csproj.CoreCompileInputs.cache
 D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Perspective.exe
 D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Perspective.pdb
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\UI\UC_FileBox.g.cs
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\UI\UC_FileBox.baml

@@ -37,6 +37,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -56,9 +57,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Functions\ListCollection.cs" />
+    <Compile Include="Models\DataModel.cs" />
     <Compile Include="Navigations\Window_AddTags.xaml.cs">
       <DependentUpon>Window_AddTags.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UI\UC_FileBox.xaml.cs">
+      <DependentUpon>UC_FileBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ValueConverters\VisibleConverter.cs" />
     <Compile Include="ViewModels\NotifyBase.cs" />
     <Compile Include="ViewModels\VM.cs" />
     <Page Include="Dictionary_Style.xaml">
@@ -86,6 +92,10 @@
       <Generator>MSBuild:Compile</Generator>
       <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
     </Page>
+    <Page Include="UI\UC_FileBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -112,6 +122,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\folder.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

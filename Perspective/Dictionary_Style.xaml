@@ -234,10 +234,10 @@
             <Setter.Value>
                 <ControlTemplate TargetType="{x:Type ToggleButton}">
                     <Grid
-                        Width="120"
-                        Height="120"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Top">
+                        MinWidth="140"
+                        MinHeight="160"
+                        HorizontalAlignment="Center"
+                        VerticalAlignment="Center">
                         <Border
                             x:Name="border"
                             Margin="10"
@@ -248,6 +248,7 @@
                                 <Grid.RowDefinitions>
                                     <RowDefinition />
                                     <RowDefinition Height="7*" />
+                                    <RowDefinition Height="3*" MinHeight="35" />
                                     <RowDefinition />
                                 </Grid.RowDefinitions>
                                 <Grid.ColumnDefinitions>
@@ -255,13 +256,18 @@
                                     <ColumnDefinition Width="7*" />
                                     <ColumnDefinition />
                                 </Grid.ColumnDefinitions>
+                                <Viewbox Grid.Row="1" Grid.Column="1">
+                                    <Image HorizontalAlignment="Center" Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" />
+                                </Viewbox>
                                 <TextBlock
-                                    Grid.Row="1"
+                                    Grid.Row="2"
                                     Grid.Column="1"
+                                    MaxHeight="34"
                                     HorizontalAlignment="Center"
                                     VerticalAlignment="Bottom"
                                     FontFamily="Segoe Print"
-                                    FontSize="14"
+                                    FontSize="10"
+                                    LineHeight="17"
                                     Text="{TemplateBinding Content}"
                                     TextAlignment="Center"
                                     TextWrapping="Wrap" />
