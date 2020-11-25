@@ -9,21 +9,12 @@ Perspective
 none
 false
 DEBUG;TRACE
-<<<<<<< HEAD
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\App.xaml
-5-1874896863
-
-121901072805
-14434534373
-Dictionary_Style.xaml;MainWindow.xaml;Navigations\Window_AddTags.xaml;Properties\DesignTimeResources.xaml;UI\UC_FileBox.xaml;
-=======
 C:\Users\sean_wu\source\repos\Perspective\Perspective\App.xaml
 4-1605048610
 
 9-1720101106
 131569487696
 Dictionary_Style.xaml;MainWindow.xaml;Navigations\Window_AddTags.xaml;Properties\DesignTimeResources.xaml;
->>>>>>> 511b80c08caf414464d536ed94bdbfcd3d546416
 
 False
 
