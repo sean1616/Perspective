@@ -83,7 +83,11 @@
     </UserControl.Triggers>-->
 
     <Grid Margin="10">
-        <ToggleButton MouseDoubleClick="Tbtn_DoubleClick_Click" Style="{DynamicResource Tbtn_FileBox}">
+        <ToggleButton
+            Checked="Tbtn_Checked_Click"
+            MouseDoubleClick="Tbtn_DoubleClick_Click"
+            Style="{DynamicResource Tbtn_FileBox}"
+            Tag="{Binding path_info, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}">
             <Grid MinWidth="110" MinHeight="130">
                 <Grid.RowDefinitions>
                     <RowDefinition />
@@ -125,7 +129,9 @@
                 Background="#FFDEDEDE"
                 BorderBrush="#FFDEDEDE"
                 BorderThickness="1"
-                Content="X" />
+                Click="Button_Click"
+                Content="X"
+                Tag="{Binding path_info, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}" />
         </Grid>
     </Grid>
 

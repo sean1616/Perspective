@@ -10,6 +10,7 @@ namespace Perspective.Models
     public class DataModel:NotifyBase
     {
         public string Names { get; set; }
+        public string pathInfo { get; set; }
         public bool Selected { get; set; }
 
         private bool _Visibility_btn_remove = false;

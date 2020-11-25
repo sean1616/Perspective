@@ -47,32 +47,20 @@ namespace Perspective
             Binding myBinding = new Binding("list_files[1]");
             myBinding.Source = vm;
             //btn_2.SetBinding(Button.ContentProperty, myBinding);
-<<<<<<< HEAD
             itms_directories.ItemsSource = vm.list_DataModels;
-=======
-
-            listCollection = new ListCollection(vm);
->>>>>>> 511b80c08caf414464d536ed94bdbfcd3d546416
         }
 
         Style style_tag;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
-            //btn_tag.Style = style_tag;
-
-            SearchDirectory(vm.path);
-
-            vm.list_DataModels.Clear();
-
+            //btn_tag.Style = style_tag;                       
+                        
             GetSavedTags();
 
-            foreach(string s in vm.list_dirNames)
-            {
-                vm.list_DataModels.Add(new DataModel() { Names = s , Visibility_btn_remove=true});
-            }
-
             vm.unigrid_column = (int)Math.Truncate(viewer.ActualWidth / 140);
+
+            SearchDirectory(vm.path);
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -100,19 +88,18 @@ namespace Perspective
             {
                 if (string.IsNullOrEmpty(path)) return;
 
+                vm.list_DataModels.Clear();
                 vm.list_files.Clear();
                 vm.list_directories.Clear();
                 vm.list_dirNames.Clear();
                 vm.list_fileNames.Clear();
-
-                if (File.Exists(@path))
-                {
-                    // This path is a file
+                
+                if (File.Exists(@path))  // This path is a file
+                {                    
                     ProcessFile(@path);
                 }
-                else if (Directory.Exists(@path))
+                else if (Directory.Exists(@path))  // This path is a directory
                 {
-                    // This path is a directory
                     ProcessDirectory(@path);
                 }
                 else
@@ -122,7 +109,6 @@ namespace Perspective
 
                 //取得本資料夾路徑
                 //string thisFld = System.IO.Directory.GetParent(@tbk.Text).FullName.ToString();
-
             }
             catch { }
         }
@@ -161,8 +147,8 @@ namespace Perspective
                     // This path is a directory
                     vm.list_directories.Add(s);
                     vm.list_dirNames.Add(Path.GetFileName(s));
-                    //vm.list_files.Add(s);
-                    //vm.list_fileNames.Add(Path.GetFileName(s));
+
+                    vm.list_DataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s });
                 }
             }
             #endregion
@@ -207,6 +193,8 @@ namespace Perspective
             Button btn = (Button)sender;
             string tag = btn.Content.ToString();
 
+            if (!vm.list_selectedTags.Contains(tag)) vm.list_selectedTags.Add(tag);
+
             string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
 
             if (vm._isTagRemoveMode)
@@ -215,9 +203,10 @@ namespace Perspective
                 listCollection.RemoveTag(tag, tagTxtPath);
                 return;
             }
-                        
-            vm.list_directories.Clear();
-            vm.list_dirNames.Clear();
+
+            vm.list_DataModels.Clear();
+            //vm.list_directories.Clear();
+            //vm.list_dirNames.Clear();
             vm.list_files.Clear();
             vm.list_fileNames.Clear();            
 
@@ -239,8 +228,7 @@ namespace Perspective
                     }
                     else if (Directory.Exists(@s)) // This path is a directory
                     {
-                        vm.list_directories.Add(s);
-                        vm.list_dirNames.Add(Path.GetFileName(s));
+                        vm.list_DataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
                     }
                 }
             }
@@ -282,34 +270,48 @@ namespace Perspective
 
         private void tbtn_directories_Checked(object sender, RoutedEventArgs e)
         {
-            ToggleButton tbtn = (ToggleButton)sender;
-
-            string selected_fileName = tbtn.Content.ToString();
-
-            int dir_no = vm.list_dirNames.IndexOf(selected_fileName);
-
-            string selectedDir_path = vm.list_directories[dir_no];
-
+            ToggleButton uc = (ToggleButton)sender;
+            string selectedDir_path = uc.Tag.ToString();
             if (!vm.list_selected_dirs.Contains(selectedDir_path))
             {
                 vm.list_selected_dirs.Add(selectedDir_path);
             }
+
+            //ToggleButton tbtn = (ToggleButton)sender;
+
+            //string selected_fileName = tbtn.Content.ToString();
+
+            //int dir_no = vm.list_dirNames.IndexOf(selected_fileName);
+
+            //string selectedDir_path = vm.list_directories[dir_no];
+
+            //if (!vm.list_selected_dirs.Contains(selectedDir_path))
+            //{
+            //    vm.list_selected_dirs.Add(selectedDir_path);
+            //}
         }
 
         private void tbtn_directories_Unchecked(object sender, RoutedEventArgs e)
         {
-            ToggleButton tbtn = (ToggleButton)sender;
-
-            string selected_fileName = tbtn.Content.ToString();
-
-            int dir_no = vm.list_dirNames.IndexOf(selected_fileName);
-
-            string selectedDir_path = vm.list_directories[dir_no];
-
-            if (vm.list_selected_dirs.Contains(selectedDir_path))
+            ToggleButton uc = (ToggleButton)sender;
+            string selectedDir_path = uc.Tag.ToString();
+            if (!vm.list_selected_dirs.Contains(selectedDir_path))
             {
                 vm.list_selected_dirs.Remove(selectedDir_path);
             }
+
+            //ToggleButton tbtn = (ToggleButton)sender;
+
+            //string selected_fileName = tbtn.Content.ToString();
+
+            //int dir_no = vm.list_dirNames.IndexOf(selected_fileName);
+
+            //string selectedDir_path = vm.list_directories[dir_no];
+
+            //if (vm.list_selected_dirs.Contains(selectedDir_path))
+            //{
+            //    vm.list_selected_dirs.Remove(selectedDir_path);
+            //}
         }
 
         private void tbtn_files_Checked(object sender, RoutedEventArgs e)
@@ -488,14 +490,14 @@ namespace Perspective
             vm.list_fileNames.Clear();
             vm.list_files.Clear();
             vm.list_selected_files.Clear();
+            vm.list_selectedTags.Clear();
 
             string[] keys = vm.dictonary_tag_files.Keys.ToArray();
             foreach(string key in keys)
             {
                 vm.dictonary_tag_files[key] = new ObservableCollection<string>();
             }
-            SearchDirectory(vm.path);
-            
+            SearchDirectory(vm.path);            
         }
 
         private void btn_RefreshTags_Click(object sender, RoutedEventArgs e)
@@ -525,7 +527,6 @@ namespace Perspective
             System.Diagnostics.Process.Start(tagsDirectoryPath);
         }
 
-<<<<<<< HEAD
         private void Btn_test_Click(object sender, RoutedEventArgs e)
         {
             vm._isTagEditMode = !vm._isTagEditMode;
@@ -546,8 +547,7 @@ namespace Perspective
                 }
                 
             }
-
-            vm.list_DataModels.Add(vm.list_DataModels[1]);
+           
         }
 
         private void UC_FileBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -556,9 +556,48 @@ namespace Perspective
 
             string filename = uc.str_btn_text;
             MessageBox.Show(filename);
+        }                
+
+        private void UC_FileBox_btn_delete_Click(object sender, RoutedEventArgs e)
+        {
+            Button uc = (Button)sender;
+            string selectedDir_path = uc.Tag.ToString();
+
+            if (Directory.Exists(tagsDirectoryPath))
+            {
+                foreach(string tag in vm.list_selectedTags)
+                {
+                    string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
+                    if (!File.Exists(tagTxtPath)) continue;
+
+                    var tempFile = Path.GetTempFileName();
+                    var linesToKeep = File.ReadLines(tagTxtPath).Where(l => l != selectedDir_path);
+
+                    File.WriteAllLines(tempFile, linesToKeep);
+
+                    File.Delete(tagTxtPath);
+                    File.Move(tempFile, tagTxtPath);
+
+                    //using (var sr = new StreamReader(tagTxtPath))
+                    //using (var sw = new StreamWriter(tagTxtPath_Temp))
+                    //{
+                    //    string line;
+
+                    //    while ((line = sr.ReadLine()) != null)
+                    //    {
+                    //        if (line != "removeme")
+                    //            sw.WriteLine(line);
+                    //    }
+                    //}
+
+                    //File.Delete(tagTxtPath);
+                    //File.Move(tagTxtPath_Temp, tagTxtPath);
+                }
+
+               
+
+                
+            }
         }
-=======
-        
->>>>>>> 511b80c08caf414464d536ed94bdbfcd3d546416
     }
 }

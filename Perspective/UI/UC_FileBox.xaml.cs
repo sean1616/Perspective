@@ -55,6 +55,16 @@ namespace Perspective.UI
             get { return (bool)GetValue(vis_btn_remove_Property); }
             set { SetValue(vis_btn_remove_Property, value); }
         }
+
+        public static readonly DependencyProperty path_info_Property =
+               DependencyProperty.Register("path_info", typeof(string), typeof(UC_FileBox),
+               new UIPropertyMetadata(null));
+
+        public string path_info //提供內部binding之相依屬性
+        {
+            get { return (string)GetValue(path_info_Property); }
+            set { SetValue(path_info_Property, value); }
+        }
         #endregion
 
         #region Button Event
@@ -62,6 +72,19 @@ namespace Perspective.UI
         private void Tbtn_DoubleClick_Click(object sender, MouseButtonEventArgs e)
         {
             Tbtn_DoubleClick(sender, e);
+        }
+
+        
+        public event RoutedEventHandler Tbtn_Checked = delegate { };
+        private void Tbtn_Checked_Click(object sender, RoutedEventArgs e)
+        {
+            Tbtn_Checked(sender, e);
+        }
+
+        public event RoutedEventHandler btn_delete_Click = delegate { };
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            btn_delete_Click(sender, e);
         }
         #endregion
 

@@ -101,6 +101,10 @@ namespace Perspective.ViewModels
             }
         }
 
+
+        public ObservableCollection<string> list_selectedTags { get; set; } = new ObservableCollection<string>();
+        
+
         public Dictionary<string, ObservableCollection<string>> dictonary_tag_files { get; set; } = new Dictionary<string, ObservableCollection<string>>();
 
         private string _path = @"D:\Download";

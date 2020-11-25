@@ -83,9 +83,12 @@
                     Text="{Binding path}" />
                 <Viewbox HorizontalAlignment="Left" />
 
-                <Button Grid.Column="1" Content="V"/>
-                <Button x:Name="btn_check_path"
-                        Grid.Column="2" Content="O" Click="btn_check_path_Click"/>
+                <Button Grid.Column="1" Content="V" />
+                <Button
+                    x:Name="btn_check_path"
+                    Grid.Column="2"
+                    Click="btn_check_path_Click"
+                    Content="O" />
             </Grid>
 
             <Grid Grid.Row="1">
@@ -118,8 +121,8 @@
                                 x:Name="btn_tag"
                                 Margin="0,0,5,5"
                                 Click="Btn_tag_Click"
-                                MouseDown="btn_tag_MouseDown"
                                 Content="{Binding}"
+                                MouseDown="btn_tag_MouseDown"
                                 PreviewMouseRightButtonDown="btn_tag_PreviewMouseRightButtonDown" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
@@ -161,12 +164,14 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-<<<<<<< HEAD
                                 <uc:UC_FileBox
                                     Width="140"
                                     Height="160"
                                     MouseDoubleClick="UC_FileBox_MouseDoubleClick"
+                                    Tbtn_Checked="tbtn_directories_Checked"
+                                    btn_delete_Click="UC_FileBox_btn_delete_Click"
                                     imgSource="../Resources/folder.png"
+                                    path_info="{Binding pathInfo}"
                                     str_btn_text="{Binding Names}"
                                     vis_btn_remove="{Binding Visibility_btn_remove}" />
                                 <!--<ToggleButton
@@ -178,8 +183,7 @@
                                     Style="{DynamicResource TBtn_DirBox}"
                                     Tag="../Resources/folder.png"
                                     Unchecked="tbtn_directories_Unchecked" />-->
-=======
-                                <Viewbox>
+                                <!--<Viewbox>
                                     <ToggleButton
                                         x:Name="tbtn_directories"
                                         Width="120"
@@ -189,8 +193,7 @@
                                         Content="{Binding}"
                                         Style="{DynamicResource TBtn_DirBox}"
                                         Unchecked="tbtn_directories_Unchecked" />
-                                </Viewbox>
->>>>>>> 511b80c08caf414464d536ed94bdbfcd3d546416
+                                </Viewbox>-->
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -214,8 +217,8 @@
                                         Width="120"
                                         Height="120"
                                         Checked="tbtn_files_Checked"
-                                        MouseDoubleClick="tbtn_files_MouseDoubleClick"
                                         Content="{Binding}"
+                                        MouseDoubleClick="tbtn_files_MouseDoubleClick"
                                         Style="{DynamicResource TBtn_FileBox}"
                                         Unchecked="tbtn_files_Unchecked" />
                                 </Viewbox>
