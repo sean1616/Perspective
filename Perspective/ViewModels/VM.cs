@@ -13,14 +13,25 @@ namespace Perspective.ViewModels
     {
         public bool _isTagEditMode { get; set; } = false;
 
-        private ObservableCollection<DataModel> _list_DataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.1" } };
-        public ObservableCollection<DataModel> list_DataModels
+        private ObservableCollection<DataModel> _list_DirDataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.1" } };
+        public ObservableCollection<DataModel> list_DirDataModels
         {
-            get { return _list_DataModels; }
+            get { return _list_DirDataModels; }
             set
             {
-                _list_DataModels = value;
-                OnPropertyChanged_Normal("list_DataModels");
+                _list_DirDataModels = value;
+                OnPropertyChanged_Normal("list_DirDataModels");
+            }
+        }
+
+        private ObservableCollection<DataModel> _list_FileDataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.2" } };
+        public ObservableCollection<DataModel> list_FileDataModels
+        {
+            get { return _list_FileDataModels; }
+            set
+            {
+                _list_FileDataModels = value;
+                OnPropertyChanged_Normal("list_FileDataModels");
             }
         }
 

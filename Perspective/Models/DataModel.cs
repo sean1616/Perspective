@@ -24,6 +24,15 @@ namespace Perspective.Models
             }
         }
 
-
+        private string _imgSource = "";
+        public string imgSource
+        {
+            get { return _imgSource; }
+            set
+            {
+                _imgSource = value;
+                OnPropertyChanged_Normal("imgSource");
+            }
+        }
     }
 }

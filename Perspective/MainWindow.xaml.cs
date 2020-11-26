@@ -47,7 +47,8 @@ namespace Perspective
             Binding myBinding = new Binding("list_files[1]");
             myBinding.Source = vm;
             //btn_2.SetBinding(Button.ContentProperty, myBinding);
-            itms_directories.ItemsSource = vm.list_DataModels;
+            //itms_directories.ItemsSource = vm.list_DirDataModels;
+            //itms_files.ItemsSource = vm.list_FileDataModels;
         }
 
         Style style_tag;
@@ -88,7 +89,8 @@ namespace Perspective
             {
                 if (string.IsNullOrEmpty(path)) return;
 
-                vm.list_DataModels.Clear();
+                vm.list_DirDataModels.Clear();
+                vm.list_FileDataModels.Clear();
                 vm.list_files.Clear();
                 vm.list_directories.Clear();
                 vm.list_dirNames.Clear();
@@ -148,7 +150,7 @@ namespace Perspective
                     vm.list_directories.Add(s);
                     vm.list_dirNames.Add(Path.GetFileName(s));
 
-                    vm.list_DataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s });
+                    vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s });
                 }
             }
             #endregion
@@ -162,6 +164,32 @@ namespace Perspective
                 {
                     vm.list_files.Add(s);
                     vm.list_fileNames.Add(Path.GetFileName(s));
+
+                    DataModel newDataModel = new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s };
+                    string fileExtention = Path.GetExtension(s);
+                    switch (fileExtention)
+                    {
+                        case ".txt":
+                            newDataModel.imgSource = "../Resources/Text.png";
+                            break;
+                        case ".xlsx":
+                            newDataModel.imgSource = "../Resources/excel.png";
+                            break;
+                        case ".csv":
+                            newDataModel.imgSource = "../Resources/excel.png";
+                            break;
+                        case ".png":
+                            newDataModel.imgSource = @s;
+                            break;
+                        case ".jpg":
+                            newDataModel.imgSource = @s;
+                            break;
+                        case ".bmp":
+                            newDataModel.imgSource = @s;
+                            break;
+                    }
+                    vm.list_FileDataModels.Add(newDataModel);
+
                 }
             }
             #endregion
@@ -190,9 +218,10 @@ namespace Perspective
         //當標籤左鍵點擊時，呼叫有此標籤的物件
         private void Btn_tag_Click(object sender, RoutedEventArgs e)
         {
-            Button btn = (Button)sender;
+            ToggleButton btn = (ToggleButton)sender;
             string tag = btn.Content.ToString();
 
+            //將此標籤加入List_selectedTag
             if (!vm.list_selectedTags.Contains(tag)) vm.list_selectedTags.Add(tag);
 
             string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
@@ -204,36 +233,38 @@ namespace Perspective
                 return;
             }
 
-            vm.list_DataModels.Clear();
-            //vm.list_directories.Clear();
-            //vm.list_dirNames.Clear();
-            vm.list_files.Clear();
-            vm.list_fileNames.Clear();            
-
-            string[] lines;
-            if (File.Exists(tagTxtPath))
+            if ((bool)btn.IsChecked)
             {
-                lines = System.IO.File.ReadAllLines(tagTxtPath);
-            }
-            else return;
+                vm.list_DirDataModels.Clear();
+                //vm.list_directories.Clear();
+                //vm.list_dirNames.Clear();
+                vm.list_files.Clear();
+                vm.list_fileNames.Clear();
 
-            foreach(string s in lines)
-            {
-                if (vm.dictonary_tag_files.ContainsKey(tag))
+                string[] lines;
+                if (File.Exists(tagTxtPath))
                 {
-                    if (File.Exists(@s)) // This path is a file
+                    lines = System.IO.File.ReadAllLines(tagTxtPath);
+                }
+                else return;
+
+                foreach (string s in lines)
+                {
+                    if (vm.dictonary_tag_files.ContainsKey(tag))
                     {
-                        vm.list_files.Add(s);
-                        vm.list_fileNames.Add(Path.GetFileName(s));
-                    }
-                    else if (Directory.Exists(@s)) // This path is a directory
-                    {
-                        vm.list_DataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
+                        if (File.Exists(@s)) // This path is a file
+                        {
+                            vm.list_files.Add(s);
+                            vm.list_fileNames.Add(Path.GetFileName(s));
+                        }
+                        else if (Directory.Exists(@s)) // This path is a directory
+                        {
+                            vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
+                        }
                     }
                 }
             }
-            
-                 
+           
         }
 
         //當標籤中鍵點擊時
@@ -533,17 +564,17 @@ namespace Perspective
 
             if (vm._isTagEditMode)
             {
-                for (int i = 0; i < vm.list_DataModels.Count; i++)
+                for (int i = 0; i < vm.list_DirDataModels.Count; i++)
                 {
-                    vm.list_DataModels[i].Visibility_btn_remove = true;
+                    vm.list_DirDataModels[i].Visibility_btn_remove = true;
                 }
                 
             }
             else
             {
-                for (int i = 0; i < vm.list_DataModels.Count; i++)
+                for (int i = 0; i < vm.list_DirDataModels.Count; i++)
                 {
-                    vm.list_DataModels[i].Visibility_btn_remove = false;
+                    vm.list_DirDataModels[i].Visibility_btn_remove = false;
                 }
                 
             }

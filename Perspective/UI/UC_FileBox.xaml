@@ -90,7 +90,7 @@
             Tag="{Binding path_info, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}">
             <Grid MinWidth="110" MinHeight="130">
                 <Grid.RowDefinitions>
-                    <RowDefinition />
+                    <RowDefinition Height="2*"/>
                     <RowDefinition Height="7*" />
                     <RowDefinition Height="3*" MinHeight="35" />
                     <RowDefinition />
