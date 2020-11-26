@@ -11,6 +11,25 @@ namespace Perspective.ViewModels
 {
     public class VM : NotifyBase
     {
+        public VM()
+        {
+           
+        }
+
+        public ObservableCollection<string> path_previous { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> path_after { get; set; } = new ObservableCollection<string>();
+
+        private string _txt_msg = "Message";
+        public string txt_msg
+        {
+            get { return _txt_msg; }
+            set
+            {
+                _txt_msg = value;
+                OnPropertyChanged_Normal("txt_msg");
+            }
+        }
+
         public bool _isTagEditMode { get; set; } = false;
 
         private ObservableCollection<DataModel> _list_DirDataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.1" } };
@@ -23,6 +42,17 @@ namespace Perspective.ViewModels
                 OnPropertyChanged_Normal("list_DirDataModels");
             }
         }
+
+        //private List<DataModel> _list_FileDataModels = new List<DataModel>() { new DataModel() { Names = "No.2" } };
+        //public List<DataModel> list_FileDataModels
+        //{
+        //    get { return _list_FileDataModels; }
+        //    set
+        //    {
+        //        _list_FileDataModels = value;
+        //        OnPropertyChanged_Normal("list_FileDataModels");
+        //    }
+        //}
 
         private ObservableCollection<DataModel> _list_FileDataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.2" } };
         public ObservableCollection<DataModel> list_FileDataModels

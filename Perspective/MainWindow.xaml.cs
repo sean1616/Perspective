@@ -3,6 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -33,6 +34,8 @@ namespace Perspective
         ListCollection listCollection;
         ItemsControl itemsControl = new ItemsControl();
 
+        System.Timers.Timer timer_showFilebox = new System.Timers.Timer();
+
         string currentPath = Directory.GetCurrentDirectory();
         string tagsDirectoryPath = "";
 
@@ -49,6 +52,9 @@ namespace Perspective
             //btn_2.SetBinding(Button.ContentProperty, myBinding);
             //itms_directories.ItemsSource = vm.list_DirDataModels;
             //itms_files.ItemsSource = vm.list_FileDataModels;
+
+            timer_showFilebox.Interval = 50;
+            timer_showFilebox.Elapsed += Timer_showFilebox_Elapsed;
         }
 
         Style style_tag;
@@ -56,12 +62,14 @@ namespace Perspective
         {
             style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
             //btn_tag.Style = style_tag;                       
-                        
+
             GetSavedTags();
 
             vm.unigrid_column = (int)Math.Truncate(viewer.ActualWidth / 140);
 
+            
             SearchDirectory(vm.path);
+            
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -77,6 +85,14 @@ namespace Perspective
                 SearchDirectory(tbk.Text);
             }
         }
+
+        private void Txt_path_PreviewMouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            // Set the event as handled
+            e.Handled = true;
+            // Select the Text
+            (sender as TextBox).SelectAll();
+    }
 
         private void btn_check_path_Click(object sender, RoutedEventArgs e)
         {
@@ -102,7 +118,9 @@ namespace Perspective
                 }
                 else if (Directory.Exists(@path))  // This path is a directory
                 {
-                    ProcessDirectory(@path);
+                    Task GetFile_Task = new Task(() => ProcessDirectory(path));
+                    GetFile_Task.Start();
+                    //ProcessDirectory(@path);
                 }
                 else
                 {
@@ -113,9 +131,7 @@ namespace Perspective
                 //string thisFld = System.IO.Directory.GetParent(@tbk.Text).FullName.ToString();
             }
             catch { }
-        }
-
-        
+        }                
 
         public void ProcessGetFilesInDirectory(string targetDirectory)
         {
@@ -135,10 +151,55 @@ namespace Perspective
             ProcessDirectory(path_directory_of_file);
         }
 
+        string[] files;
+        int fileCount = 0;
+        private void Timer_showFilebox_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
+        {
+            if (files == null) return;
+            if (fileCount < files.Length)
+            {
+                string s = files[fileCount];
+
+                if (vm.list_FileDataModels.Count <= fileCount) return;
+                              
+                string fileExtention = Path.GetExtension(s);
+                switch (fileExtention)
+                {
+                    case ".txt":
+                        vm.list_FileDataModels[fileCount].imgSource = "../Resources/Text.png";
+                        break;
+                    case ".xlsx":
+                        vm.list_FileDataModels[fileCount].imgSource = "../Resources/excel.png";
+                        break;
+                    case ".csv":
+                        vm.list_FileDataModels[fileCount].imgSource = "../Resources/excel.png";
+                        break;
+                    case ".png":
+                        vm.list_FileDataModels[fileCount].imgSource = @s;
+                        break;
+                    case ".jpg":
+                        vm.list_FileDataModels[fileCount].imgSource = @s;
+                        break;
+                    case ".bmp":
+                        vm.list_FileDataModels[fileCount].imgSource = @s;
+                        break;
+                }
+
+                fileCount++;
+            }
+            else
+            {
+                timer_showFilebox.Stop();
+                fileCount = 0;
+            }
+        }
+
         // Process all files in the directory passed in, recurse on any directories
         // that are found, and process the files they contain.
         public void ProcessDirectory(string targetDirectory)
         {
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
             #region 搜尋本資料夾內的所有資料夾
             string[] directories = System.IO.Directory.GetDirectories(targetDirectory);
 
@@ -150,48 +211,93 @@ namespace Perspective
                     vm.list_directories.Add(s);
                     vm.list_dirNames.Add(Path.GetFileName(s));
 
-                    vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s });
+                    Action methodDeleagate = delegate ()
+                    {
+                        Task.Delay(50);
+                        vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s });
+                    };
+                    this.Dispatcher.BeginInvoke(methodDeleagate);
+                    //vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s });
                 }
             }
             #endregion
 
             #region 搜尋本資料夾內的所有檔案
             string[] files = Directory.GetFiles(targetDirectory);
+            string[] fileNames = new string[files.Length];
+            DataModel[] dataModels = new DataModel[files.Length];
 
-            foreach(string s in files)
+            Parallel.For(0, files.Length, i =>
             {
-                if (File.Exists(@s))
+                string s = files[i];
+                fileNames[i] = Path.GetFileName(s);                                
+
+                dataModels[i] = new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s };
+
+                //string fileExtention = Path.GetExtension(s);
+                //switch (fileExtention)
+                //{
+                //    case ".txt":
+                //        dataModels[i].imgSource = "../Resources/Text.png";
+                //        break;
+                //    case ".xlsx":
+                //        dataModels[i].imgSource = "../Resources/excel.png";
+                //        break;
+                //    case ".csv":
+                //        dataModels[i].imgSource = "../Resources/excel.png";
+                //        break;
+                //    case ".png":
+                //        dataModels[i].imgSource = @s;
+                //        break;
+                //    case ".jpg":
+                //        dataModels[i].imgSource = @s;
+                //        break;
+                //    case ".bmp":
+                //        dataModels[i].imgSource = @s;
+                //        break;
+                //}
+
+                Action methodDeleagate = delegate ()
                 {
-                    vm.list_files.Add(s);
-                    vm.list_fileNames.Add(Path.GetFileName(s));
+                    vm.list_FileDataModels.Add(dataModels[i]);
+                };
+                this.Dispatcher.BeginInvoke(methodDeleagate);
+            });
 
-                    DataModel newDataModel = new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s };
-                    string fileExtention = Path.GetExtension(s);
-                    switch (fileExtention)
-                    {
-                        case ".txt":
-                            newDataModel.imgSource = "../Resources/Text.png";
-                            break;
-                        case ".xlsx":
-                            newDataModel.imgSource = "../Resources/excel.png";
-                            break;
-                        case ".csv":
-                            newDataModel.imgSource = "../Resources/excel.png";
-                            break;
-                        case ".png":
-                            newDataModel.imgSource = @s;
-                            break;
-                        case ".jpg":
-                            newDataModel.imgSource = @s;
-                            break;
-                        case ".bmp":
-                            newDataModel.imgSource = @s;
-                            break;
-                    }
-                    vm.list_FileDataModels.Add(newDataModel);
+            //foreach(DataModel dataModel in dataModels)
+            //{
+            //    Action methodDeleagate = delegate ()
+            //    {                    
+            //        vm.list_FileDataModels.Add(dataModel);
+            //    };
+            //    this.Dispatcher.BeginInvoke(methodDeleagate);
+            //}
 
-                }
-            }
+            //foreach (string s in files)
+            //{
+            //    vm.list_files.Add(s);
+            //    vm.list_fileNames.Add(Path.GetFileName(s));
+
+            //    DataModel newDataModel = new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s };               
+
+            //    //vm.list_FileDataModels.Add(newDataModel);
+
+            //    Action methodDeleagate = delegate ()
+            //    {
+            //        Task.Delay(50);
+            //        vm.list_FileDataModels.Add(newDataModel);
+            //    };
+            //    this.Dispatcher.BeginInvoke(methodDeleagate);
+
+            //}
+
+            long elapsedMs = watch.ElapsedMilliseconds;
+
+
+            this.files = files;
+            timer_showFilebox.Start();
+
+            //vm.txt_msg = elapsedMs.ToString();
             #endregion
         }
 
@@ -585,8 +691,17 @@ namespace Perspective
         {
             UC_FileBox uc = (UC_FileBox)sender;
 
-            string filename = uc.str_btn_text;
-            MessageBox.Show(filename);
+            if (File.Exists(@uc.path_info))  // This path is a file
+            {
+                Process.Start(@uc.path_info);
+            }
+            else if (Directory.Exists(@uc.path_info))  // This path is a directory
+            {
+                vm.path_previous.Add(vm.path);
+
+                vm.path = uc.path_info;
+                SearchDirectory(vm.path);
+            }
         }                
 
         private void UC_FileBox_btn_delete_Click(object sender, RoutedEventArgs e)
@@ -628,6 +743,36 @@ namespace Perspective
                
 
                 
+            }
+        }
+
+        private void Btn_previous_Click(object sender, RoutedEventArgs e)
+        {
+            if (vm.path_previous.Count == 0) return;
+            if (Directory.Exists(@vm.path_previous.Last()))  // This path is a directory
+            {
+                vm.path_after.Add(vm.path);
+                vm.path = vm.path_previous.Last();
+                
+                                
+                SearchDirectory(vm.path);
+
+                vm.path_previous.RemoveAt(vm.path_previous.IndexOf(vm.path_previous.Last()));
+            }
+        }
+
+        private void Btn_after_Click(object sender, RoutedEventArgs e)
+        {
+            if (vm.path_after.Count == 0) return;
+            if (Directory.Exists(@vm.path_after.Last()))  // This path is a directory
+            {
+                vm.path_previous.Add(vm.path);
+                vm.path = vm.path_after.Last();
+               
+
+                SearchDirectory(vm.path);
+
+                vm.path_after.RemoveAt(vm.path_after.IndexOf(vm.path_after.Last()));
             }
         }
     }

@@ -90,7 +90,7 @@
             Tag="{Binding path_info, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}">
             <Grid MinWidth="110" MinHeight="130">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="2*"/>
+                    <RowDefinition Height="2*" />
                     <RowDefinition Height="7*" />
                     <RowDefinition Height="3*" MinHeight="35" />
                     <RowDefinition />
@@ -102,7 +102,10 @@
                 </Grid.ColumnDefinitions>
 
                 <Viewbox Grid.Row="1" Grid.Column="1">
-                    <Image HorizontalAlignment="Center" Source="{Binding imgSource, FallbackValue=../Resources/folder.png, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}" />
+                    <Image
+                        HorizontalAlignment="Center"
+                        RenderOptions.BitmapScalingMode="HighQuality"
+                        Source="{Binding imgSource, FallbackValue=../Resources/folder.png, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}" />
                 </Viewbox>
                 <TextBlock
                     Grid.Row="2"

@@ -70,31 +70,39 @@
 
             <Grid>
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
                     <ColumnDefinition Width="12*" />
                     <ColumnDefinition />
                     <ColumnDefinition />
-                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="3*" />
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
+                <Button x:Name="btn_previous" Content="P" Click="Btn_previous_Click"/>
+                <Button
+                    x:Name="btn_after"
+                    Grid.Column="1"
+                    Content="A" Click="Btn_after_Click"/>
                 <TextBox
                     x:Name="txt_path"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
                     FontFamily="Segoe Print"
                     PreviewKeyDown="Txt_path_PreviewKeyDown"
+                    PreviewMouseDoubleClick="Txt_path_PreviewMouseDoubleClick"
                     Text="{Binding path}" />
                 <Viewbox HorizontalAlignment="Left" />
 
-                <Button Grid.Column="1" Content="V" />
+                <Button Grid.Column="3" Content="V" />
                 <Button
                     x:Name="btn_check_path"
-                    Grid.Column="2"
+                    Grid.Column="4"
                     Click="btn_check_path_Click"
                     Content="O" />
 
-                <TextBox Grid.Column="3" />
-                <Button Grid.Column="4"
-                        Content="S" />
+                <TextBox Grid.Column="5" />
+                <Button Grid.Column="6" Content="S" />
             </Grid>
 
             <Grid Grid.Row="1">
@@ -123,12 +131,13 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <ToggleButton x:Name="btn_tag"
-                                          Margin="0,0,5,5"
-                                          Click="Btn_tag_Click"
-                                          Content="{Binding}"
-                                          MouseDown="btn_tag_MouseDown"
-                                          PreviewMouseRightButtonDown="btn_tag_PreviewMouseRightButtonDown" />
+                            <ToggleButton
+                                x:Name="btn_tag"
+                                Margin="0,0,5,5"
+                                Click="Btn_tag_Click"
+                                Content="{Binding}"
+                                MouseDown="btn_tag_MouseDown"
+                                PreviewMouseRightButtonDown="btn_tag_PreviewMouseRightButtonDown" />
                             <!--<Button
                                 x:Name="btn_tag"
                                 Margin="0,0,5,5"
@@ -168,7 +177,7 @@
                         x:Name="itms_directories"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                                  ItemsSource="{Binding list_DirDataModels}">
+                        ItemsSource="{Binding list_DirDataModels}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="{Binding unigrid_column}" />
@@ -215,7 +224,7 @@
                         Grid.Row="2"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Top"
-                                  ItemsSource="{Binding list_FileDataModels}">
+                        ItemsSource="{Binding list_FileDataModels}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <UniformGrid Columns="{Binding unigrid_column}" />
@@ -223,13 +232,15 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <uc:UC_FileBox  Width="140"
-                                                Height="160"
-                                                imgSource="{Binding imgSource}"
-                                                path_info="{Binding pathInfo}"
-                                                str_btn_text="{Binding Names}"
-                                                vis_btn_remove="{Binding Visibility_btn_remove}" />
-                                <!--<Viewbox>                                    
+                                <uc:UC_FileBox
+                                    Width="140"
+                                    Height="160"
+                                    MouseDoubleClick="UC_FileBox_MouseDoubleClick"
+                                    imgSource="{Binding imgSource}"
+                                    path_info="{Binding pathInfo}"
+                                    str_btn_text="{Binding Names}"
+                                    vis_btn_remove="{Binding Visibility_btn_remove}" />
+                                <!--<Viewbox>
                                     <ToggleButton
                                         x:Name="tbtn_files"
                                         Width="120"
@@ -246,11 +257,15 @@
                 </StackPanel>
             </ScrollViewer>
 
+            <Grid Grid.Row="4">
+                <Border x:Name="border_msg" Background="#FFA5E2DD" />
+                <TextBlock
+                    x:Name="txt_msg"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Center"
+                    Text="{Binding txt_msg, FallbackValue=MSG}" />
+            </Grid>
 
-            <Border
-                x:Name="border_msg"
-                Grid.Row="4"
-                Background="#FFA5E2DD" />
         </Grid>
     </Grid>
 </Window>
