@@ -57,6 +57,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Functions\ListCollection.cs" />
+    <Compile Include="Functions\PathProcess.cs" />
     <Compile Include="Models\DataModel.cs" />
     <Compile Include="Navigations\Window_AddTags.xaml.cs">
       <DependentUpon>Window_AddTags.xaml</DependentUpon>
@@ -134,6 +135,24 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\picture.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\l_arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\r_arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\down_arrow.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\refresh.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\search.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\reload.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

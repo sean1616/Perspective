@@ -32,6 +32,7 @@ namespace Perspective
         VM vm = new VM();
         Window_AddTags _window_addTags;
         ListCollection listCollection;
+        PathProcess pathProcess;
         ItemsControl itemsControl = new ItemsControl();
 
         System.Timers.Timer timer_showFilebox = new System.Timers.Timer();
@@ -49,6 +50,8 @@ namespace Perspective
 
             Binding myBinding = new Binding("list_files[1]");
             myBinding.Source = vm;
+
+            pathProcess = new PathProcess();
             //btn_2.SetBinding(Button.ContentProperty, myBinding);
             //itms_directories.ItemsSource = vm.list_DirDataModels;
             //itms_files.ItemsSource = vm.list_FileDataModels;
@@ -162,28 +165,31 @@ namespace Perspective
 
                 if (vm.list_FileDataModels.Count <= fileCount) return;
                               
-                string fileExtention = Path.GetExtension(s);
-                switch (fileExtention)
-                {
-                    case ".txt":
-                        vm.list_FileDataModels[fileCount].imgSource = "../Resources/Text.png";
-                        break;
-                    case ".xlsx":
-                        vm.list_FileDataModels[fileCount].imgSource = "../Resources/excel.png";
-                        break;
-                    case ".csv":
-                        vm.list_FileDataModels[fileCount].imgSource = "../Resources/excel.png";
-                        break;
-                    case ".png":
-                        vm.list_FileDataModels[fileCount].imgSource = @s;
-                        break;
-                    case ".jpg":
-                        vm.list_FileDataModels[fileCount].imgSource = @s;
-                        break;
-                    case ".bmp":
-                        vm.list_FileDataModels[fileCount].imgSource = @s;
-                        break;
-                }
+                //string fileExtention = Path.GetExtension(s);
+                //switch (fileExtention)
+                //{
+                //    case ".txt":
+                //        vm.list_FileDataModels[fileCount].imgSource = "../Resources/Text.png";
+                //        break;
+                //    case ".xlsx":
+                //        vm.list_FileDataModels[fileCount].imgSource = "../Resources/excel.png";
+                //        break;
+                //    case ".csv":
+                //        vm.list_FileDataModels[fileCount].imgSource = "../Resources/excel.png";
+                //        break;
+                //    case ".png":
+                //        vm.list_FileDataModels[fileCount].imgSource = @s;
+                //        break;
+                //    case ".jpg":
+                //        vm.list_FileDataModels[fileCount].imgSource = @s;
+                //        break;
+                //    case ".bmp":
+                //        vm.list_FileDataModels[fileCount].imgSource = @s;
+                //        break;
+                //}
+
+                
+                vm.list_FileDataModels[fileCount].imgSource = pathProcess.FileBox_NameExtensionJudge(s);
 
                 fileCount++;
             }
@@ -339,13 +345,11 @@ namespace Perspective
                 return;
             }
 
+            //呼叫具此標籤的檔案
             if ((bool)btn.IsChecked)
             {
                 vm.list_DirDataModels.Clear();
-                //vm.list_directories.Clear();
-                //vm.list_dirNames.Clear();
-                vm.list_files.Clear();
-                vm.list_fileNames.Clear();
+                vm.list_FileDataModels.Clear();
 
                 string[] lines;
                 if (File.Exists(tagTxtPath))
@@ -360,8 +364,9 @@ namespace Perspective
                     {
                         if (File.Exists(@s)) // This path is a file
                         {
-                            vm.list_files.Add(s);
-                            vm.list_fileNames.Add(Path.GetFileName(s));
+                            DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource= pathProcess.FileBox_NameExtensionJudge(s) };
+                                                        
+                            vm.list_FileDataModels.Add(dataModel);
                         }
                         else if (Directory.Exists(@s)) // This path is a directory
                         {
@@ -369,8 +374,16 @@ namespace Perspective
                         }
                     }
                 }
+
+                vm.list_selected_files.Clear();
+                vm.list_selected_dirs.Clear();
             }
-           
+            else
+            {
+                vm.list_selectedTags.Remove(tag);
+
+                if (vm.list_selectedTags.Count == 0) SearchDirectory(vm.path);
+            }
         }
 
         //當標籤中鍵點擊時
@@ -453,34 +466,48 @@ namespace Perspective
 
         private void tbtn_files_Checked(object sender, RoutedEventArgs e)
         {
-            ToggleButton tbtn = (ToggleButton)sender;
-                       
-            string selected_fileName = tbtn.Content.ToString();
-            
-            int file_no = vm.list_fileNames.IndexOf(selected_fileName);
-
-            string selectedFile_path = vm.list_files[file_no];
-
-            if (!vm.list_selected_files.Contains(selectedFile_path))
+            ToggleButton uc = (ToggleButton)sender;
+            string selected_fileName = uc.Tag.ToString();
+            if (!vm.list_selected_files.Contains(selected_fileName))
             {
-                vm.list_selected_files.Add(selectedFile_path);
-            }            
+                vm.list_selected_files.Add(selected_fileName);
+            }
+
+            //ToggleButton tbtn = (ToggleButton)sender;
+
+            //string selected_fileName = tbtn.Content.ToString();
+
+            //int file_no = vm.list_fileNames.IndexOf(selected_fileName);
+
+            //string selectedFile_path = vm.list_files[file_no];
+
+            //if (!vm.list_selected_files.Contains(selectedFile_path))
+            //{
+            //    vm.list_selected_files.Add(selectedFile_path);
+            //}            
         }
 
         private void tbtn_files_Unchecked(object sender, RoutedEventArgs e)
         {
-            ToggleButton tbtn = (ToggleButton)sender;
-
-            string selected_fileName = tbtn.Content.ToString();
-
-            int file_no = vm.list_fileNames.IndexOf(selected_fileName);
-
-            string selectedFile_path = vm.list_files[file_no];
-
-            if (vm.list_selected_files.Contains(selectedFile_path))
+            ToggleButton uc = (ToggleButton)sender;
+            string selected_fileName = uc.Tag.ToString();
+            if (!vm.list_selected_files.Contains(selected_fileName))
             {
-                vm.list_selected_files.Remove(selectedFile_path);
+                vm.list_selected_files.Remove(selected_fileName);
             }
+
+            //ToggleButton tbtn = (ToggleButton)sender;
+
+            //string selected_fileName = tbtn.Content.ToString();
+
+            //int file_no = vm.list_fileNames.IndexOf(selected_fileName);
+
+            //string selectedFile_path = vm.list_files[file_no];
+
+            //if (vm.list_selected_files.Contains(selectedFile_path))
+            //{
+            //    vm.list_selected_files.Remove(selectedFile_path);
+            //}
         }
 
         private void tbtn_directories_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -522,7 +549,7 @@ namespace Perspective
 
         private void btn_tag_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Button btn = (Button)sender;
+            ToggleButton btn = (ToggleButton)sender;
             string tag = btn.Content.ToString();
 
             if (vm._isTagRemoveMode)
@@ -774,6 +801,59 @@ namespace Perspective
 
                 vm.path_after.RemoveAt(vm.path_after.IndexOf(vm.path_after.Last()));
             }
+        }
+
+        private void btn_min_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void btn_max_Click(object sender, RoutedEventArgs e)
+        {
+            if (WindowState == WindowState.Normal)
+            {
+                this.WindowState = WindowState.Maximized;
+            }
+            else
+            {
+                this.WindowState = WindowState.Normal;
+            }            
+        }
+
+        private void btn_close_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
+        private bool mRestoreForDragMove;
+        private void border_title_PreviewMouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            //判斷滑鼠點擊次數
+            if (e.ClickCount == 2)
+            {
+                if ((this.ResizeMode != ResizeMode.CanResize) && (this.ResizeMode != ResizeMode.CanResizeWithGrip))
+                    return;
+                this.WindowState = this.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized; //雙擊最大化
+            }
+            else
+            {
+                mRestoreForDragMove = this.WindowState == WindowState.Normal;
+            }
+        }
+
+        private void border_title_MouseMove(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (mRestoreForDragMove && this.WindowState == WindowState.Normal)
+            {
+                //mRestoreForDragMove = false;
+                mRestoreForDragMove = false;
+                this.DragMove();
+            }
+        }
+
+        private void border_title_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            mRestoreForDragMove = false;
         }
     }
 }

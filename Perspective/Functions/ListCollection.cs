@@ -32,5 +32,7 @@ namespace Perspective.Functions
                 MessageBox.Show("Tag removed");
             }
         }
+
+        
     }
 }

@@ -65,6 +65,16 @@ namespace Perspective.UI
             get { return (string)GetValue(path_info_Property); }
             set { SetValue(path_info_Property, value); }
         }
+
+        public static readonly DependencyProperty tbtn_isChecked_Property =
+               DependencyProperty.Register("tbtn_isChecked", typeof(bool), typeof(UC_FileBox),
+               new UIPropertyMetadata(null));
+
+        public bool tbtn_isChecked //提供內部binding之相依屬性
+        {
+            get { return (bool)GetValue(tbtn_isChecked_Property); }
+            set { SetValue(tbtn_isChecked_Property, value); }
+        }
         #endregion
 
         #region Button Event
@@ -73,12 +83,17 @@ namespace Perspective.UI
         {
             Tbtn_DoubleClick(sender, e);
         }
-
         
         public event RoutedEventHandler Tbtn_Checked = delegate { };
         private void Tbtn_Checked_Click(object sender, RoutedEventArgs e)
         {
             Tbtn_Checked(sender, e);
+        }
+
+        public event RoutedEventHandler Tbtn_UnChecked = delegate { };
+        private void Tbtn_UnChecked_Click(object sender, RoutedEventArgs e)
+        {
+            Tbtn_UnChecked(sender, e);
         }
 
         public event RoutedEventHandler btn_delete_Click = delegate { };

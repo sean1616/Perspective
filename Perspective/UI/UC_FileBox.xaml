@@ -85,6 +85,7 @@
     <Grid Margin="10">
         <ToggleButton
             Checked="Tbtn_Checked_Click"
+            Unchecked="Tbtn_UnChecked_Click"
             MouseDoubleClick="Tbtn_DoubleClick_Click"
             Style="{DynamicResource Tbtn_FileBox}"
             Tag="{Binding path_info, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}">
