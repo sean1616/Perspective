@@ -56,7 +56,7 @@
             <TextBlock HorizontalAlignment="Left"
                        VerticalAlignment="Center"
                        FontFamily="Segoe Print"
-                       Text=" Perspective"
+                       Text=" Mobius"
                        MouseLeftButtonUp="border_title_MouseLeftButtonUp"
                        MouseMove="border_title_MouseMove"
                        PreviewMouseLeftButtonDown="border_title_PreviewMouseLeftButtonDown"

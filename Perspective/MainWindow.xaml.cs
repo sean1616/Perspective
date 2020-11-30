@@ -339,60 +339,82 @@ namespace Perspective
             ToggleButton btn = (ToggleButton)sender;
             string tag = btn.Content.ToString();
 
-            //將此標籤加入List_selectedTag
-            if (!vm.list_selectedTags.Contains(tag)) vm.list_selectedTags.Add(tag);
+            //if (vm._isTagRemoveMode)
+            //{
+            //    listCollection.RemoveTag(tag, tagTxtPath);
+            //    return;
+            //}
 
-            string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
-
-            if (vm._isTagRemoveMode)
-            {
-                //if (vm.list_tags.Contains(tag)) vm.list_tags.Remove(tag);
-                listCollection.RemoveTag(tag, tagTxtPath);
-                return;
-            }
-
-            //呼叫具此標籤的檔案
+            //將此標籤加入/移除List_selectedTag
             if ((bool)btn.IsChecked)
             {
-                vm.list_DirDataModels.Clear();
-                vm.list_FileDataModels.Clear();
+                if (!vm.list_selectedTags.Contains(tag)) vm.list_selectedTags.Add(tag);
+            }
+            else vm.list_selectedTags.Remove(tag);
 
+            var list_all_files_in_tags = new List<List<string>>();
+            List<List<string>> list_all_Dirs_in_tags = new List<List<string>>();
+
+            vm.list_DirDataModels.Clear();
+            vm.list_FileDataModels.Clear();
+
+            //將所有已選擇的標籤對應的檔案存成List
+            foreach (string t in vm.list_selectedTags)
+            {
+                string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+
+                //if (vm.dictonary_tag_files.ContainsKey(tag))
+
+                    //呼叫具此標籤的檔案們              
                 string[] lines;
                 if (File.Exists(tagTxtPath))
                 {
-                    lines = System.IO.File.ReadAllLines(tagTxtPath);
+                    lines = File.ReadAllLines(tagTxtPath);
                 }
-                else return;
+                else continue;
+
+                List<string> list_f = new List<string>();
+                List<string> list_d = new List<string>();
 
                 foreach (string s in lines)
                 {
-                    if (vm.dictonary_tag_files.ContainsKey(tag))
+                    if (File.Exists(@s)) // This path is a file
                     {
-                        if (File.Exists(@s)) // This path is a file
-                        {
-                            DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource= pathProcess.FileBox_NameExtensionJudge(s) };
-                                                        
-                            vm.list_FileDataModels.Add(dataModel);
-                        }
-                        else if (Directory.Exists(@s)) // This path is a directory
-                        {
-                            vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
-                        }
+                        list_f.Add(s);
+                        //DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = pathProcess.FileBox_NameExtensionJudge(s) };
+
+                        //vm.list_FileDataModels.Add(dataModel);
+                    }
+                    else if (Directory.Exists(@s)) // This path is a directory
+                    {
+                        list_d.Add(s);
+                        //vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
                     }
                 }
 
-                vm.list_selected_files.Clear();
-                vm.list_selected_dirs.Clear();
+                list_all_files_in_tags.Add(list_f);
+                list_all_Dirs_in_tags.Add(list_d);
             }
-            else
-            {
-                vm.list_selectedTags.Remove(tag);
 
-                if (vm.list_selectedTags.Count == 0) SearchDirectory(vm.path);
+
+            if (vm.list_selectedTags.Count != 0)
+            {
+                List<string> list_F_intersection = list_all_files_in_tags[0];
+                for (int i = 1; i < list_all_files_in_tags.Count; i++)
+                {
+                    //list_F_intersection = list_F_intersection.Intersect(list_all_files_in_tags[i])
+                }
             }
+            else 
+            {
+                SearchDirectory(vm.path);
+            }
+
+            vm.list_selected_files.Clear();
+            vm.list_selected_dirs.Clear();
         }
 
-        //當標籤中鍵點擊時
+        //當"中鍵"點擊標籤時
         private void btn_tag_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.MiddleButton == MouseButtonState.Pressed)
