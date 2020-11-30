@@ -53,7 +53,7 @@ namespace Perspective.UI {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Perspective;component/ui/uc_filebox.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Perspective v1.0.1;component/ui/uc_filebox.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\UI\UC_FileBox.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

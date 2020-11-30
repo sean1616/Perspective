@@ -68,7 +68,7 @@ namespace Perspective.Navigations {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/Perspective;component/navigations/window_addtags.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/Perspective v1.0.1;component/navigations/window_addtags.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\..\Navigations\Window_AddTags.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

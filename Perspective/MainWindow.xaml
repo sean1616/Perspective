@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:local="clr-namespace:Perspective"
+        xmlns:pageTransitions="clr-namespace:WpfPageTransitions;assembly=WpfPageTransitions"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:uc="clr-namespace:Perspective.UI"
         xmlns:vm="clr-namespace:Perspective.ViewModels"
@@ -206,7 +207,7 @@
                         Background="#FFE7F1F0" />
                 <ItemsControl x:Name="itms_tags"
                               Grid.Column="1"
-                              ItemsSource="{Binding list_tags}">
+                              ItemsSource="{Binding list_TagModels}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <StackPanel Orientation="Horizontal" />
@@ -217,7 +218,8 @@
                             <ToggleButton x:Name="btn_tag"
                                           Click="Btn_tag_Click"                                          
                                           Style="{DynamicResource TBtnStyle_TxtCenter}"
-                                          Content="{Binding}"
+                                          Content="{Binding tagName}"
+                                          IsChecked="{Binding isChecked}"
                                           MouseDown="btn_tag_MouseDown"
                                           PreviewMouseRightButtonDown="btn_tag_PreviewMouseRightButtonDown" />                           
                         </DataTemplate>
@@ -244,10 +246,14 @@
 
             <Border Grid.Row="2"
                     Background="White" />
-            <ScrollViewer x:Name="viewer"
+
+            <pageTransitions:PageTransition Grid.Row="2"
+                                            Name="pageTransitionControl" />
+            <!--<ScrollViewer x:Name="viewer"
                           Grid.Row="2">
                 <StackPanel>
                     <ItemsControl x:Name="itms_directories"
+                                  AllowDrop="True"
                                   HorizontalAlignment="Left"
                                   VerticalAlignment="Top"
                                   ItemsSource="{Binding list_DirDataModels}">
@@ -267,27 +273,7 @@
                                                imgSource="../Resources/folder.png"
                                                path_info="{Binding pathInfo}"
                                                str_btn_text="{Binding Names}"
-                                               vis_btn_remove="{Binding Visibility_btn_remove}" />
-                                <!--<ToggleButton
-                                    x:Name="tbtn_directories"
-                                    Width="140"
-                                    Height="160"
-                                    Checked="tbtn_directories_Checked"
-                                    Content="{Binding Names}"
-                                    Style="{DynamicResource TBtn_DirBox}"
-                                    Tag="../Resources/folder.png"
-                                    Unchecked="tbtn_directories_Unchecked" />-->
-                                <!--<Viewbox>
-                                    <ToggleButton
-                                        x:Name="tbtn_directories"
-                                        Width="120"
-                                        Height="120"
-                                        Checked="tbtn_directories_Checked"
-                                        MouseDoubleClick="tbtn_directories_MouseDoubleClick"
-                                        Content="{Binding}"
-                                        Style="{DynamicResource TBtn_DirBox}"
-                                        Unchecked="tbtn_directories_Unchecked" />
-                                </Viewbox>-->
+                                               vis_btn_remove="{Binding Visibility_btn_remove}" />                              
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -312,23 +298,12 @@
                                                imgSource="{Binding imgSource}"
                                                path_info="{Binding pathInfo}"
                                                str_btn_text="{Binding Names}"
-                                               vis_btn_remove="{Binding Visibility_btn_remove}" />
-                                <!--<Viewbox>
-                                    <ToggleButton
-                                        x:Name="tbtn_files"
-                                        Width="120"
-                                        Height="120"
-                                        Checked="tbtn_files_Checked"
-                                        Content="{Binding}"
-                                        MouseDoubleClick="tbtn_files_MouseDoubleClick"
-                                        Style="{DynamicResource TBtn_FileBox}"
-                                        Unchecked="tbtn_files_Unchecked" />
-                                </Viewbox>-->
+                                               vis_btn_remove="{Binding Visibility_btn_remove}" />                               
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </StackPanel>
-            </ScrollViewer>
+            </ScrollViewer>-->
 
             <Grid Grid.Row="4">
                 <Grid.ColumnDefinitions>

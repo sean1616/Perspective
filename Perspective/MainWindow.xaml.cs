@@ -35,6 +35,8 @@ namespace Perspective
         PathProcess pathProcess;
         ItemsControl itemsControl = new ItemsControl();
 
+        Page_CurrentPage _page_CurrentPage;
+
         System.Timers.Timer timer_showFilebox = new System.Timers.Timer();
 
         string currentPath = Directory.GetCurrentDirectory();
@@ -45,6 +47,8 @@ namespace Perspective
             InitializeComponent();
 
             this.DataContext = vm;
+
+            _page_CurrentPage = new Page_CurrentPage(vm);
 
             tagsDirectoryPath = currentPath + @"\Tags";
 
@@ -63,21 +67,23 @@ namespace Perspective
         Style style_tag;
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
-            //btn_tag.Style = style_tag;                       
+            pageTransitionControl.ShowPage(_page_CurrentPage);
+
+            //style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
+            //btn_tag.Style = style_tag;
 
             GetSavedTags();
 
-            vm.unigrid_column = (int)Math.Truncate(viewer.ActualWidth / 140);
+            vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
 
-            
+
             SearchDirectory(vm.path);
-            
+
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            vm.unigrid_column = (int)Math.Truncate(viewer.ActualWidth / 140);
+            vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
         }
 
         private void Txt_path_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -638,6 +644,7 @@ namespace Perspective
         {           
             if (Directory.Exists(tagsDirectoryPath))
             {
+                vm.list_TagModels = new ObservableCollection<TagModel>();
                 vm.list_tags = new System.Collections.ObjectModel.ObservableCollection<string>();
                 string[] tagsPath = Directory.GetFiles(tagsDirectoryPath);
                 foreach (string s in tagsPath)
@@ -645,6 +652,9 @@ namespace Perspective
                     string tag = Path.GetFileNameWithoutExtension(s);
                     vm.list_tags.Add(tag);
                     vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
+
+                    TagModel tagModel = new TagModel() { tagName = tag, isChecked = false };
+                    vm.list_TagModels.Add(tagModel);
                 }
             }            
         }
@@ -661,7 +671,14 @@ namespace Perspective
             {
                 vm.dictonary_tag_files[key] = new ObservableCollection<string>();
             }
-            SearchDirectory(vm.path);            
+            SearchDirectory(vm.path);
+
+            var v = (from tagM in vm.list_TagModels where tagM.isChecked == true select tagM );
+
+            foreach(TagModel t in v)
+            {
+                t.isChecked = false;
+            }
         }
 
         private void btn_RefreshTags_Click(object sender, RoutedEventArgs e)

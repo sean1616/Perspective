@@ -32,6 +32,17 @@ namespace Perspective.ViewModels
 
         public bool _isTagEditMode { get; set; } = false;
 
+        private ObservableCollection<TagModel> _list_TagModels = new ObservableCollection<TagModel>();
+        public ObservableCollection<TagModel> list_TagModels
+        {
+            get { return _list_TagModels; }
+            set
+            {
+                _list_TagModels = value;
+                OnPropertyChanged_Normal("list_TagModels");
+            }
+        }
+
         private ObservableCollection<DataModel> _list_DirDataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.1" } };
         public ObservableCollection<DataModel> list_DirDataModels
         {
