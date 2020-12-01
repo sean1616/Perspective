@@ -16,6 +16,8 @@ namespace Perspective.ViewModels
            
         }
 
+        public int ExpanderItemsHeigh { get; set; } = 25;
+
         public ObservableCollection<string> path_previous { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> path_after { get; set; } = new ObservableCollection<string>();
 
@@ -30,6 +32,7 @@ namespace Perspective.ViewModels
             }
         }
 
+        public bool _isInTagMode { get; set; } = false;
         public bool _isTagEditMode { get; set; } = false;
 
         private ObservableCollection<TagModel> _list_TagModels = new ObservableCollection<TagModel>();

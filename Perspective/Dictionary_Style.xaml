@@ -180,7 +180,7 @@
                                     </Grid.ColumnDefinitions>
                                     <Grid.RowDefinitions>
                                         <RowDefinition />
-                                        <RowDefinition Height="3*" />
+                                        <RowDefinition Height="8*" />
                                         <RowDefinition />
                                     </Grid.RowDefinitions>
                                     <Viewbox Grid.Row="1" Grid.Column="1">

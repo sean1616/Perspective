@@ -40,7 +40,7 @@ namespace Perspective
         System.Timers.Timer timer_showFilebox = new System.Timers.Timer();
 
         string currentPath = Directory.GetCurrentDirectory();
-        string tagsDirectoryPath = "";
+        string tagsDirectoryPath = "", InTagsDirectoryPath = "";
 
         public MainWindow()
         {           
@@ -51,11 +51,12 @@ namespace Perspective
             _page_CurrentPage = new Page_CurrentPage(vm);
 
             tagsDirectoryPath = currentPath + @"\Tags";
+            InTagsDirectoryPath = currentPath + @"\InTags";
 
             Binding myBinding = new Binding("list_files[1]");
             myBinding.Source = vm;
 
-            pathProcess = new PathProcess();
+            pathProcess = new PathProcess(vm);
             //btn_2.SetBinding(Button.ContentProperty, myBinding);
             //itms_directories.ItemsSource = vm.list_DirDataModels;
             //itms_files.ItemsSource = vm.list_FileDataModels;
@@ -705,20 +706,35 @@ namespace Perspective
                 {
                     string tag = Path.GetFileNameWithoutExtension(s);
                     vm.list_tags.Add(tag);
-                    vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
+
+                    if (!vm.dictonary_tag_files.ContainsKey(tag))
+                        vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
 
                     TagModel tagModel = new TagModel() { tagName = tag, isChecked = false };
                     vm.list_TagModels.Add(tagModel);
                 }
-            }            
+            }
+            else
+            {
+                Directory.CreateDirectory(tagsDirectoryPath);
+            }
+
+            #region Invisible tags
+            if (!Directory.Exists(InTagsDirectoryPath))
+            {
+                Directory.CreateDirectory(InTagsDirectoryPath);
+            }
+            #endregion
         }
 
-        private void btn_tagClear_Click(object sender, RoutedEventArgs e)
+        private void btn_selectedTagClear_Click(object sender, RoutedEventArgs e)
         {
             vm.list_fileNames.Clear();
             vm.list_files.Clear();
             vm.list_selected_files.Clear();
             vm.list_selectedTags.Clear();
+
+            GetSavedTags();
 
             string[] keys = vm.dictonary_tag_files.Keys.ToArray();
             foreach(string key in keys)
@@ -1018,19 +1034,50 @@ namespace Perspective
 
         private void btn_searchTag_Click(object sender, RoutedEventArgs e)
         {
-            SearchTag();
+            string tag = txt_nTagName.Text;
+            pathProcess.SearchTag(tag);
         }
 
         private void txt_nTagName_PreviewKeyDown(object sender, KeyEventArgs e)
         {
-            SearchTag();
+            if (e.Key == Key.Enter)
+            {
+                string tag = txt_nTagName.Text;
+
+                if (tag == "tongtaI61^")
+                {
+                    vm._isInTagMode = !vm._isInTagMode;                   
+                }
+
+                if (vm._isInTagMode)
+                {
+                    tagsDirectoryPath = InTagsDirectoryPath;
+                    GetSavedTags();
+                    border_tagBackground.Background = Brushes.Orange;
+                }
+                else
+                {
+                    tagsDirectoryPath = currentPath + @"\Tags";
+                    GetSavedTags();
+                    border_tagBackground.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FFE7F1F0");
+                }
+
+                
+            }
         }
 
-        private void SearchTag()
+        private void Btn_UserDir_Click(object sender, RoutedEventArgs e)
         {
-            string tag = txt_nTagName.Text;
+            vm.path = @"D:\SeanWu";
+            SearchDirectory(vm.path);
+        }
 
-
+        private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(txt_nTagName.Text))
+            {
+                GetSavedTags();
+            }
         }
     }
 }

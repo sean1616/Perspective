@@ -15,7 +15,8 @@
         WindowStyle="None"
         ResizeMode="CanResizeWithGrip"
         SizeChanged="Window_SizeChanged"
-        mc:Ignorable="d">
+        BorderThickness="0.8"
+        mc:Ignorable="d" BorderBrush="#FF138076">
 
     <Window.DataContext>
         <vm:VM />
@@ -30,7 +31,8 @@
             <RowDefinition Height="0.6*"
                            MaxHeight="40" />
             <RowDefinition Height="0.8*" />
-            <RowDefinition Height="9*" />
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="8*" />
         </Grid.RowDefinitions>
 
         <Grid Margin="0"
@@ -104,37 +106,71 @@
                     Margin="2.5,0" />
         </Grid>
 
-        <Grid Grid.Row="2">
-            <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>
+        <Grid x:Name="grid_function" Grid.Row="1" Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
             <Button x:Name="btn_addTagWindow"
                     Click="Btn_addTagWindow_Click"
                     Content="Tag"
                     Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button x:Name="btn_open_tags_location"
-                    Grid.Row="1"
                     Click="Btn_open_tags_location_Click"
                     Content="Tags Location"
-                    Style="{DynamicResource BtnStyle_FilePicBox}" />
+                    Style="{DynamicResource BtnStyle_FilePicBox}" Grid.Column="1" />
             <Button x:Name="btn_test"
-                    Grid.Row="2"
                     Click="Btn_test_Click"
                     Content="Test"
-                    Style="{DynamicResource BtnStyle_FilePicBox}" />
+                    Style="{DynamicResource BtnStyle_FilePicBox}" Grid.Column="2" />
         </Grid>
-        <Grid Grid.Row="2"
-              Grid.Column="1"
-              Margin="5,0,-5,0"
-              Background="#FFFBFBFB">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="35" />
-                <RowDefinition Height="35"/>
-                <RowDefinition Height="10*" />
+
+        <Grid Grid.Row="3" >
+            <!--<Grid.RowDefinitions>
                 <RowDefinition />
-                <RowDefinition Height="40"/>
+                <RowDefinition />
+                <RowDefinition />
+            </Grid.RowDefinitions>-->
+            <ScrollViewer>
+                <StackPanel>
+                    <Expander Header="快速存取" IsExpanded="True">
+                        <StackPanel>
+                            <Button x:Name="btn_UserDir" Content="SeanWu" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh, FallbackValue=25}" Click="Btn_UserDir_Click"/>
+                            <Button Content="Download" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh,FallbackValue=25}"/>
+                            <Button Content="Repository" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"/>
+                            <Button Content="Media" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"/>
+                        </StackPanel>
+                    </Expander>
+                    <Expander Header="本機" IsExpanded="True">
+                        <StackPanel>
+                            <Button Content="Desktop" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"/>
+                            <Button Content="(C:)" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"/>
+                            <Button Content="(D:)" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"/>
+                            <Button Content="3D object" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"/>
+                            <Button Content="Picture" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"/>
+                            <Button Content="Video" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"/>
+                            <Button Content="Document" Style="{DynamicResource BtnStyle_TxtCenter}" Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"/>
+                        </StackPanel>
+                    </Expander>
+                    <Expander/>
+                </StackPanel>
+            </ScrollViewer>
+        </Grid>
+        
+        <Grid Grid.Row="2"
+              Grid.Column="0"
+              Margin="5,0,-5,0"
+              Background="#FFFBFBFB" Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition  />
             </Grid.RowDefinitions>
 
             <Grid x:Name="grid_path">
@@ -200,20 +236,21 @@
                     <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}" />
                     <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}"/>
                 </Grid.ColumnDefinitions>
-                <Button x:Name="btn_tagClear"
-                        Click="btn_tagClear_Click"
+                <Button x:Name="btn_selectedTagClear"
+                        Click="btn_selectedTagClear_Click"
                         Content="../Resources/reload.png"
                         Style="{DynamicResource BtnStyle_ImgCenter}"
                         Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" />
 
-                <Border Grid.Column="1"
+                <Border x:Name="border_tagBackground" Grid.Column="1"
                         Background="#FFE7F1F0" />
                 <ItemsControl x:Name="itms_tags"
                               Grid.Column="1"
                               ItemsSource="{Binding list_TagModels}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <StackPanel Orientation="Horizontal" />
+                            <StackPanel Orientation="Horizontal" >
+                            </StackPanel>
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -255,6 +292,7 @@
                          VerticalAlignment="Center"
                          VerticalContentAlignment="Center"
                          FontFamily="Segoe Print"
+                         TextChanged="Txt_nTagName_TextChanged"
                          Height="{Binding ActualHeight, ElementName=itms_tags}" />
                 <Button x:Name="btn_searchTag"
                         Grid.Column="5"
@@ -272,10 +310,18 @@
                         Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" />
             </Grid>
 
-            <Border Grid.Row="2"
+           
+        </Grid>
+
+        <Grid Grid.Row="3" Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="8*"/>
+                <RowDefinition Height="35"/>
+            </Grid.RowDefinitions>
+            <Border Grid.Row="0"
                     Background="White" />
 
-            <pageTransitions:PageTransition Grid.Row="2"
+            <pageTransitions:PageTransition Grid.Row="0"
                                             Name="pageTransitionControl" />
             <!--<ScrollViewer x:Name="viewer"
                           Grid.Row="2">
@@ -333,7 +379,7 @@
                 </StackPanel>
             </ScrollViewer>-->
 
-            <Grid Grid.Row="4">
+            <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition MinWidth="15"
                                       Width="0.03*" />
