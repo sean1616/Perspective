@@ -38,11 +38,12 @@
                 <ControlTemplate TargetType="{x:Type Button}">
                     <Grid Margin="1">
                         <Border x:Name="border"
-                                Background="#FF727272"
+                                Background="#FFD1CECE"
                                 CornerRadius="2" />
                         <Viewbox Grid.Row="1"
                                  Margin="5">
                             <Image HorizontalAlignment="Center"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
                                    Source="{Binding Tag, RelativeSource={RelativeSource TemplatedParent}}" />
                         </Viewbox>
                     </Grid>
@@ -257,7 +258,7 @@
                                     </Grid.RowDefinitions>
                                     <Viewbox Grid.Row="1"
                                              Grid.Column="1">
-                                        <Image Source="{Binding Content, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
+                                        <Image RenderOptions.BitmapScalingMode="HighQuality" Source="{Binding Content, Mode=OneWay, RelativeSource={RelativeSource TemplatedParent}}" />
                                     </Viewbox>
                                 </Grid>
                             </Border>
@@ -331,7 +332,8 @@
                             <Image
                                 Width="100"
                                 Height="100"
-                                HorizontalAlignment="Stretch"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   HorizontalAlignment="Stretch"
                                 VerticalAlignment="Stretch" />
                             <TextBlock
                                 Grid.Row="1"

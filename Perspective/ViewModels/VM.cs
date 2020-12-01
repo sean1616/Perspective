@@ -155,7 +155,8 @@ namespace Perspective.ViewModels
 
 
         public ObservableCollection<string> list_selectedTags { get; set; } = new ObservableCollection<string>();
-        
+        public ObservableCollection<TagModel> list_selectedTagModels { get; set; } = new ObservableCollection<TagModel>();
+
 
         public Dictionary<string, ObservableCollection<string>> dictonary_tag_files { get; set; } = new Dictionary<string, ObservableCollection<string>>();
 

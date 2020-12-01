@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\
+C:\Users\sean_wu\source\repos\Perspective\Perspective\obj\Debug\
 Perspective
 none
 false
 DEBUG;TRACE
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\App.xaml
+C:\Users\sean_wu\source\repos\Perspective\Perspective\App.xaml
 6-57834446
 
-19-805604027
-1542572381
+19-1461160835
+1598881762
 Dictionary_Style.xaml;MainWindow.xaml;Navigations\Page_CurrentPage.xaml;Navigations\Window_AddTags.xaml;Properties\DesignTimeResources.xaml;UI\UC_FileBox.xaml;
 
-True
+False
 

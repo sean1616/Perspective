@@ -8,8 +8,9 @@
         xmlns:uc="clr-namespace:Perspective.UI"
         xmlns:vm="clr-namespace:Perspective.ViewModels"
         Title="MainWindow"
+        KeyDown="Window_KeyDown"
         Width="1300"
-        Height="650"
+        Height="800"
         Loaded="Window_Loaded"
         WindowStyle="None"
         ResizeMode="CanResizeWithGrip"
@@ -79,7 +80,7 @@
                     VerticalAlignment="Top"
                     Click="btn_min_Click"
                     Style="{DynamicResource style_WindowFuncBtn}"
-                    Tag="../Resources/Min_white.png"
+                    Tag="../Resources/min.png"
                     Margin="2.5,0" />
             <Button Name="btn_max"
                     Grid.Column="5"
@@ -89,7 +90,7 @@
                     VerticalAlignment="Top"
                     Click="btn_max_Click"
                     Style="{DynamicResource style_WindowFuncBtn}"
-                    Tag="../Resources/normal.png"
+                    Tag="../Resources/copy.png"
                     Margin="2.5,0" />
             <Button Name="btn_close"
                     Grid.Column="6"
@@ -129,11 +130,11 @@
               Margin="5,0,-5,0"
               Background="#FFFBFBFB">
             <Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="35" />
+                <RowDefinition Height="35"/>
                 <RowDefinition Height="10*" />
                 <RowDefinition />
-                <RowDefinition />
+                <RowDefinition Height="40"/>
             </Grid.RowDefinitions>
 
             <Grid x:Name="grid_path">
@@ -192,10 +193,12 @@
                   Grid.Row="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}" />
-                    <ColumnDefinition Width="9*" />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
+                    <ColumnDefinition Width="8*" />
+                    <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}" />
+                    <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}" />
+                    <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}"/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="btn_tagClear"
                         Click="btn_tagClear_Click"
@@ -225,23 +228,48 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-
-                <ToggleButton Grid.Column="2"
-                              Content="Delete"
-                              FontFamily="Segoe Print"
-                              IsChecked="{Binding _isTagRemoveMode}" />
+               
+                <Button x:Name="btn_deleteTag"
+                        Grid.Column="2"
+                        FontFamily="Segoe Print"
+                        Content="../Resources/delete.png"
+                        Click="btn_deleteTag_Click"
+                        Style="{DynamicResource BtnStyle_ImgCenter}"
+                        Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" />
                 <Button x:Name="btn_saveTag"
                         Grid.Column="3"
                         Click="btn_saveTag_Click"
-                        Content="Save"
+                        Content="../Resources/save.png"
                         FontFamily="Segoe Print"
-                        Style="{DynamicResource BtnStyle_TxtCenter}" />
-                <Button x:Name="btn_RefreshTags"
+                        Style="{DynamicResource BtnStyle_ImgCenter}" />
+                <!--<Button x:Name="btn_RefreshTags"
                         Grid.Column="4"
                         Click="btn_RefreshTags_Click"
                         Content="Refresh"
                         FontFamily="Segoe Print"
-                        Style="{DynamicResource BtnStyle_TxtCenter}" />
+                        Style="{DynamicResource BtnStyle_TxtCenter}" />-->
+
+                <TextBox x:Name="txt_nTagName"
+                         Grid.Column="4"
+                         PreviewKeyDown="txt_nTagName_PreviewKeyDown"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center"
+                         FontFamily="Segoe Print"
+                         Height="{Binding ActualHeight, ElementName=itms_tags}" />
+                <Button x:Name="btn_searchTag"
+                        Grid.Column="5"
+                        FontFamily="Segoe Print"
+                        Content="../Resources/search.png"
+                        Click="btn_searchTag_Click"
+                        Style="{DynamicResource BtnStyle_ImgCenter}"
+                        Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" />
+                <Button x:Name="btn_addTag"
+                        Grid.Column="6"
+                        FontFamily="Segoe Print"
+                        Content="../Resources/add.png"
+                        Click="btn_addTag_Click"
+                        Style="{DynamicResource BtnStyle_ImgCenter}"
+                        Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" />
             </Grid>
 
             <Border Grid.Row="2"

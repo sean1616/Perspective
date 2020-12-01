@@ -346,11 +346,17 @@ namespace Perspective
             //}
 
             //將此標籤加入/移除List_selectedTag
+            TagModel tagModel = new TagModel() { tagName = tag };
             if ((bool)btn.IsChecked)
             {
-                if (!vm.list_selectedTags.Contains(tag)) vm.list_selectedTags.Add(tag);
+                if (!vm.list_selectedTags.Contains(tag)) vm.list_selectedTags.Add(tag);                                
+                vm.list_selectedTagModels.Add(tagModel);
             }
-            else vm.list_selectedTags.Remove(tag);
+            else
+            {
+                vm.list_selectedTags.Remove(tag);
+                vm.list_selectedTagModels.Remove(tagModel);
+            }
 
             var list_all_files_in_tags = new List<List<string>>();
             List<List<string>> list_all_Dirs_in_tags = new List<List<string>>();
@@ -361,7 +367,7 @@ namespace Perspective
             //將所有已選擇的標籤對應的檔案存成List
             foreach (string t in vm.list_selectedTags)
             {
-                string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+                string tagTxtPath = tagsDirectoryPath + @"\" + t + @".txt";   //Txt path of this tag
 
                 //if (vm.dictonary_tag_files.ContainsKey(tag))
 
@@ -399,10 +405,28 @@ namespace Perspective
 
             if (vm.list_selectedTags.Count != 0)
             {
-                List<string> list_F_intersection = list_all_files_in_tags[0];
+                var list_F_intersection = GetFilesIntersection(list_all_files_in_tags[0]);
                 for (int i = 1; i < list_all_files_in_tags.Count; i++)
                 {
-                    //list_F_intersection = list_F_intersection.Intersect(list_all_files_in_tags[i])
+                    list_F_intersection = list_F_intersection.Intersect(list_all_files_in_tags[i]);
+                }
+
+                foreach(string s in list_F_intersection)
+                {
+                    DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = pathProcess.FileBox_NameExtensionJudge(s) };
+
+                    vm.list_FileDataModels.Add(dataModel);
+                }
+
+                var list_D_intersection = GetFilesIntersection(list_all_Dirs_in_tags[0]);
+                for (int i = 1; i < list_all_Dirs_in_tags.Count; i++)
+                {
+                    list_D_intersection = list_D_intersection.Intersect(list_all_Dirs_in_tags[i]);
+                }
+
+                foreach(string s in list_D_intersection)
+                {
+                    vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
                 }
             }
             else 
@@ -413,6 +437,14 @@ namespace Perspective
             vm.list_selected_files.Clear();
             vm.list_selected_dirs.Clear();
         }
+
+        private IEnumerable<string> GetFilesIntersection(List<string> list)
+        {
+            List<string> listF = list;
+            return listF;
+        }
+
+       
 
         //當"中鍵"點擊標籤時
         private void btn_tag_MouseDown(object sender, MouseButtonEventArgs e)
@@ -703,27 +735,27 @@ namespace Perspective
             }
         }
 
-        private void btn_RefreshTags_Click(object sender, RoutedEventArgs e)
-        {
-            foreach(string tag in vm.list_tags)
-            {
-                string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
-                string[] files_in_lines = System.IO.File.ReadAllLines(tagTxtPath);
+        //private void btn_RefreshTags_Click(object sender, RoutedEventArgs e)
+        //{
+        //    foreach(string tag in vm.list_tags)
+        //    {
+        //        string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
+        //        string[] files_in_lines = System.IO.File.ReadAllLines(tagTxtPath);
 
-                IEnumerable<string> distinctAges = files_in_lines.Distinct();
+        //        IEnumerable<string> distinctAges = files_in_lines.Distinct();
 
-                File.WriteAllText(tagTxtPath, string.Empty);
+        //        File.WriteAllText(tagTxtPath, string.Empty);
 
-                using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
-                {
-                    foreach (string s in distinctAges)
-                    {
-                        file.WriteLine(s);  //寫入選取的檔案or資料夾 路徑
-                    }
-                }
+        //        using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
+        //        {
+        //            foreach (string s in distinctAges)
+        //            {
+        //                file.WriteLine(s);  //寫入選取的檔案or資料夾 路徑
+        //            }
+        //        }
                    
-            }
-        }
+        //    }
+        //}
 
         private void Btn_open_tags_location_Click(object sender, RoutedEventArgs e)
         {
@@ -805,21 +837,30 @@ namespace Perspective
                     //File.Delete(tagTxtPath);
                     //File.Move(tagTxtPath_Temp, tagTxtPath);
                 }
-
-               
-
-                
             }
         }
 
         private void Btn_previous_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.path_previous.Count == 0) return;
+            if (vm.path_previous.Count == 0)
+            {
+                try
+                {                    
+                    string p = Directory.GetParent(vm.path).FullName;
+                    if (!string.IsNullOrEmpty(p))
+                    {
+                        vm.path_after.Add(vm.path);
+                        vm.path = p;                        
+                    }
+                }
+                catch { }
+                SearchDirectory(vm.path);
+                return;
+            }
             if (Directory.Exists(@vm.path_previous.Last()))  // This path is a directory
             {
                 vm.path_after.Add(vm.path);
-                vm.path = vm.path_previous.Last();
-                
+                vm.path = vm.path_previous.Last();                
                                 
                 SearchDirectory(vm.path);
 
@@ -893,6 +934,103 @@ namespace Perspective
         private void border_title_MouseLeftButtonUp(object sender, System.Windows.Input.MouseButtonEventArgs e)
         {
             mRestoreForDragMove = false;
+        }
+
+        private void btn_deleteTag_Click(object sender, RoutedEventArgs e)
+        {
+            if (vm.list_selectedTags.Count == 0)
+            {
+                MessageBox.Show("No selected tag");
+                return;
+            }                
+
+            if (MessageBox.Show("Delete tags ?", "Question", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+            {
+                foreach (string tag in vm.list_selectedTags)
+                {
+                    string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+
+                    if (File.Exists(tagTxtPath))
+                    {
+                        File.Delete(tagTxtPath);
+                    }
+                    else vm.txt_msg = tag + " not exist";
+
+                    foreach(string s in vm.list_selectedTags)
+                    {
+                        vm.list_tags.Remove(s);
+                    }
+                    //foreach(TagModel t in vm.list_selectedTagModels)
+                    //{
+                    //    vm.list_TagModels.Remove(t);
+                    //}
+
+
+                    List<TagModel> tagModels = vm.list_TagModels.Where(x => x.tagName == tag).ToList();
+                    foreach (TagModel t in tagModels)
+                        vm.list_TagModels.Remove(t);
+                }
+
+                vm.list_selectedTagModels.Clear();
+                vm.list_selectedTags.Clear();
+
+                MessageBox.Show("Done");
+            }
+        }
+
+        private void btn_addTag_Click(object sender, RoutedEventArgs e)
+        {
+            string tag = txt_nTagName.Text;
+            if (!string.IsNullOrEmpty(tag))
+            {
+                vm.list_tags.Add(tag);
+                vm.list_TagModels.Add(new TagModel() { tagName = tag, isChecked = false });
+                vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
+
+                string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+                if (!File.Exists(tagTxtPath))
+                    using (StreamWriter sw = File.CreateText(@tagTxtPath)) { }  //建立空的文件檔
+            }
+        }
+
+        private void Window_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Delete)
+            {
+                if (vm.list_selected_files.Count != 0)
+                {
+                    foreach(string str in vm.list_selected_files)
+                    {
+                        string s = Path.GetFileName(str);
+                        var result = from m in vm.list_FileDataModels
+                                     where m.Names == s
+                                     select m;
+
+                        List<DataModel> datas = result.ToList();
+
+                        //List<DataModel> fileModes = vm.list_FileDataModels.Where(x => x.Names == s).ToList();
+
+                        foreach (DataModel d in datas) vm.list_FileDataModels.Remove(d);
+                    }
+                }
+            }
+        }
+
+        private void btn_searchTag_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTag();
+        }
+
+        private void txt_nTagName_PreviewKeyDown(object sender, KeyEventArgs e)
+        {
+            SearchTag();
+        }
+
+        private void SearchTag()
+        {
+            string tag = txt_nTagName.Text;
+
+
         }
     }
 }

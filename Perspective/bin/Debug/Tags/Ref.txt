@@ -1,4 +1,3 @@
-D:\Download\BoardTable.txt
 D:\Download\Ref1.txt
 D:\Download\Ref2.txt
 D:\Download\Ref8.txt
