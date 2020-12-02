@@ -132,13 +132,10 @@
                     Style="{DynamicResource BtnStyle_FilePicBox}" Grid.Column="2" />
         </Grid>
 
-        <Grid Grid.Row="3" >
-            <!--<Grid.RowDefinitions>
-                <RowDefinition />
-                <RowDefinition />
-                <RowDefinition />
-            </Grid.RowDefinitions>-->
-            <ScrollViewer>
+        <Grid x:Name="grid_shortCutPath"
+              Grid.Row="3" >
+            <Border Background="Black" MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave" MouseMove="Border_MouseMove" MouseDown="Border_MouseDown" MouseUp="Border_MouseUp"/>
+            <ScrollViewer Margin="3" Background="White">
                 <StackPanel>
                     <Expander Header="快速存取" IsExpanded="True">
                         <StackPanel>

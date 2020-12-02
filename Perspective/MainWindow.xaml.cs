@@ -1072,6 +1072,45 @@ namespace Perspective
             SearchDirectory(vm.path);
         }
 
+        int cc = 0; Point p = new Point();
+        private void Border_MouseEnter(object sender, MouseEventArgs e)
+        {
+
+            //++cc;
+            //vm.txt_msg = (++cc).ToString();
+        }
+
+        private void Border_MouseLeave(object sender, MouseEventArgs e)
+        {
+            //--cc;
+            //vm.txt_msg = (--cc).ToString();
+        }
+
+        private void Border_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (_isMouseDown)
+            {
+                var point = e.GetPosition(this);
+
+                Thickness margin = grid_shortCutPath.Margin;
+                margin.Right = (p.X- point.X);
+                grid_shortCutPath.Margin = margin;
+                vm.txt_msg = point.X.ToString() + " , " + point.Y.ToString();
+            }
+        }
+
+        bool _isMouseDown = false;
+        private void Border_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            _isMouseDown = true;
+            p = e.GetPosition(this);
+        }
+
+        private void Border_MouseUp(object sender, MouseButtonEventArgs e)
+        {
+            _isMouseDown = false;
+        }
+
         private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (string.IsNullOrEmpty(txt_nTagName.Text))
