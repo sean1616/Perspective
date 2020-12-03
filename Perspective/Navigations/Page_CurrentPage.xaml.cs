@@ -12,12 +12,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
+using System.Windows.Threading;
 using System.Windows.Controls.Primitives;
 
 using System.Diagnostics;
 using Perspective.UI;
 using Perspective.Models;
 using Perspective.ViewModels;
+using Perspective.Functions;
 
 
 namespace Perspective.Navigations
@@ -28,6 +30,7 @@ namespace Perspective.Navigations
     public partial class Page_CurrentPage : UserControl
     {
         VM vm;
+        PathProcess pathProcess;
         string tagsDirectoryPath = "";
 
         public Page_CurrentPage(VM vm)
@@ -36,6 +39,8 @@ namespace Perspective.Navigations
 
             this.vm = vm;
             this.DataContext = vm;
+
+            pathProcess = new PathProcess(vm);
         }
 
         private void tbtn_directories_Checked(object sender, RoutedEventArgs e)
@@ -383,6 +388,53 @@ namespace Perspective.Navigations
 
             //vm.txt_msg = elapsedMs.ToString();
             #endregion
+        }
+
+        
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            timer.Interval = TimeSpan.FromMilliseconds(20);
+            timer.Tick += _timer_Tick;
+            timer.Start();
+
+            //foreach(DataModel dm in vm.list_FileDataModels)
+            //{
+            //    dm.imgSource = pathProcess.BitmapFromUri(dm.pathInfo);               
+            //}
+        }
+        int c = 0;
+        void _timer_Tick(object sender, EventArgs e)
+        {
+            if (c == vm.list_FileDataModels.Count)
+            {
+                timer.Stop();                
+                return;
+            }
+            string path = vm.list_FileDataModels[c].pathInfo;
+            if (pathProcess.IsImageJudge(path))
+            {
+                //vm.list_FileDataModels[c].imgSource = pathProcess.FileBox_NameExtensionJudge(path);
+                vm.list_FileDataModels[c].imgSource = pathProcess.BitmapFromUri(path);
+                //vm.list_FileDataModels[c].imgSource = LoadImage(path);
+
+            }
+
+            c++;
+        }
+
+        DispatcherTimer timer = new DispatcherTimer();
+
+        public static ImageSource LoadImage(string path)
+        {
+            var bitmap = new BitmapImage();
+
+            bitmap.BeginInit();
+            bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            bitmap.UriSource = new Uri(path);
+            bitmap.EndInit();
+            bitmap.Freeze();
+
+            return bitmap;
         }
     }
 }

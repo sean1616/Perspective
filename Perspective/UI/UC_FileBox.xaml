@@ -105,7 +105,7 @@
                 <Viewbox Grid.Row="1" Grid.Column="1">
                     <Image
                         HorizontalAlignment="Center"
-                        RenderOptions.BitmapScalingMode="HighQuality"
+                        RenderOptions.BitmapScalingMode="Fant"
                         Source="{Binding imgSource, FallbackValue=../Resources/folder.png, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}" />
                 </Viewbox>
                 <TextBlock

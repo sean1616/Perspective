@@ -24,8 +24,8 @@ namespace Perspective.Models
             }
         }
 
-        private string _imgSource = "";
-        public string imgSource
+        private System.Windows.Media.ImageSource _imgSource;
+        public System.Windows.Media.ImageSource imgSource
         {
             get { return _imgSource; }
             set
@@ -34,5 +34,16 @@ namespace Perspective.Models
                 OnPropertyChanged_Normal("imgSource");
             }
         }
+
+        //private string _imgSource = "";
+        //public string imgSource
+        //{
+        //    get { return _imgSource; }
+        //    set
+        //    {
+        //        _imgSource = value;
+        //        OnPropertyChanged_Normal("imgSource");
+        //    }
+        //}
     }
 }
