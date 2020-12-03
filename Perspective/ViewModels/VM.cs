@@ -18,8 +18,15 @@ namespace Perspective.ViewModels
 
         public int ExpanderItemsHeigh { get; set; } = 25;
 
+        
+
         public ObservableCollection<string> path_previous { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> path_after { get; set; } = new ObservableCollection<string>();
+
+        //public string path_origin_clipboard { get; set; } = "";
+        public ObservableCollection<string> path_Files_clipboard { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<string> path_Dirs_clipboard { get; set; } = new ObservableCollection<string>();
+
 
         private string _txt_msg = "Message";
         public string txt_msg

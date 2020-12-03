@@ -308,7 +308,7 @@ namespace Perspective
 
 
             this.files = files;
-            timer_showFilebox.Start();
+            //timer_showFilebox.Start();
 
             //vm.txt_msg = elapsedMs.ToString();
             #endregion
@@ -1030,6 +1030,47 @@ namespace Perspective
                     }
                 }
             }
+            else if (e.Key == Key.X && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            {
+                if (vm.list_selected_files.Count != 0)
+                {
+                    vm.path_Files_clipboard = vm.list_selected_files;
+                    //vm.path_origin_clipboard = vm.path;
+                }
+
+                if (vm.list_selected_dirs.Count != 0)
+                {
+                    vm.path_Dirs_clipboard = vm.list_selected_dirs;
+                    //vm.path_origin_clipboard = vm.path;
+                }
+            }
+            else if (e.Key == Key.V && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            {
+                if (vm.path_Files_clipboard.Count != 0)
+                {
+                    foreach(string s in vm.path_Files_clipboard)
+                    {
+                        //var fileData = vm.list_FileDataModels.Where(x => x.pathInfo == s).ToList();
+                        //foreach(DataModel dm in fileData)
+                        //{
+                        //    vm.list_FileDataModels.Remove(dm);
+                        //}
+                        
+                        string newFilePath = vm.path + @"\" + Path.GetFileName(s);
+                        File.Move(s, newFilePath);
+                    }                    
+                }
+
+                if (vm.path_Dirs_clipboard.Count != 0)
+                {
+                    foreach (string s in vm.path_Dirs_clipboard)
+                    {
+                        string newFilePath = vm.path + @"\" + Path.GetFileName(s);
+                        File.Move(s, newFilePath);
+                    }
+                }
+            }
+
         }
 
         private void btn_searchTag_Click(object sender, RoutedEventArgs e)

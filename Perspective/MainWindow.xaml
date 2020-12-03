@@ -134,8 +134,9 @@
 
         <Grid x:Name="grid_shortCutPath"
               Grid.Row="3" >
-            <Border Background="Black" MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave" MouseMove="Border_MouseMove" MouseDown="Border_MouseDown" MouseUp="Border_MouseUp"/>
-            <ScrollViewer Margin="3" Background="White">
+            <Border Background="LightGray"
+                    MouseEnter="Border_MouseEnter" MouseLeave="Border_MouseLeave" MouseMove="Border_MouseMove" MouseDown="Border_MouseDown" MouseUp="Border_MouseUp"/>
+            <ScrollViewer Margin="0,0,3,0" Background="White">
                 <StackPanel>
                     <Expander Header="快速存取" IsExpanded="True">
                         <StackPanel>
