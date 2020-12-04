@@ -118,7 +118,7 @@ namespace Perspective.Functions
             return bitmap;
         }
 
-        public ImageSource LoadImage(string path)
+        public BitmapImage LoadImage(string path)
         {
             var bitmap = new BitmapImage();
 
@@ -128,9 +128,19 @@ namespace Perspective.Functions
                 bitmap.CacheOption = BitmapCacheOption.OnLoad;
                 bitmap.StreamSource = stream;
                 bitmap.EndInit();
-                bitmap.Freeze();
             }
 
+            //using (var stream = File.OpenRead(path))
+            //{
+            //    bitmap.BeginInit();
+            //    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+            //    bitmap.StreamSource = stream;
+            //    bitmap.EndInit();
+
+
+            //}
+            //System.GC.Collect();
+            //System.GC.WaitForPendingFinalizers();
             return bitmap;
         }
     }

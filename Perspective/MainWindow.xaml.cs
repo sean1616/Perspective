@@ -65,6 +65,7 @@ namespace Perspective
             //itms_directories.ItemsSource = vm.list_DirDataModels;
             //itms_files.ItemsSource = vm.list_FileDataModels;
 
+            //img_test.Source = pathProcess.LoadImage(@"D:\Download\clean.png");
         }
 
         
@@ -1147,7 +1148,16 @@ namespace Perspective
 
         private void Btn_test2_Click(object sender, RoutedEventArgs e)
         {
-            worker.RunWorkerAsync();
+            //worker.RunWorkerAsync();
+
+           
+
+            if (File.Exists(@"D:\Download\clean.png"))  //刪除指定文件至資源回收筒，並顯示進度視窗
+            {
+                try { FileSystem.DeleteFile(@"D:\Download\clean.png", UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException); }
+                catch { }
+            }
+            else vm.txt_msg = "Directory is not exist.";
         }
 
         private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)
