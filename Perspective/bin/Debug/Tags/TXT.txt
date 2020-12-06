@@ -7,6 +7,4 @@ D:\Download\Ref6.txt
 D:\Download\Ref4.txt
 D:\Download\Ref3.txt
 D:\Download\Ref5.txt
-D:\Download\ffmediaelement-master
-D:\Download\ffmediaelement-master\ffmediaelement-master
 D:\Download\ffmediaelement-master\ffmediaelement-master\.github

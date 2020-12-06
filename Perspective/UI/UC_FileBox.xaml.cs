@@ -27,12 +27,12 @@ namespace Perspective.UI
 
         #region Dependency Property
         public static readonly DependencyProperty imgSource_Property =
-                DependencyProperty.Register("imgSource", typeof(string), typeof(UC_FileBox),
+                DependencyProperty.Register("imgSource", typeof(BitmapImage), typeof(UC_FileBox),
                 new UIPropertyMetadata(null));
 
-        public string imgSource //提供內部binding之相依屬性
+        public BitmapImage imgSource //提供內部binding之相依屬性
         {
-            get { return (string)GetValue(imgSource_Property); }
+            get { return (BitmapImage)GetValue(imgSource_Property); }
             set { SetValue(imgSource_Property, value); }
         }
 

@@ -62,7 +62,7 @@
                 MouseLeftButtonUp="border_title_MouseLeftButtonUp"
                 MouseMove="border_title_MouseMove"
                 PreviewMouseLeftButtonDown="border_title_PreviewMouseLeftButtonDown"
-                Text=" Mobius" />
+                Text=" Mobius Link" />
             <Button
                 Name="btn_help"
                 Grid.Column="3"
@@ -141,10 +141,10 @@
                 Content="Test"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button
-                x:Name="btn_test2"
+                x:Name="btn_RecycleBin"
                 Grid.Column="3"
-                Click="Btn_test2_Click"
-                Content="Test2"
+                Click="Btn_RecycleBin_Click"
+                Content="Recycle Bin"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
         </Grid>
 
@@ -392,7 +392,7 @@
 
             <pageTransitions:PageTransition Name="pageTransitionControl" Grid.Row="0" />
 
-            <Image x:Name="img_test" />
+            <!--<Image x:Name="img_test" Source="{Binding bbb}"/>-->
             <!--<ScrollViewer x:Name="viewer"
                           Grid.Row="2">
                 <StackPanel>

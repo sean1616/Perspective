@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media.Imaging;
 using System.Text;
 using System.Threading.Tasks;
 using Perspective.ViewModels;
@@ -24,8 +25,8 @@ namespace Perspective.Models
             }
         }
 
-        private System.Windows.Media.ImageSource _imgSource;
-        public System.Windows.Media.ImageSource imgSource
+        private BitmapImage _imgSource;
+        public BitmapImage imgSource
         {
             get { return _imgSource; }
             set

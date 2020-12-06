@@ -30,7 +30,7 @@ namespace Perspective.Navigations
     public partial class Page_CurrentPage : UserControl
     {
         VM vm;
-        PathProcess pathProcess;
+        PathProcess pps;
         string tagsDirectoryPath = "";
 
         public Page_CurrentPage(VM vm)
@@ -40,7 +40,7 @@ namespace Perspective.Navigations
             this.vm = vm;
             this.DataContext = vm;
 
-            pathProcess = new PathProcess(vm);
+            pps = new PathProcess(vm);
         }
 
         private void tbtn_directories_Checked(object sender, RoutedEventArgs e)
@@ -51,19 +51,6 @@ namespace Perspective.Navigations
             {
                 vm.list_selected_dirs.Add(selectedDir_path);
             }
-
-            //ToggleButton tbtn = (ToggleButton)sender;
-
-            //string selected_fileName = tbtn.Content.ToString();
-
-            //int dir_no = vm.list_dirNames.IndexOf(selected_fileName);
-
-            //string selectedDir_path = vm.list_directories[dir_no];
-
-            //if (!vm.list_selected_dirs.Contains(selectedDir_path))
-            //{
-            //    vm.list_selected_dirs.Add(selectedDir_path);
-            //}
         }
 
         private void tbtn_directories_Unchecked(object sender, RoutedEventArgs e)
@@ -74,19 +61,6 @@ namespace Perspective.Navigations
             {
                 vm.list_selected_dirs.Remove(selectedDir_path);
             }
-
-            //ToggleButton tbtn = (ToggleButton)sender;
-
-            //string selected_fileName = tbtn.Content.ToString();
-
-            //int dir_no = vm.list_dirNames.IndexOf(selected_fileName);
-
-            //string selectedDir_path = vm.list_directories[dir_no];
-
-            //if (vm.list_selected_dirs.Contains(selectedDir_path))
-            //{
-            //    vm.list_selected_dirs.Remove(selectedDir_path);
-            //}
         }
 
         private void tbtn_files_Checked(object sender, RoutedEventArgs e)
@@ -97,19 +71,6 @@ namespace Perspective.Navigations
             {
                 vm.list_selected_files.Add(selected_fileName);
             }
-
-            //ToggleButton tbtn = (ToggleButton)sender;
-
-            //string selected_fileName = tbtn.Content.ToString();
-
-            //int file_no = vm.list_fileNames.IndexOf(selected_fileName);
-
-            //string selectedFile_path = vm.list_files[file_no];
-
-            //if (!vm.list_selected_files.Contains(selectedFile_path))
-            //{
-            //    vm.list_selected_files.Add(selectedFile_path);
-            //}            
         }
 
         private void tbtn_files_Unchecked(object sender, RoutedEventArgs e)
@@ -120,19 +81,6 @@ namespace Perspective.Navigations
             {
                 vm.list_selected_files.Remove(selected_fileName);
             }
-
-            //ToggleButton tbtn = (ToggleButton)sender;
-
-            //string selected_fileName = tbtn.Content.ToString();
-
-            //int file_no = vm.list_fileNames.IndexOf(selected_fileName);
-
-            //string selectedFile_path = vm.list_files[file_no];
-
-            //if (vm.list_selected_files.Contains(selectedFile_path))
-            //{
-            //    vm.list_selected_files.Remove(selectedFile_path);
-            //}
         }
 
         private void tbtn_directories_MouseDoubleClick(object sender, MouseButtonEventArgs e)
@@ -185,7 +133,8 @@ namespace Perspective.Navigations
                 vm.path_previous.Add(vm.path);
 
                 vm.path = uc.path_info;
-                //SearchDirectory(vm.path);
+                
+                pps.SearchDirectory(vm.path);
             }
         }
 
@@ -206,80 +155,24 @@ namespace Perspective.Navigations
 
                     File.WriteAllLines(tempFile, linesToKeep);
 
-                    File.Delete(tagTxtPath);
+                    if (Directory.Exists(tagTxtPath))  //刪除指定文件至資源回收筒，並顯示進度視窗
+                    {
+                        if (MessageBox.Show("Delete Tag ?", "", MessageBoxButton.YesNo) == MessageBoxResult.OK)
+                        {
+                            try
+                            {
+                                Microsoft.VisualBasic.FileIO.FileSystem.DeleteDirectory(tagTxtPath, Microsoft.VisualBasic.FileIO.UIOption.AllDialogs,
+                              Microsoft.VisualBasic.FileIO.RecycleOption.SendToRecycleBin, Microsoft.VisualBasic.FileIO.UICancelOption.ThrowException);
+                            }
+                            catch { }
+
+                        }
+                    }
+                    else vm.txt_msg = "Directory is not exist.";
+                   
                     File.Move(tempFile, tagTxtPath);
-
-                    //using (var sr = new StreamReader(tagTxtPath))
-                    //using (var sw = new StreamWriter(tagTxtPath_Temp))
-                    //{
-                    //    string line;
-
-                    //    while ((line = sr.ReadLine()) != null)
-                    //    {
-                    //        if (line != "removeme")
-                    //            sw.WriteLine(line);
-                    //    }
-                    //}
-
-                    //File.Delete(tagTxtPath);
-                    //File.Move(tagTxtPath_Temp, tagTxtPath);
                 }
-
-
-
-
             }
-        }
-        
-        
-        private void UserControl_Loaded(object sender, RoutedEventArgs e)
-        {
-            timer.Interval = TimeSpan.FromMilliseconds(20);
-            timer.Tick += _timer_Tick;
-            timer.Start();
-
-            //foreach (DataModel dm in vm.list_FileDataModels)
-            //{
-            //    if (pathProcess.IsImageJudge(dm.pathInfo))
-            //    {
-            //        dm.imgSource = pathProcess.BitmapFromUri(dm.pathInfo);
-            //    }
-
-            //}
-        }
-        int c = 0;
-        void _timer_Tick(object sender, EventArgs e)
-        {
-            if (c == vm.list_FileDataModels.Count)
-            {
-                timer.Stop();                
-                return;
-            }
-            string path = vm.list_FileDataModels[c].pathInfo;
-           
-            {
-                //vm.list_FileDataModels[c].imgSource = pathProcess.FileBox_NameExtensionJudge(path);
-                //vm.list_FileDataModels[c].imgSource = pathProcess.BitmapFromUri(path);
-                //vm.list_FileDataModels[c].imgSource = LoadImage(path);
-                vm.list_FileDataModels[c].imgSource = pathProcess.LoadImage(path);
-            }
-
-            c++;
-        }
-
-        DispatcherTimer timer = new DispatcherTimer();
-
-        public static ImageSource LoadImage(string path)
-        {
-            var bitmap = new BitmapImage();
-
-            bitmap.BeginInit();
-            bitmap.CacheOption = BitmapCacheOption.OnLoad;
-            bitmap.UriSource = new Uri(path);
-            bitmap.EndInit();
-            bitmap.Freeze();
-
-            return bitmap;
-        }
+        }                            
     }
 }

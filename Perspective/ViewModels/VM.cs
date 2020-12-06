@@ -1,6 +1,9 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Windows.Threading;
+using System.Windows.Media.Imaging;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -16,10 +19,13 @@ namespace Perspective.ViewModels
            
         }
 
+        public BackgroundWorker worker = new BackgroundWorker();
+        public DispatcherTimer timer = new DispatcherTimer();
+
         public int ExpanderItemsHeigh { get; set; } = 25;
 
-        
-
+        public string[] searchFiles_Result { get; set; } = new string[] { };
+              
         public ObservableCollection<string> path_previous { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> path_after { get; set; } = new ObservableCollection<string>();
 

@@ -85,10 +85,10 @@
     <Grid Margin="10">
         <ToggleButton
             Checked="Tbtn_Checked_Click"
-            Unchecked="Tbtn_UnChecked_Click"
             MouseDoubleClick="Tbtn_DoubleClick_Click"
             Style="{DynamicResource Tbtn_FileBox}"
-            Tag="{Binding path_info, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}">
+            Tag="{Binding path_info, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}"
+            Unchecked="Tbtn_UnChecked_Click">
             <Grid MinWidth="110" MinHeight="130">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*" />
@@ -106,7 +106,7 @@
                     <Image
                         HorizontalAlignment="Center"
                         RenderOptions.BitmapScalingMode="Fant"
-                        Source="{Binding imgSource, FallbackValue=../Resources/folder.png, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}" />
+                        Source="{Binding imgSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}" />
                 </Viewbox>
                 <TextBlock
                     Grid.Row="2"

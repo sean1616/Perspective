@@ -1,22 +1,23 @@
-﻿<UserControl x:Class="Perspective.Navigations.Page_CurrentPage"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:uc="clr-namespace:Perspective.UI"
-             Loaded="UserControl_Loaded"
-             xmlns:local="clr-namespace:Perspective.Navigations"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
+﻿<UserControl
+    x:Class="Perspective.Navigations.Page_CurrentPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Perspective.Navigations"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:uc="clr-namespace:Perspective.UI"
+    d:DesignHeight="450"
+    d:DesignWidth="800"
+    mc:Ignorable="d">
     <Grid>
-        <ScrollViewer x:Name="viewer"
-                      Grid.Row="2">
+        <ScrollViewer x:Name="viewer" Grid.Row="2">
             <StackPanel>
-                <ItemsControl x:Name="itms_directories"
-                              AllowDrop="True"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Top"
-                              ItemsSource="{Binding list_DirDataModels}">
+                <ItemsControl
+                    x:Name="itms_directories"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    AllowDrop="True"
+                    ItemsSource="{Binding list_DirDataModels}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Columns="{Binding unigrid_column}" />
@@ -24,45 +25,27 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <uc:UC_FileBox Width="140"
-                                           Height="160"
-                                           MouseDoubleClick="UC_FileBox_MouseDoubleClick"
-                                           Tbtn_Checked="tbtn_directories_Checked"
-                                           Tbtn_UnChecked="tbtn_directories_Unchecked"
-                                           btn_delete_Click="UC_FileBox_btn_delete_Click"
-                                           imgSource="../Resources/folder.png"
-                                           path_info="{Binding pathInfo}"
-                                           str_btn_text="{Binding Names}"
-                                           vis_btn_remove="{Binding Visibility_btn_remove}" />
-                            <!--<ToggleButton
-                                    x:Name="tbtn_directories"
-                                    Width="140"
-                                    Height="160"
-                                    Checked="tbtn_directories_Checked"
-                                    Content="{Binding Names}"
-                                    Style="{DynamicResource TBtn_DirBox}"
-                                    Tag="../Resources/folder.png"
-                                    Unchecked="tbtn_directories_Unchecked" />-->
-                            <!--<Viewbox>
-                                    <ToggleButton
-                                        x:Name="tbtn_directories"
-                                        Width="120"
-                                        Height="120"
-                                        Checked="tbtn_directories_Checked"
-                                        MouseDoubleClick="tbtn_directories_MouseDoubleClick"
-                                        Content="{Binding}"
-                                        Style="{DynamicResource TBtn_DirBox}"
-                                        Unchecked="tbtn_directories_Unchecked" />
-                                </Viewbox>-->
+                            <uc:UC_FileBox
+                                Width="140"
+                                Height="160"
+                                MouseDoubleClick="UC_FileBox_MouseDoubleClick"
+                                Tbtn_Checked="tbtn_directories_Checked"
+                                Tbtn_UnChecked="tbtn_directories_Unchecked"
+                                btn_delete_Click="UC_FileBox_btn_delete_Click"
+                                imgSource="../Resources/folder.png"
+                                path_info="{Binding pathInfo}"
+                                str_btn_text="{Binding Names}"
+                                vis_btn_remove="{Binding Visibility_btn_remove}" />                         
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
 
-                <ItemsControl x:Name="itms_files"
-                              Grid.Row="2"
-                              HorizontalAlignment="Left"
-                              VerticalAlignment="Top"
-                              ItemsSource="{Binding list_FileDataModels}">
+                <ItemsControl
+                    x:Name="itms_files"
+                    Grid.Row="2"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    ItemsSource="{Binding list_FileDataModels}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <UniformGrid Columns="{Binding unigrid_column}" />
@@ -70,15 +53,16 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <uc:UC_FileBox Width="140"
-                                           Height="160"
-                                           Tbtn_Checked="tbtn_files_Checked"
-                                           Tbtn_UnChecked="tbtn_files_Unchecked"
-                                           MouseDoubleClick="UC_FileBox_MouseDoubleClick"
-                                           imgSource="{Binding imgSource}"
-                                           path_info="{Binding pathInfo}"
-                                           str_btn_text="{Binding Names}"
-                                           vis_btn_remove="{Binding Visibility_btn_remove}" />
+                            <uc:UC_FileBox
+                                Width="140"
+                                Height="160"
+                                MouseDoubleClick="UC_FileBox_MouseDoubleClick"
+                                Tbtn_Checked="tbtn_files_Checked"
+                                Tbtn_UnChecked="tbtn_files_Unchecked"
+                                imgSource="{Binding imgSource}"
+                                path_info="{Binding pathInfo}"
+                                str_btn_text="{Binding Names}"
+                                vis_btn_remove="{Binding Visibility_btn_remove}" />
                             <!--<Viewbox>
                                     <ToggleButton
                                         x:Name="tbtn_files"

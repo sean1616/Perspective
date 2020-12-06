@@ -35,14 +35,14 @@ namespace Perspective
         VM vm = new VM();
         Window_AddTags _window_addTags;
         ListCollection listCollection;
-        PathProcess pathProcess;
+        PathProcess pps;
         ItemsControl itemsControl = new ItemsControl();
 
         Page_CurrentPage _page_CurrentPage;
 
         System.Timers.Timer timer_showFilebox = new System.Timers.Timer();
 
-        string[] files;
+        
         string currentPath = Directory.GetCurrentDirectory();
         string tagsDirectoryPath = "", InTagsDirectoryPath = "";
 
@@ -60,28 +60,33 @@ namespace Perspective
             Binding myBinding = new Binding("list_files[1]");
             myBinding.Source = vm;
 
-            pathProcess = new PathProcess(vm);
+            pps = new PathProcess(vm);
             //btn_2.SetBinding(Button.ContentProperty, myBinding);
             //itms_directories.ItemsSource = vm.list_DirDataModels;
             //itms_files.ItemsSource = vm.list_FileDataModels;
 
-            //img_test.Source = pathProcess.LoadImage(@"D:\Download\clean.png");
+            #region Background worker setting
+            vm.worker.WorkerReportsProgress = true;
+            vm.worker.DoWork += new DoWorkEventHandler(pps.DoWork);
+            vm.worker.ProgressChanged += new ProgressChangedEventHandler(pps.DuringWork);
+            vm.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(pps.RunWorkerCompleted);
+
+            vm.timer.Interval = TimeSpan.FromMilliseconds(20);
+            vm.timer.Tick += pps._timer_Tick;
+            #endregion
         }
 
         
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            
-
             //style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
             //btn_tag.Style = style_tag;
 
             GetSavedTags();
 
             vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
-
-
-            SearchDirectory(vm.path);
+            
+            pps.SearchDirectory(vm.path);
 
             pageTransitionControl.ShowPage(_page_CurrentPage);
 
@@ -97,7 +102,7 @@ namespace Perspective
             if (e.Key == Key.Enter)
             {
                 TextBox tbk = (TextBox)sender;
-                SearchDirectory(tbk.Text);
+                pps.SearchDirectory(tbk.Text);
             }
         }
 
@@ -111,161 +116,9 @@ namespace Perspective
 
         private void btn_check_path_Click(object sender, RoutedEventArgs e)
         {
-            SearchDirectory(vm.path);
+            pps.SearchDirectory(vm.path);
         }
 
-        private void SearchDirectory(string path)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(path)) return;
-
-                vm.list_DirDataModels.Clear();
-                vm.list_FileDataModels.Clear();
-                vm.list_files.Clear();
-                vm.list_directories.Clear();
-                vm.list_dirNames.Clear();
-                vm.list_fileNames.Clear();
-                
-                if (File.Exists(@path))  // This path is a file
-                {                    
-                    ProcessFile(@path);
-                }
-                else if (Directory.Exists(@path))  // This path is a directory
-                {
-                    //Task GetFile_Task = new Task(() => ProcessDirectory(path));
-                    //GetFile_Task.Start();
-                    ProcessDirectory(@path);
-                }
-                else
-                {
-                    Console.WriteLine("{0} is not a valid file or directory.", path);
-                }
-
-                
-            }
-            catch { }
-        }                
-
-        public void ProcessGetFilesInDirectory(string targetDirectory)
-        {
-            // Process the list of files found in the directory.
-            string[] fileEntries = Directory.GetFiles(targetDirectory);
-            foreach (string fileName in fileEntries)
-            {
-                ProcessFile(fileName);
-            }
-        }
-
-        // Insert logic for processing found files here.
-        public void ProcessFile(string path)
-        {
-            string path_directory_of_file = System.IO.Path.GetDirectoryName(path);
-
-            ProcessDirectory(path_directory_of_file);
-        }
-
-        
-        
-
-        // Process all files in the directory passed in, recurse on any directories
-        // that are found, and process the files they contain.
-        public void ProcessDirectory(string targetDirectory)
-        {          
-            #region 搜尋本資料夾內的所有資料夾
-            string[] directories = System.IO.Directory.GetDirectories(targetDirectory);
-
-            foreach (string s in directories)
-            {
-                if (Directory.Exists(@s))
-                {
-                    // This path is a directory
-                    vm.list_directories.Add(s);
-                    vm.list_dirNames.Add(Path.GetFileName(s));
-
-                    Action methodDeleagate = delegate ()
-                    {
-                        Task.Delay(50);
-                        vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s });
-                    };
-                    this.Dispatcher.BeginInvoke(methodDeleagate);
-                    //vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s });
-                }
-            }
-            #endregion
-
-            #region 搜尋本資料夾內的所有檔案
-            string[] files = Directory.GetFiles(targetDirectory);
-            //fileNames = new string[files.Length];
-            DataModel[] dataModels = new DataModel[files.Length];
-
-            var watch = System.Diagnostics.Stopwatch.StartNew();
-
-            //Parallel.For(0, files.Length, i =>
-            //{
-            //    string s = files[i];
-
-            //    Action methodDeleagate = delegate ()
-            //    {
-            //        if (pathProcess.IsImageJudge(s))
-            //        {
-            //            dataModels[i] = new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s, imgSource = pathProcess.BitmapFromUri(s) };
-            //        }
-            //        else
-            //        {
-            //            dataModels[i] = new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s };
-            //        }
-            //        vm.list_FileDataModels.Add(dataModels[i]);
-            //    };
-            //    this.Dispatcher.BeginInvoke(methodDeleagate);
-            //});
-
-
-            this.files = files;
-
-            worker.WorkerReportsProgress = true;
-            worker.DoWork += new DoWorkEventHandler(DoWork);
-            worker.ProgressChanged += new ProgressChangedEventHandler(DuringWork);
-
-            //start the background work
-            worker.RunWorkerAsync();
-
-            //vm.txt_msg = watch.Elapsed.Milliseconds.ToString();
-            #endregion
-        }
-        BackgroundWorker worker = new BackgroundWorker();
-        //string[] fileNames;
-        void DoWork(object sender, DoWorkEventArgs e)
-        {
-            BackgroundWorker worker = sender as BackgroundWorker;
-            for (int i = 0; i < files.Length; i++)
-            {
-                if (worker.CancellationPending)
-                {
-                    e.Cancel = true;
-                    return;
-                }
-                string s = files[i];
-                DataModel dm = new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s};
-                worker.ReportProgress((int)i, dm);
-            }
-        }
-
-        void DuringWork(object sender, ProgressChangedEventArgs e)
-        {
-            DataModel dm = (DataModel)e.UserState;
-            //if (pathProcess.IsImageJudge(files[e.ProgressPercentage]))
-            //{
-            //    dm.imgSource = pathProcess.BitmapFromUri(new Uri(files[e.ProgressPercentage]));
-            //}
-             
-            vm.list_FileDataModels.Add((DataModel)e.UserState);
-            //foreach(string s in files)
-            //{
-            //    DataModel dm = new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s, imgSource = pathProcess.BitmapFromUri(s) };
-            //    vm.list_FileDataModels.Add(dm);
-            //}
-        }
 
         Style style_tag;
         private void Btn_addTagWindow_Click(object sender, RoutedEventArgs e)
@@ -294,12 +147,6 @@ namespace Perspective
             ToggleButton btn = (ToggleButton)sender;
             string tag = btn.Content.ToString();
 
-            //if (vm._isTagRemoveMode)
-            //{
-            //    listCollection.RemoveTag(tag, tagTxtPath);
-            //    return;
-            //}
-
             //將此標籤加入/移除List_selectedTag
             TagModel tagModel = new TagModel() { tagName = tag };
             if ((bool)btn.IsChecked)
@@ -312,84 +159,84 @@ namespace Perspective
                 vm.list_selectedTags.Remove(tag);
                 vm.list_selectedTagModels.Remove(tagModel);
             }
+                        
+            pps.Refresh_Taged_File(tagsDirectoryPath);
 
-            var list_all_files_in_tags = new List<List<string>>();
-            List<List<string>> list_all_Dirs_in_tags = new List<List<string>>();
+            //var list_all_files_in_tags = new List<List<string>>();
+            //List<List<string>> list_all_Dirs_in_tags = new List<List<string>>();
 
-            vm.list_DirDataModels.Clear();
-            vm.list_FileDataModels.Clear();
+            //vm.list_DirDataModels.Clear();
+            //vm.list_FileDataModels.Clear();
 
-            //將所有已選擇的標籤對應的檔案存成List
-            foreach (string t in vm.list_selectedTags)
-            {
-                string tagTxtPath = tagsDirectoryPath + @"\" + t + @".txt";   //Txt path of this tag
+            ////將所有已選擇的標籤對應的檔案存成List
+            //foreach (string t in vm.list_selectedTags)
+            //{
+            //    string tagTxtPath = tagsDirectoryPath + @"\" + t + @".txt";   //Txt path of this tag
 
-                //if (vm.dictonary_tag_files.ContainsKey(tag))
+            //    //if (vm.dictonary_tag_files.ContainsKey(tag))
 
-                    //呼叫具此標籤的檔案們              
-                string[] lines;
-                if (File.Exists(tagTxtPath))
-                {
-                    lines = File.ReadAllLines(tagTxtPath);
-                }
-                else continue;
+            //        //呼叫具此標籤的檔案們              
+            //    string[] lines;
+            //    if (File.Exists(tagTxtPath))
+            //    {
+            //        lines = File.ReadAllLines(tagTxtPath);
+            //    }
+            //    else continue;
 
-                List<string> list_f = new List<string>();
-                List<string> list_d = new List<string>();
+            //    List<string> list_f = new List<string>();
+            //    List<string> list_d = new List<string>();
 
-                foreach (string s in lines)
-                {
-                    if (File.Exists(@s)) // This path is a file
-                    {
-                        list_f.Add(s);
-                        //DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = pathProcess.FileBox_NameExtensionJudge(s) };
+            //    foreach (string s in lines)
+            //    {
+            //        if (File.Exists(@s)) // This path is a file
+            //        {
+            //            list_f.Add(s);
+            //            //DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = pathProcess.FileBox_NameExtensionJudge(s) };
 
-                        //vm.list_FileDataModels.Add(dataModel);
-                    }
-                    else if (Directory.Exists(@s)) // This path is a directory
-                    {
-                        list_d.Add(s);
-                        //vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
-                    }
-                }
+            //            //vm.list_FileDataModels.Add(dataModel);
+            //        }
+            //        else if (Directory.Exists(@s)) // This path is a directory
+            //        {
+            //            list_d.Add(s);
+            //            //vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
+            //        }
+            //    }
 
-                list_all_files_in_tags.Add(list_f);
-                list_all_Dirs_in_tags.Add(list_d);
-            }
+            //    list_all_files_in_tags.Add(list_f);
+            //    list_all_Dirs_in_tags.Add(list_d);
+            //}
 
 
-            if (vm.list_selectedTags.Count != 0)
-            {
-                var list_F_intersection = GetFilesIntersection(list_all_files_in_tags[0]);
-                for (int i = 1; i < list_all_files_in_tags.Count; i++)
-                {
-                    list_F_intersection = list_F_intersection.Intersect(list_all_files_in_tags[i]);
-                }
+            //if (vm.list_selectedTags.Count != 0)
+            //{
+            //var list_F_intersection = GetFilesIntersection(list_all_files_in_tags[0]);
+            //    for (int i = 1; i < list_all_files_in_tags.Count; i++)
+            //    {
+            //        list_F_intersection = list_F_intersection.Intersect(list_all_files_in_tags[i]);
+            //    }
 
-                foreach(string s in list_F_intersection)
-                {
-                    //DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = pathProcess.FileBox_NameExtensionJudge(s) };
-                    DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = pathProcess.BitmapFromUri(s) };
-                    //DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = pathProcess.LoadImage(s) };
+            //    foreach(string s in list_F_intersection)
+            //    {
+            //        DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = pps.LoadImage(s) };
 
-                    vm.list_FileDataModels.Add(dataModel);
-                }
+            //        vm.list_FileDataModels.Add(dataModel);
+            //    }
 
-                var list_D_intersection = GetFilesIntersection(list_all_Dirs_in_tags[0]);
-                for (int i = 1; i < list_all_Dirs_in_tags.Count; i++)
-                {
-                    list_D_intersection = list_D_intersection.Intersect(list_all_Dirs_in_tags[i]);
-                }
+            //    var list_D_intersection = GetFilesIntersection(list_all_Dirs_in_tags[0]);
+            //    for (int i = 1; i < list_all_Dirs_in_tags.Count; i++)
+            //    {
+            //        list_D_intersection = list_D_intersection.Intersect(list_all_Dirs_in_tags[i]);
+            //    }
 
-                foreach(string s in list_D_intersection)
-                {
-                    vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
-                }
-            }
-            else 
-            {
-                SearchDirectory(vm.path);
-            }
+            //    foreach(string s in list_D_intersection)
+            //    {
+            //        vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
+            //    }
+            //}
+            //else 
+            //{
+            //    pps.SearchDirectory(vm.path);
+            //}
 
             vm.list_selected_files.Clear();
             vm.list_selected_dirs.Clear();
@@ -408,30 +255,24 @@ namespace Perspective
         {
             if (e.MiddleButton == MouseButtonState.Pressed)
             {
-                foreach(string s in vm.list_selected_dirs)
+                ToggleButton obj = (ToggleButton)sender;
+                string selectedTag = obj.Content.ToString();
+                string tagPath = tagsDirectoryPath + @"\" + selectedTag + @".txt";   //Txt path of this tag
+
+                var tempList = vm.list_selected_dirs.Concat(vm.list_selected_files);
+
+                foreach (string s in tempList)
                 {
-                    string line = null;
-                    string line_to_delete = "the line i want to delete";
+                    var tempFile = Path.GetTempFileName();
+                    var linesToKeep = File.ReadLines(tagPath).Where(l => l != s);
 
-                    using (StreamReader reader = new StreamReader("C:\\input"))
-                    {
-                        using (StreamWriter writer = new StreamWriter("C:\\output"))
-                        {
-                            while ((line = reader.ReadLine()) != null)
-                            {
-                                if (String.Compare(line, line_to_delete) == 0)
-                                    continue;
+                    File.WriteAllLines(tempFile, linesToKeep);
 
-                                writer.WriteLine(line);
-                            }
-                        }
-                    }
+                    File.Delete(tagPath);
+                    File.Move(tempFile, tagPath);
                 }
 
-                foreach(string s in vm.list_selected_files)
-                {
-
-                }
+                pps.Refresh_Taged_File(tagsDirectoryPath);
             }
         }
 
@@ -697,7 +538,7 @@ namespace Perspective
             {
                 vm.dictonary_tag_files[key] = new ObservableCollection<string>();
             }
-            SearchDirectory(vm.path);
+            pps.SearchDirectory(vm.path);
 
             var v = (from tagM in vm.list_TagModels where tagM.isChecked == true select tagM );
 
@@ -770,7 +611,7 @@ namespace Perspective
                 vm.path_previous.Add(vm.path);
 
                 vm.path = uc.path_info;
-                SearchDirectory(vm.path);
+                pps.SearchDirectory(vm.path);
             }
         }                
 
@@ -826,7 +667,7 @@ namespace Perspective
                     }
                 }
                 catch { }
-                SearchDirectory(vm.path);
+                pps.SearchDirectory(vm.path);
                 return;
             }
             if (Directory.Exists(@vm.path_previous.Last()))  // This path is a directory
@@ -834,7 +675,7 @@ namespace Perspective
                 vm.path_after.Add(vm.path);
                 vm.path = vm.path_previous.Last();                
                                 
-                SearchDirectory(vm.path);
+                pps.SearchDirectory(vm.path);
 
                 vm.path_previous.RemoveAt(vm.path_previous.IndexOf(vm.path_previous.Last()));
             }
@@ -846,10 +687,9 @@ namespace Perspective
             if (Directory.Exists(@vm.path_after.Last()))  // This path is a directory
             {
                 vm.path_previous.Add(vm.path);
-                vm.path = vm.path_after.Last();
-               
+                vm.path = vm.path_after.Last();               
 
-                SearchDirectory(vm.path);
+                pps.SearchDirectory(vm.path);
 
                 vm.path_after.RemoveAt(vm.path_after.IndexOf(vm.path_after.Last()));
             }
@@ -978,23 +818,14 @@ namespace Perspective
                                      where m.Names == s
                                      select m;
 
-
                         List<DataModel> datas = result.ToList();
-
-                        //List<DataModel> fileModes = vm.list_FileDataModels.Where(x => x.Names == s).ToList();
-                       
-
 
                         if (File.Exists(str)) //刪除指定文件至資源回收筒，並顯示進度視窗
                         {
                             try
                             {
                                 FileSystem.DeleteFile(str, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
-                                foreach (DataModel d in datas)
-                                {
-                                    //d.imgSource = null;
-                                    vm.list_FileDataModels.Remove(d);
-                                }
+                                foreach (DataModel d in datas) vm.list_FileDataModels.Remove(d);
                             }
                             catch { }
                         }
@@ -1011,13 +842,15 @@ namespace Perspective
                                      where m.Names == s
                                      select m;
 
-                        List<DataModel> datas = result.ToList();
-
-                        foreach (DataModel d in datas) vm.list_DirDataModels.Remove(d);
+                        List<DataModel> datas = result.ToList();                        
 
                         if (Directory.Exists(str))  //刪除指定文件至資源回收筒，並顯示進度視窗
-                        {                            
-                            try { FileSystem.DeleteDirectory(str, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException); }
+                        {
+                            try
+                            {
+                                FileSystem.DeleteDirectory(str, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
+                                foreach (DataModel d in datas) vm.list_DirDataModels.Remove(d);
+                            }
                             catch { }
                         }
                         else vm.txt_msg = "Directory is not exist.";
@@ -1044,14 +877,17 @@ namespace Perspective
                 {
                     foreach(string s in vm.path_Files_clipboard)
                     {
-                        var fileData = vm.list_FileDataModels.Where(x => x.pathInfo == s).ToList();
-                        foreach (DataModel dm in fileData)
-                        {
-                            vm.list_FileDataModels.Remove(dm);
-                        }
+                        //var fileData = vm.list_FileDataModels.Where(x => x.pathInfo == s).ToList();
+                        //foreach (DataModel dm in fileData)
+                        //{
+                        //    vm.list_FileDataModels.Remove(dm);
+                        //}
 
                         string newFilePath = vm.path + @"\" + Path.GetFileName(s);
-                        File.Move(s, newFilePath);
+                        try { File.Move(s, newFilePath); }
+                        catch { }
+
+                        
                     }                    
                 }
 
@@ -1060,9 +896,14 @@ namespace Perspective
                     foreach (string s in vm.path_Dirs_clipboard)
                     {
                         string newFilePath = vm.path + @"\" + Path.GetFileName(s);
-                        File.Move(s, newFilePath);
+                        try { File.Move(s, newFilePath); }
+                        catch { }
+
+                        //pps.SearchDirectory(vm.path);
                     }
                 }
+
+                pps.SearchDirectory(vm.path);
             }
 
         }
@@ -1070,7 +911,7 @@ namespace Perspective
         private void btn_searchTag_Click(object sender, RoutedEventArgs e)
         {
             string tag = txt_nTagName.Text;
-            pathProcess.SearchTag(tag);
+            pps.SearchTag(tag);
         }
 
         private void txt_nTagName_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -1104,7 +945,7 @@ namespace Perspective
         private void Btn_UserDir_Click(object sender, RoutedEventArgs e)
         {
             vm.path = @"D:\SeanWu";
-            SearchDirectory(vm.path);
+            pps.SearchDirectory(vm.path);
         }
 
         int cc = 0; Point p = new Point();
@@ -1146,18 +987,18 @@ namespace Perspective
             _isMouseDown = false;
         }
 
-        private void Btn_test2_Click(object sender, RoutedEventArgs e)
+        private void Btn_RecycleBin_Click(object sender, RoutedEventArgs e)
         {
             //worker.RunWorkerAsync();
 
-           
+            //if (File.Exists(@"D:\Download\folder (1).png"))  //刪除指定文件至資源回收筒，並顯示進度視窗
+            //{
+            //    try { FileSystem.DeleteFile(@"D:\Download\folder (1).png", UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException); }
+            //    catch { }
+            //}
+            //else vm.txt_msg = "Directory is not exist.";
 
-            if (File.Exists(@"D:\Download\clean.png"))  //刪除指定文件至資源回收筒，並顯示進度視窗
-            {
-                try { FileSystem.DeleteFile(@"D:\Download\clean.png", UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException); }
-                catch { }
-            }
-            else vm.txt_msg = "Directory is not exist.";
+            System.Diagnostics.Process.Start("explorer.exe", "shell:RecycleBinFolder");
         }
 
         private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)
