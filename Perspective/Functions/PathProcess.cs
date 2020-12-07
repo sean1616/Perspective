@@ -62,14 +62,14 @@ namespace Perspective.Functions
                     img_strSource = currentPath + @"\ImgSource\excel.png";
                     //img_strSource = "../Resources/excel.png";
                     break;
-                case ".png":
-                    img_strSource = path;
-                    break;
-                case ".jpg":
-                    img_strSource = path;
-                    break;
-                case ".bmp":
-                    img_strSource = path;
+                //case ".png":
+                //    img_strSource = path;
+                //    break;
+                //case ".jpg":
+                //    img_strSource = path;
+                //    break;
+                //case ".bmp":
+                //    img_strSource = path;
                     break;
             }
 
@@ -133,7 +133,21 @@ namespace Perspective.Functions
                     bitmap.StreamSource = stream;
                     bitmap.EndInit();
                 }
-            }              
+            }
+            else
+            {
+                string ph = FileBox_NameExtensionJudge(path);
+                if (!string.IsNullOrEmpty(ph))
+                {
+                    using (var stream = new FileStream(ph, FileMode.Open, FileAccess.Read, FileShare.Read))
+                    {
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = stream;
+                        bitmap.EndInit();
+                    }
+                }
+            }
 
             return bitmap;
         }
@@ -201,6 +215,12 @@ namespace Perspective.Functions
         {
             timerCount = 0;
             vm.timer.Start();
+
+            int itemsCount = vm.list_FileDataModels.Count + vm.list_DirDataModels.Count;
+            if (itemsCount == 1)
+                vm.txt_msg = itemsCount.ToString() + " item";
+            else
+                vm.txt_msg = itemsCount.ToString() + " items";
         }
 
         int timerCount = 0;
@@ -209,6 +229,15 @@ namespace Perspective.Functions
             if (timerCount >= vm.list_FileDataModels.Count)
             {
                 vm.timer.Stop();
+
+                //Save all files/dirs to temp list
+                List<DataModel> ld = vm.list_DirDataModels.ToList();
+                vm.temp_list_DirDataModels = new System.Collections.ObjectModel.ObservableCollection<DataModel>(ld);
+
+                ld = vm.list_FileDataModels.ToList();
+                vm.temp_list_FileDataModels = new System.Collections.ObjectModel.ObservableCollection<DataModel>(ld);
+
+               
                 return;
             }
             string path = vm.list_FileDataModels[timerCount].pathInfo;

@@ -657,17 +657,22 @@ namespace Perspective
         {
             if (vm.path_previous.Count == 0)
             {
+                string p = "";
                 try
                 {                    
-                    string p = Directory.GetParent(vm.path).FullName;
+                    p = Directory.GetParent(vm.path).FullName;
                     if (!string.IsNullOrEmpty(p))
-                    {
+                    {                       
                         vm.path_after.Add(vm.path);
                         vm.path = p;                        
                     }
                 }
                 catch { }
-                pps.SearchDirectory(vm.path);
+                if (!string.IsNullOrEmpty(p))
+                {
+                    pps.SearchDirectory(vm.path);
+                    pageTransitionControl.ShowPage(_page_CurrentPage);
+                }
                 return;
             }
             if (Directory.Exists(@vm.path_previous.Last()))  // This path is a directory
@@ -678,6 +683,8 @@ namespace Perspective
                 pps.SearchDirectory(vm.path);
 
                 vm.path_previous.RemoveAt(vm.path_previous.IndexOf(vm.path_previous.Last()));
+
+                pageTransitionControl.ShowPage(_page_CurrentPage);
             }
         }
 
@@ -686,12 +693,15 @@ namespace Perspective
             if (vm.path_after.Count == 0) return;
             if (Directory.Exists(@vm.path_after.Last()))  // This path is a directory
             {
+                if (vm.path == vm.path_after.Last()) return;
                 vm.path_previous.Add(vm.path);
                 vm.path = vm.path_after.Last();               
 
                 pps.SearchDirectory(vm.path);
 
                 vm.path_after.RemoveAt(vm.path_after.IndexOf(vm.path_after.Last()));
+
+                pageTransitionControl.ShowPage(_page_CurrentPage);
             }
         }
 
@@ -805,6 +815,7 @@ namespace Perspective
             }
         }
 
+        bool clip_or_copy = false;
         private void Window_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Delete)
@@ -859,17 +870,42 @@ namespace Perspective
             }
             else if (e.Key == Key.X && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
+                clip_or_copy = false;
                 if (vm.list_selected_files.Count != 0)
                 {
                     vm.path_Files_clipboard = vm.list_selected_files;
-                    //vm.path_origin_clipboard = vm.path;
                 }
 
                 if (vm.list_selected_dirs.Count != 0)
                 {
                     vm.path_Dirs_clipboard = vm.list_selected_dirs;
-                    //vm.path_origin_clipboard = vm.path;
                 }
+
+                int selectedCount = vm.path_Dirs_clipboard.Count + vm.path_Files_clipboard.Count;
+                if (selectedCount == 1)
+                    vm.txt_msg = "Clip " + selectedCount.ToString() + " item";
+                else
+                    vm.txt_msg = "Clip " + selectedCount.ToString() + " items";
+            }
+            else if (e.Key == Key.C && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
+            {
+                clip_or_copy = true;
+                
+                if (vm.list_selected_files.Count != 0)
+                {
+                    vm.path_Files_clipboard = vm.list_selected_files;
+                }
+
+                if (vm.list_selected_dirs.Count != 0)
+                {
+                    vm.path_Dirs_clipboard = vm.list_selected_dirs;
+                }
+
+                int selectedCount = vm.path_Dirs_clipboard.Count + vm.path_Files_clipboard.Count;
+                if(selectedCount==1)
+                    vm.txt_msg = "Copy " + selectedCount.ToString() + " item";
+                else
+                    vm.txt_msg = "Copy " + selectedCount.ToString() + " items";
             }
             else if (e.Key == Key.V && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
@@ -877,17 +913,17 @@ namespace Perspective
                 {
                     foreach(string s in vm.path_Files_clipboard)
                     {
-                        //var fileData = vm.list_FileDataModels.Where(x => x.pathInfo == s).ToList();
-                        //foreach (DataModel dm in fileData)
-                        //{
-                        //    vm.list_FileDataModels.Remove(dm);
-                        //}
-
                         string newFilePath = vm.path + @"\" + Path.GetFileName(s);
-                        try { File.Move(s, newFilePath); }
-                        catch { }
-
-                        
+                        if (!clip_or_copy)
+                        {                            
+                            try { File.Move(s, newFilePath); }
+                            catch { vm.txt_msg = "Selected Files are not exist."; }
+                        }
+                        else
+                        {
+                            try { File.Copy(s, newFilePath); }
+                            catch { }
+                        }
                     }                    
                 }
 
@@ -896,10 +932,16 @@ namespace Perspective
                     foreach (string s in vm.path_Dirs_clipboard)
                     {
                         string newFilePath = vm.path + @"\" + Path.GetFileName(s);
-                        try { File.Move(s, newFilePath); }
-                        catch { }
-
-                        //pps.SearchDirectory(vm.path);
+                        if (clip_or_copy)
+                        {                            
+                            try { File.Move(s, newFilePath); }
+                            catch { vm.txt_msg = "Selected Directories are not exist.";  }
+                        }
+                        else
+                        {
+                            try { File.Copy(s, newFilePath); }
+                            catch { }
+                        }
                     }
                 }
 
@@ -999,6 +1041,86 @@ namespace Perspective
             //else vm.txt_msg = "Directory is not exist.";
 
             System.Diagnostics.Process.Start("explorer.exe", "shell:RecycleBinFolder");
+        }
+
+        
+        private void txt_searchFiles_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            vm.list_DirDataModels = new ObservableCollection<DataModel>(vm.temp_list_DirDataModels);
+            vm.list_FileDataModels = new ObservableCollection<DataModel>(vm.temp_list_FileDataModels);
+
+            if (string.IsNullOrEmpty(vm.txt_for_searchFiles))
+            {
+                //pps.SearchDirectory(vm.path);
+                return;
+            }
+            
+            var listDirs = vm.list_DirDataModels.Where(x => x.Names.Contains(vm.txt_for_searchFiles)).ToList();
+            vm.list_DirDataModels.Clear();
+            foreach (DataModel d in listDirs)
+            {
+                vm.list_DirDataModels.Add(d);
+            }
+
+            var listFiles = vm.list_FileDataModels.Where(x => x.Names.Contains(vm.txt_for_searchFiles)).ToList();
+            vm.list_FileDataModels.Clear();
+            foreach (DataModel d in listFiles)
+            {
+                vm.list_FileDataModels.Add(d);
+            }
+        }
+
+        private void btn_open_path_location_Click(object sender, RoutedEventArgs e)
+        {
+            System.Diagnostics.Process.Start(vm.path);
+        }
+
+        bool isSelectedAll = false;
+        private void btn_SelectAll_Click(object sender, RoutedEventArgs e)
+        {
+            if (!isSelectedAll)
+            {
+                foreach (DataModel dm in vm.list_DirDataModels)
+                {
+                    if (!vm.list_selected_dirs.Contains(dm.pathInfo))
+                    {
+                        vm.list_selected_dirs.Add(dm.pathInfo);
+                        dm.isChecked = true;
+                    }
+                }
+
+                foreach (DataModel dm in vm.list_FileDataModels)
+                {
+                    if (!vm.list_selected_files.Contains(dm.pathInfo))
+                    {
+                        vm.list_selected_files.Add(dm.pathInfo);
+                        dm.isChecked = true;
+                    }
+                }                
+            }
+            else
+            {
+                vm.list_selected_dirs.Clear();
+                vm.list_selected_files.Clear();
+
+                foreach (DataModel dm in vm.list_DirDataModels)
+                {
+                    dm.isChecked = false;
+                }
+
+                foreach (DataModel dm in vm.list_FileDataModels)
+                {
+                    dm.isChecked = false;
+                }
+            }
+
+            isSelectedAll = !isSelectedAll;
+
+            int selectedCount = vm.path_Dirs_clipboard.Count + vm.path_Files_clipboard.Count;
+            if (selectedCount == 1)
+                vm.txt_msg = "Select " + selectedCount.ToString() + " item";
+            else
+                vm.txt_msg = "Select " + selectedCount.ToString() + " items";
         }
 
         private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)

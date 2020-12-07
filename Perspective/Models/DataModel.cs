@@ -21,7 +21,18 @@ namespace Perspective.Models
             set
             {
                 _Visibility_btn_remove = value;
-                OnPropertyChanged("Visibility_btn_remove");
+                OnPropertyChanged_Normal("Visibility_btn_remove");
+            }
+        }
+
+        private bool _isChecked = false;
+        public bool isChecked
+        {
+            get { return _isChecked; }
+            set
+            {
+                _isChecked = value;
+                OnPropertyChanged_Normal("isChecked");
             }
         }
 

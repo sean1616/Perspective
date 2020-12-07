@@ -86,7 +86,8 @@
         <ToggleButton
             Checked="Tbtn_Checked_Click"
             MouseDoubleClick="Tbtn_DoubleClick_Click"
-            Style="{DynamicResource Tbtn_FileBox}"
+                      IsChecked="{Binding tbtn_isChecked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}"
+                      Style="{DynamicResource Tbtn_FileBox}"
             Tag="{Binding path_info, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}"
             Unchecked="Tbtn_UnChecked_Click">
             <Grid MinWidth="110" MinHeight="130">

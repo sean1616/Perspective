@@ -24,8 +24,22 @@ namespace Perspective.ViewModels
 
         public int ExpanderItemsHeigh { get; set; } = 25;
 
+        private string _txt_for_searchFiles = "";
+        public string txt_for_searchFiles
+        {
+            get { return _txt_for_searchFiles; }
+            set
+            {
+                _txt_for_searchFiles = value;
+                OnPropertyChanged_Normal("txt_for_searchFiles");
+            }
+        }
+
         public string[] searchFiles_Result { get; set; } = new string[] { };
-              
+
+        public ObservableCollection<DataModel> temp_list_DirDataModels { get; set; } = new ObservableCollection<DataModel>();
+        public ObservableCollection<DataModel> temp_list_FileDataModels { get; set; } = new ObservableCollection<DataModel>();
+
         public ObservableCollection<string> path_previous { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> path_after { get; set; } = new ObservableCollection<string>();
 

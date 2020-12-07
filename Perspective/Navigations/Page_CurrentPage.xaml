@@ -25,17 +25,17 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <uc:UC_FileBox
-                                Width="140"
-                                Height="160"
-                                MouseDoubleClick="UC_FileBox_MouseDoubleClick"
-                                Tbtn_Checked="tbtn_directories_Checked"
-                                Tbtn_UnChecked="tbtn_directories_Unchecked"
-                                btn_delete_Click="UC_FileBox_btn_delete_Click"
-                                imgSource="../Resources/folder.png"
-                                path_info="{Binding pathInfo}"
-                                str_btn_text="{Binding Names}"
-                                vis_btn_remove="{Binding Visibility_btn_remove}" />                         
+                            <uc:UC_FileBox Width="140"
+                                           Height="160"
+                                           MouseDoubleClick="UC_FileBox_MouseDoubleClick"
+                                           Tbtn_Checked="tbtn_directories_Checked"
+                                           Tbtn_UnChecked="tbtn_directories_Unchecked"
+                                           btn_delete_Click="UC_FileBox_btn_delete_Click"
+                                           imgSource="../Resources/folder.png"
+                                           path_info="{Binding pathInfo}"
+                                           tbtn_isChecked="{Binding isChecked}"
+                                           str_btn_text="{Binding Names}"
+                                           vis_btn_remove="{Binding Visibility_btn_remove}" />
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -53,16 +53,16 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <uc:UC_FileBox
-                                Width="140"
-                                Height="160"
-                                MouseDoubleClick="UC_FileBox_MouseDoubleClick"
-                                Tbtn_Checked="tbtn_files_Checked"
-                                Tbtn_UnChecked="tbtn_files_Unchecked"
-                                imgSource="{Binding imgSource}"
-                                path_info="{Binding pathInfo}"
-                                str_btn_text="{Binding Names}"
-                                vis_btn_remove="{Binding Visibility_btn_remove}" />
+                            <uc:UC_FileBox Width="140"
+                                           Height="160"
+                                           MouseDoubleClick="UC_FileBox_MouseDoubleClick"
+                                           Tbtn_Checked="tbtn_files_Checked"
+                                           Tbtn_UnChecked="tbtn_files_Unchecked"
+                                           imgSource="{Binding imgSource}"
+                                           tbtn_isChecked="{Binding isChecked}"
+                                           path_info="{Binding pathInfo}"
+                                           str_btn_text="{Binding Names}"
+                                           vis_btn_remove="{Binding Visibility_btn_remove}" />
                             <!--<Viewbox>
                                     <ToggleButton
                                         x:Name="tbtn_files"

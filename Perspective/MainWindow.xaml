@@ -134,9 +134,14 @@
                 Click="Btn_open_tags_location_Click"
                 Content="Tags Location"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button x:Name="btn_open_path_location"
+                    Grid.Column="2"
+                    Click="btn_open_path_location_Click"
+                    Content="Path Location"
+                    Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button
                 x:Name="btn_test"
-                Grid.Column="2"
+                Grid.Column="10"
                 Click="Btn_test_Click"
                 Content="Test"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
@@ -146,6 +151,12 @@
                 Click="Btn_RecycleBin_Click"
                 Content="Recycle Bin"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button x:Name="btn_SelectAll"
+                    Grid.Column="3"
+                    Click="btn_SelectAll_Click"
+                    Content="Select All"
+                    Style="{DynamicResource BtnStyle_FilePicBox}" />
+
         </Grid>
 
         <Grid x:Name="grid_shortCutPath" Grid.Row="3">
@@ -275,11 +286,13 @@
                     Content="../Resources/refresh.png"
                     Style="{DynamicResource BtnStyle_ImgCenter}" />
 
-                <TextBox
-                    Grid.Column="5"
-                    VerticalAlignment="Center"
-                    VerticalContentAlignment="Center"
-                    FontFamily="Segoe Print" />
+                <TextBox x:Name="txt_searchFiles"
+                         Grid.Column="5"
+                         VerticalAlignment="Center"
+                         VerticalContentAlignment="Center"
+                         FontFamily="Segoe Print"
+                         TextChanged="txt_searchFiles_TextChanged"
+                         Text="{Binding txt_for_searchFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 <Button
                     Grid.Column="6"
                     Height="{Binding ActualHeight, ElementName=txt_path, Mode=OneWay}"
@@ -390,7 +403,7 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Background="White" />
 
-            <pageTransitions:PageTransition Name="pageTransitionControl" Grid.Row="0" />
+            <pageTransitions:PageTransition Name="pageTransitionControl" Grid.Row="0" TransitionType="SlideAndFade" />
 
             <!--<Image x:Name="img_test" Source="{Binding bbb}"/>-->
             <!--<ScrollViewer x:Name="viewer"
