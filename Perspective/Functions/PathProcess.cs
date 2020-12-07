@@ -27,19 +27,32 @@ namespace Perspective.Functions
             this.vm = vm;
         }
 
-        public bool IsImageJudge(string path)
+        public int IsImageJudge(string path)
         {
-            bool _isImg = false;
-            string[] list_extension = new string[] { ".png", ".jpg", ".bmp", "jpeg" };
+            int _isImg = 0;
+
             string fileExtension = Path.GetExtension(path);
-            foreach(string s in list_extension)
+
+            string[] list_img_extension = new string[] { ".png", ".jpg", ".bmp", "jpeg" };            
+            foreach(string s in list_img_extension)
             {
                 if (string.Compare(fileExtension, s) == 0)
                 {
-                    _isImg = true;
+                    _isImg = 1;
                     break;
                 }
             }
+
+            string[] list_video_extension = new string[] { ".mp4" };
+            foreach (string s in list_video_extension)
+            {
+                if (string.Compare(fileExtension, s) == 0)
+                {
+                    _isImg = 2;
+                    break;
+                }
+            }
+
             return _isImg;
         }
 
@@ -52,24 +65,42 @@ namespace Perspective.Functions
             {
                 case ".txt":
                     img_strSource = currentPath + @"\ImgSource\Text.png";
-                    //img_strSource = "../Resources/Text.png";
                     break;
                 case ".xlsx":
                     img_strSource = currentPath + @"\ImgSource\excel.png";
-                    //img_strSource = "../Resources/excel.png";
                     break;
                 case ".csv":
                     img_strSource = currentPath + @"\ImgSource\excel.png";
-                    //img_strSource = "../Resources/excel.png";
                     break;
-                //case ".png":
-                //    img_strSource = path;
-                //    break;
-                //case ".jpg":
-                //    img_strSource = path;
-                //    break;
-                //case ".bmp":
-                //    img_strSource = path;
+                case ".pdf":
+                    img_strSource = currentPath + @"\ImgSource\pdf.png";
+                    break;
+                case ".zip":
+                    img_strSource = currentPath + @"\ImgSource\zip.png";                    
+                    break;
+                case ".7z":
+                    img_strSource = currentPath + @"\ImgSource\7z.png";
+                    break;
+                case ".doc":
+                    img_strSource = currentPath + @"\ImgSource\doc.png";
+                    break;
+                case ".ppt":
+                    img_strSource = currentPath + @"\ImgSource\ppt.png";
+                    break;
+                case ".gif":
+                    img_strSource = currentPath + @"\ImgSource\gif.png";
+                    break;
+                case ".mp3":
+                    img_strSource = currentPath + @"\ImgSource\mp3.png";
+                    break;
+                case ".cad":
+                    img_strSource = currentPath + @"\ImgSource\cad.png";
+                    break;
+                case ".ai":
+                    img_strSource = currentPath + @"\ImgSource\ai.png";
+                    break;
+                default:
+                    img_strSource = currentPath + @"\ImgSource\paper.png";
                     break;
             }
 
@@ -124,7 +155,8 @@ namespace Perspective.Functions
         {
             var bitmap = new BitmapImage();
 
-            if (IsImageJudge(path))
+            int code = IsImageJudge(path);
+            if (code == 1)  //image
             {
                 using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
@@ -133,6 +165,31 @@ namespace Perspective.Functions
                     bitmap.StreamSource = stream;
                     bitmap.EndInit();
                 }
+            }
+            else if (code == 2)  //video
+            {
+                //System.Windows.Shell.ShellFile shellFile = ShellFile.FromFilePath(VideoFileName);
+                //Bitmap bm = shellFile.Thumbnail.Bitmap;
+
+                //add_Video_Image(path);
+
+                //var renderTargetBitmap = source;
+                //var bitmapImage = new BitmapImage();
+                //var bitmapEncoder = new PngBitmapEncoder();
+                //bitmapEncoder.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
+
+                //using (var stream = new MemoryStream())
+                //{
+                //    bitmapEncoder.Save(stream);
+                //    stream.Seek(0, SeekOrigin.Begin);
+
+                //    bitmapImage.BeginInit();
+                //    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
+                //    bitmapImage.StreamSource = stream;
+                //    bitmapImage.EndInit();
+                //}
+
+                //bitmap = bitmapImage;
             }
             else
             {
@@ -211,6 +268,7 @@ namespace Perspective.Functions
             vm.list_FileDataModels.Add((DataModel)e.UserState);
         }
 
+        //此步驟所有資料夾/檔案皆已載入頁面，尚餘檔案的小圖未載入
         public void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             timerCount = 0;
@@ -223,6 +281,7 @@ namespace Perspective.Functions
                 vm.txt_msg = itemsCount.ToString() + " items";
         }
 
+        //檔案載入小圖顯示
         int timerCount = 0;
         public void _timer_Tick(object sender, EventArgs e)
         {
@@ -326,5 +385,84 @@ namespace Perspective.Functions
             List<string> listF = list;
             return listF;
         }
+
+        private void add_Video_Image(string sFullname_Path_of_Video)
+        {
+            //----------------< add_Video_Image() >----------------
+            //*create mediaplayer in memory and jump to position
+            MediaPlayer mediaPlayer = new MediaPlayer();
+
+            mediaPlayer.MediaOpened += new EventHandler(mediaplayer_OpenMedia);
+            mediaPlayer.ScrubbingEnabled = true;
+            mediaPlayer.Open(new Uri(sFullname_Path_of_Video));
+            mediaPlayer.Position = TimeSpan.FromSeconds(0);
+            //----------------</ add_Video_Image() >----------------           
+        }
+        RenderTargetBitmap source;
+        private void mediaplayer_OpenMedia(object sender, EventArgs e)
+        {
+            //----------------< mediaplayer_OpenMedia() >----------------
+            //*create mediaplayer in memory and jump to position
+            //< draw video_image >
+            MediaPlayer mediaPlayer = sender as MediaPlayer;
+            DrawingVisual drawingVisual = new DrawingVisual();
+            DrawingContext drawingContext = drawingVisual.RenderOpen();
+            drawingContext.DrawVideo(mediaPlayer, new System.Windows.Rect(0, 0, 160, 100));
+            drawingContext.Close();
+
+            double dpiX = 1 / 200;
+            double dpiY = 1 / 200;
+            RenderTargetBitmap bmp = new RenderTargetBitmap(160, 100, dpiX, dpiY, PixelFormats.Pbgra32);
+            bmp.Render(drawingVisual);
+            //</ draw video_image >
+
+            //< set Image >
+            System.Windows.Controls.Image newImage = new System.Windows.Controls.Image();
+            newImage.Source = bmp;
+            newImage.Stretch = Stretch.Uniform;
+            newImage.Height = 100;
+            //</ set Image >
+
+            //< add >
+            source = bmp;
+            //panel_Images.Children.Add(newImage);
+            //</ add >
+            //----------------< mediaplayer_OpenMedia() >----------------
+        }
+
+        //public static BitmapImage GetThumbnail(string video, string thumbnail)
+        //{
+        //    var cmd = "ffmpeg  -itsoffset -1  -i " + '"' + video + '"' + " -vcodec mjpeg -vframes 1 -an -f rawvideo -s 320x240 " + '"' + thumbnail + '"';
+
+        //    var startInfo = new System.Diagnostics.ProcessStartInfo
+        //    {
+        //        WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden,
+        //        FileName = "cmd.exe",
+        //        Arguments = "/C " + cmd
+        //    };
+
+        //    var process = new System.Diagnostics.Process
+        //    {
+        //        StartInfo = startInfo
+        //    };
+
+        //    process.Start();
+        //    process.WaitForExit(5000);
+
+        //    return _LoadImage(thumbnail);
+        //}
+
+        //static BitmapImage _LoadImage(string path)
+        //{
+        //    var ms = new MemoryStream(File.ReadAllBytes(path));
+
+        //    var bitmap = new BitmapImage();
+        //    bitmap.BeginInit();
+        //    bitmap.StreamSource = ms;
+        //    bitmap.CacheOption = BitmapCacheOption.OnLoad;
+        //    bitmap.EndInit();
+
+        //    return bitmap;
+        //}
     }
 }

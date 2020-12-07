@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Perspective"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pageTransitions="clr-namespace:WpfPageTransitions;assembly=WpfPageTransitions"
     xmlns:uc="clr-namespace:Perspective.UI"
     xmlns:vm="clr-namespace:Perspective.ViewModels"
@@ -134,11 +135,12 @@
                 Click="Btn_open_tags_location_Click"
                 Content="Tags Location"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
-            <Button x:Name="btn_open_path_location"
-                    Grid.Column="2"
-                    Click="btn_open_path_location_Click"
-                    Content="Path Location"
-                    Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button
+                x:Name="btn_open_path_location"
+                Grid.Column="2"
+                Click="btn_open_path_location_Click"
+                Content="Path Location"
+                Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button
                 x:Name="btn_test"
                 Grid.Column="10"
@@ -151,11 +153,13 @@
                 Click="Btn_RecycleBin_Click"
                 Content="Recycle Bin"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
-            <Button x:Name="btn_SelectAll"
-                    Grid.Column="3"
-                    Click="btn_SelectAll_Click"
-                    Content="Select All"
-                    Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button
+                x:Name="btn_SelectAll"
+                Grid.Column="3"
+                Click="btn_SelectAll_Click"
+                Content="Select All"
+                Style="{DynamicResource BtnStyle_FilePicBox}" />
+
 
         </Grid>
 
@@ -286,13 +290,14 @@
                     Content="../Resources/refresh.png"
                     Style="{DynamicResource BtnStyle_ImgCenter}" />
 
-                <TextBox x:Name="txt_searchFiles"
-                         Grid.Column="5"
-                         VerticalAlignment="Center"
-                         VerticalContentAlignment="Center"
-                         FontFamily="Segoe Print"
-                         TextChanged="txt_searchFiles_TextChanged"
-                         Text="{Binding txt_for_searchFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                <TextBox
+                    x:Name="txt_searchFiles"
+                    Grid.Column="5"
+                    VerticalAlignment="Center"
+                    VerticalContentAlignment="Center"
+                    FontFamily="Segoe Print"
+                    Text="{Binding txt_for_searchFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                    TextChanged="txt_searchFiles_TextChanged" />
                 <Button
                     Grid.Column="6"
                     Height="{Binding ActualHeight, ElementName=txt_path, Mode=OneWay}"
@@ -403,7 +408,10 @@
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Background="White" />
 
-            <pageTransitions:PageTransition Name="pageTransitionControl" Grid.Row="0" TransitionType="SlideAndFade" />
+            <pageTransitions:PageTransition
+                Name="pageTransitionControl"
+                Grid.Row="0"
+                TransitionType="SlideAndFade" />
 
             <!--<Image x:Name="img_test" Source="{Binding bbb}"/>-->
             <!--<ScrollViewer x:Name="viewer"

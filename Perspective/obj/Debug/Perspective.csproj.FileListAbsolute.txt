@@ -75,3 +75,4 @@ C:\Users\sean_wu\source\repos\Perspective\Perspective\obj\Debug\Mobius Link v1.0
 C:\Users\sean_wu\source\repos\Perspective\Perspective\obj\Debug\Mobius Link v1.0.5.pdb
 C:\Users\sean_wu\source\repos\Perspective\Perspective\bin\Debug\Wpf_Control_Library.dll
 C:\Users\sean_wu\source\repos\Perspective\Perspective\bin\Debug\Wpf_Control_Library.pdb
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\bin\Debug\Wpf_Control_Library.pdb
