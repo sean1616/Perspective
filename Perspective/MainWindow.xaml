@@ -16,6 +16,7 @@
     BorderThickness="0.8"
     KeyDown="Window_KeyDown"
     Loaded="Window_Loaded"
+    PreviewMouseLeftButtonUp="Window_PreviewMouseLeftButtonUp"
     ResizeMode="CanResizeWithGrip"
     SizeChanged="Window_SizeChanged"
     WindowStyle="None"
@@ -35,6 +36,7 @@
             <RowDefinition Height="0.8*" />
             <RowDefinition Height="70" />
             <RowDefinition Height="8*" />
+            <RowDefinition Height="0.6*" />
         </Grid.RowDefinitions>
 
         <Grid Grid.ColumnSpan="2" Margin="0">
@@ -159,7 +161,16 @@
                 Click="btn_SelectAll_Click"
                 Content="Select All"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
-
+            <Button x:Name="btn_OrderByName"
+                    Grid.Column="4"
+                    Click="btn_OrderByName_Click"
+                    Content="Order by Name"
+                    Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button x:Name="btn_OrderByDateTime"
+                    Grid.Column="4"
+                    Click="btn_OrderByDateTime_Click"
+                    Content="Order by DataTime"
+                    Style="{DynamicResource BtnStyle_FilePicBox}" />
 
         </Grid>
 
@@ -401,11 +412,7 @@
 
         </Grid>
 
-        <Grid Grid.Row="3" Grid.Column="1">
-            <Grid.RowDefinitions>
-                <RowDefinition Height="8*" />
-                <RowDefinition Height="35" />
-            </Grid.RowDefinitions>
+        <Grid Grid.Row="3" Grid.Column="1">           
             <Border Grid.Row="0" Background="White" />
 
             <pageTransitions:PageTransition
@@ -470,25 +477,55 @@
                 </StackPanel>
             </ScrollViewer>-->
 
-            <Grid Grid.Row="2">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="0.03*" MinWidth="15" />
-                    <ColumnDefinition />
-                    <ColumnDefinition />
-                </Grid.ColumnDefinitions>
-                <Border
-                    x:Name="border_msg"
-                    Grid.ColumnSpan="3"
-                    Background="#FFA5E2DD" />
-                <TextBlock
-                    x:Name="txt_msg"
-                    Grid.Column="1"
-                    HorizontalAlignment="Left"
-                    VerticalAlignment="Center"
-                    FontFamily="Segoe Print"
-                    Text="{Binding txt_msg, FallbackValue=MSG}" />
-            </Grid>
+           
 
         </Grid>
+        <Grid x:Name="grid_msg"
+              Grid.Row="4"
+              Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="0.03*"
+                                  MinWidth="15" />
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.6*" />
+                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Border x:Name="border_msg"
+                    Grid.ColumnSpan="6"
+                    Background="#FFA5E2DD" />
+            <TextBlock x:Name="txt_msg1"
+                       Grid.Column="1"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontFamily="Segoe Print"
+                       Text="{Binding txt_msg1, FallbackValue=MSG}" />
+            <TextBlock x:Name="txt_msg2"
+                       Grid.Column="2"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontFamily="Segoe Print"
+                       Text="{Binding txt_msg2}" />
+            <TextBlock x:Name="txt_msg3"
+                       Grid.Column="3"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontFamily="Segoe Print"
+                       Text="{Binding txt_msg3}" />
+            <TextBlock x:Name="txt_msg4"
+                       Grid.Column="4"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontFamily="Segoe Print"
+                       Text="{Binding txt_msg4}" />
+            <TextBlock x:Name="txt_msg5"
+                       Grid.Column="5"
+                       HorizontalAlignment="Left"
+                       VerticalAlignment="Center"
+                       FontFamily="Segoe Print"
+                       Text="{Binding txt_msg5}" />
+        </Grid>
+
     </Grid>
 </Window>

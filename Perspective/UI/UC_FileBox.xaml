@@ -84,6 +84,8 @@
 
     <Grid Margin="10">
         <ToggleButton
+            FocusVisualStyle="{x:Null}"
+            MouseEnter="tbtn_MouseEnter"
             Checked="Tbtn_Checked_Click"
             IsChecked="{Binding tbtn_isChecked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}"
             MouseDoubleClick="Tbtn_DoubleClick_Click"

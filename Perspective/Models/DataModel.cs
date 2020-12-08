@@ -10,9 +10,12 @@ namespace Perspective.Models
 {
     public class DataModel:NotifyBase
     {
+        public bool DirOrFile { get; set; }
         public string Names { get; set; }
         public string pathInfo { get; set; }
         public bool Selected { get; set; }
+        public DateTime updateTime { get; set; }
+        public DateTime creationTime { get; set; }
 
         private bool _Visibility_btn_remove = false;
         public bool Visibility_btn_remove

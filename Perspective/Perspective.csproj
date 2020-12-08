@@ -8,7 +8,7 @@
     <ProjectGuid>{9A446D22-B7D1-499A-A40F-6E5F231AD5DD}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <RootNamespace>Perspective</RootNamespace>
-    <AssemblyName>Mobius Link v1.0.5</AssemblyName>
+    <AssemblyName>Mobius Link v1.0.6</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -72,6 +72,7 @@
     <Compile Include="Functions\ListCollection.cs" />
     <Compile Include="Functions\PathProcess.cs" />
     <Compile Include="Models\DataModel.cs" />
+    <Compile Include="Models\MsgModel.cs" />
     <Compile Include="Models\TagModel.cs" />
     <Compile Include="Navigations\Page_CurrentPage.xaml.cs">
       <DependentUpon>Page_CurrentPage.xaml</DependentUpon>

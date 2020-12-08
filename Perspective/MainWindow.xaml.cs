@@ -65,6 +65,8 @@ namespace Perspective
             //itms_directories.ItemsSource = vm.list_DirDataModels;
             //itms_files.ItemsSource = vm.list_FileDataModels;
 
+            grid_msg.DataContext = vm.msg;
+
             #region Background worker setting
             vm.worker.WorkerReportsProgress = true;
             vm.worker.DoWork += new DoWorkEventHandler(pps.DoWork);
@@ -162,84 +164,9 @@ namespace Perspective
                         
             pps.Refresh_Taged_File(tagsDirectoryPath);
 
-            //var list_all_files_in_tags = new List<List<string>>();
-            //List<List<string>> list_all_Dirs_in_tags = new List<List<string>>();
-
-            //vm.list_DirDataModels.Clear();
-            //vm.list_FileDataModels.Clear();
-
-            ////將所有已選擇的標籤對應的檔案存成List
-            //foreach (string t in vm.list_selectedTags)
-            //{
-            //    string tagTxtPath = tagsDirectoryPath + @"\" + t + @".txt";   //Txt path of this tag
-
-            //    //if (vm.dictonary_tag_files.ContainsKey(tag))
-
-            //        //呼叫具此標籤的檔案們              
-            //    string[] lines;
-            //    if (File.Exists(tagTxtPath))
-            //    {
-            //        lines = File.ReadAllLines(tagTxtPath);
-            //    }
-            //    else continue;
-
-            //    List<string> list_f = new List<string>();
-            //    List<string> list_d = new List<string>();
-
-            //    foreach (string s in lines)
-            //    {
-            //        if (File.Exists(@s)) // This path is a file
-            //        {
-            //            list_f.Add(s);
-            //            //DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = pathProcess.FileBox_NameExtensionJudge(s) };
-
-            //            //vm.list_FileDataModels.Add(dataModel);
-            //        }
-            //        else if (Directory.Exists(@s)) // This path is a directory
-            //        {
-            //            list_d.Add(s);
-            //            //vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
-            //        }
-            //    }
-
-            //    list_all_files_in_tags.Add(list_f);
-            //    list_all_Dirs_in_tags.Add(list_d);
-            //}
-
-
-            //if (vm.list_selectedTags.Count != 0)
-            //{
-            //var list_F_intersection = GetFilesIntersection(list_all_files_in_tags[0]);
-            //    for (int i = 1; i < list_all_files_in_tags.Count; i++)
-            //    {
-            //        list_F_intersection = list_F_intersection.Intersect(list_all_files_in_tags[i]);
-            //    }
-
-            //    foreach(string s in list_F_intersection)
-            //    {
-            //        DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = pps.LoadImage(s) };
-
-            //        vm.list_FileDataModels.Add(dataModel);
-            //    }
-
-            //    var list_D_intersection = GetFilesIntersection(list_all_Dirs_in_tags[0]);
-            //    for (int i = 1; i < list_all_Dirs_in_tags.Count; i++)
-            //    {
-            //        list_D_intersection = list_D_intersection.Intersect(list_all_Dirs_in_tags[i]);
-            //    }
-
-            //    foreach(string s in list_D_intersection)
-            //    {
-            //        vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
-            //    }
-            //}
-            //else 
-            //{
-            //    pps.SearchDirectory(vm.path);
-            //}
-
-            vm.list_selected_files.Clear();
-            vm.list_selected_dirs.Clear();
+            vm.list_selected_items.Clear();
+            //vm.list_selected_files.Clear();
+            //vm.list_selected_dirs.Clear();
         }
 
         private IEnumerable<string> GetFilesIntersection(List<string> list)
@@ -259,12 +186,13 @@ namespace Perspective
                 string selectedTag = obj.Content.ToString();
                 string tagPath = tagsDirectoryPath + @"\" + selectedTag + @".txt";   //Txt path of this tag
 
-                var tempList = vm.list_selected_dirs.Concat(vm.list_selected_files);
+                //var tempList = vm.list_selected_dirs.Concat(vm.list_selected_files);
+                var tempList = vm.list_selected_items;
 
-                foreach (string s in tempList)
+                foreach (DataModel s in tempList)
                 {
                     var tempFile = Path.GetTempFileName();
-                    var linesToKeep = File.ReadLines(tagPath).Where(l => l != s);
+                    var linesToKeep = File.ReadLines(tagPath).Where(l => l != s.pathInfo);
 
                     File.WriteAllLines(tempFile, linesToKeep);
 
@@ -276,134 +204,9 @@ namespace Perspective
             }
         }
 
-        private void tbtn_directories_Checked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton uc = (ToggleButton)sender;
-            string selectedDir_path = uc.Tag.ToString();
-            if (!vm.list_selected_dirs.Contains(selectedDir_path))
-            {
-                vm.list_selected_dirs.Add(selectedDir_path);
-            }
+      
 
-            //ToggleButton tbtn = (ToggleButton)sender;
-
-            //string selected_fileName = tbtn.Content.ToString();
-
-            //int dir_no = vm.list_dirNames.IndexOf(selected_fileName);
-
-            //string selectedDir_path = vm.list_directories[dir_no];
-
-            //if (!vm.list_selected_dirs.Contains(selectedDir_path))
-            //{
-            //    vm.list_selected_dirs.Add(selectedDir_path);
-            //}
-        }
-
-        private void tbtn_directories_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton uc = (ToggleButton)sender;
-            string selectedDir_path = uc.Tag.ToString();
-            if (!vm.list_selected_dirs.Contains(selectedDir_path))
-            {
-                vm.list_selected_dirs.Remove(selectedDir_path);
-            }
-
-            //ToggleButton tbtn = (ToggleButton)sender;
-
-            //string selected_fileName = tbtn.Content.ToString();
-
-            //int dir_no = vm.list_dirNames.IndexOf(selected_fileName);
-
-            //string selectedDir_path = vm.list_directories[dir_no];
-
-            //if (vm.list_selected_dirs.Contains(selectedDir_path))
-            //{
-            //    vm.list_selected_dirs.Remove(selectedDir_path);
-            //}
-        }
-
-        private void tbtn_files_Checked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton uc = (ToggleButton)sender;
-            string selected_fileName = uc.Tag.ToString();
-            if (!vm.list_selected_files.Contains(selected_fileName))
-            {
-                vm.list_selected_files.Add(selected_fileName);
-            }
-
-            //ToggleButton tbtn = (ToggleButton)sender;
-
-            //string selected_fileName = tbtn.Content.ToString();
-
-            //int file_no = vm.list_fileNames.IndexOf(selected_fileName);
-
-            //string selectedFile_path = vm.list_files[file_no];
-
-            //if (!vm.list_selected_files.Contains(selectedFile_path))
-            //{
-            //    vm.list_selected_files.Add(selectedFile_path);
-            //}            
-        }
-
-        private void tbtn_files_Unchecked(object sender, RoutedEventArgs e)
-        {
-            ToggleButton uc = (ToggleButton)sender;
-            string selected_fileName = uc.Tag.ToString();
-            if (!vm.list_selected_files.Contains(selected_fileName))
-            {
-                vm.list_selected_files.Remove(selected_fileName);
-            }
-
-            //ToggleButton tbtn = (ToggleButton)sender;
-
-            //string selected_fileName = tbtn.Content.ToString();
-
-            //int file_no = vm.list_fileNames.IndexOf(selected_fileName);
-
-            //string selectedFile_path = vm.list_files[file_no];
-
-            //if (vm.list_selected_files.Contains(selectedFile_path))
-            //{
-            //    vm.list_selected_files.Remove(selectedFile_path);
-            //}
-        }
-
-        private void tbtn_directories_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            ToggleButton tbtn = (ToggleButton)sender;
-
-            string selected_fileName = tbtn.Content.ToString();
-
-            int dir_no = vm.list_dirNames.IndexOf(selected_fileName);
-
-            string selectedDir_path = vm.list_directories[dir_no];
-
-            if (Directory.Exists(selectedDir_path))
-            {
-                // opens the folder in explorer
-                Process.Start(selectedDir_path);
-            }
-
-            tbtn.IsChecked = false;
-        }
-
-        private void tbtn_files_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            ToggleButton tbtn = (ToggleButton)sender;
-
-            string selected_fileName = tbtn.Content.ToString();
-
-            int file_no = vm.list_fileNames.IndexOf(selected_fileName);
-
-            string selectedFile_path = vm.list_files[file_no];
-
-            if (File.Exists(selectedFile_path))
-            {
-                Process.Start(selectedFile_path);
-            }
-
-            tbtn.IsChecked = false;
-        }
+      
 
         private void btn_tag_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
@@ -426,21 +229,12 @@ namespace Perspective
                 {
                     using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
                     {
-                        foreach (string s in vm.list_selected_dirs)
+                        foreach(DataModel dm in vm.list_selected_items)
                         {
-                            if (!lines.Contains(s))
+                            if (!lines.Contains(dm.pathInfo))
                             {
-                                vm.dictonary_tag_files[tag].Add(s);
-                                file.WriteLine(s);
-                            }
-                        }
-
-                        foreach (string s in vm.list_selected_files)
-                        {
-                            if (!lines.Contains(s))
-                            {
-                                vm.dictonary_tag_files[tag].Add(s);
-                                file.WriteLine(s);  //寫入選取的檔案or資料夾 路徑
+                                vm.dictonary_tag_files[tag].Add(dm.pathInfo);
+                                file.WriteLine(dm.pathInfo);  //寫入選取的檔案or資料夾 路徑
                             }
                         }
                     }
@@ -478,11 +272,10 @@ namespace Perspective
                     {
                         using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
                         {
-                            foreach(string str in vm.list_selected_files)
+                            foreach(DataModel dm in vm.list_selected_items)
                             {
-                                file.WriteLine(str);  //寫入選取的檔案or資料夾 路徑
-                            }
-                            
+                                file.WriteLine(dm.pathInfo);  //寫入選取的檔案or資料夾 路徑
+                            }                            
                         }
                     }
                 }
@@ -528,7 +321,6 @@ namespace Perspective
         {
             vm.list_fileNames.Clear();
             vm.list_files.Clear();
-            vm.list_selected_files.Clear();
             vm.list_selectedTags.Clear();
 
             GetSavedTags();
@@ -547,28 +339,6 @@ namespace Perspective
                 t.isChecked = false;
             }
         }
-
-        //private void btn_RefreshTags_Click(object sender, RoutedEventArgs e)
-        //{
-        //    foreach(string tag in vm.list_tags)
-        //    {
-        //        string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
-        //        string[] files_in_lines = System.IO.File.ReadAllLines(tagTxtPath);
-
-        //        IEnumerable<string> distinctAges = files_in_lines.Distinct();
-
-        //        File.WriteAllText(tagTxtPath, string.Empty);
-
-        //        using (StreamWriter file = new StreamWriter(@tagTxtPath, true))
-        //        {
-        //            foreach (string s in distinctAges)
-        //            {
-        //                file.WriteLine(s);  //寫入選取的檔案or資料夾 路徑
-        //            }
-        //        }
-                   
-        //    }
-        //}
 
         private void Btn_open_tags_location_Click(object sender, RoutedEventArgs e)
         {
@@ -665,13 +435,14 @@ namespace Perspective
                     {                       
                         vm.path_after.Add(vm.path);
                         vm.path = p;                        
-                    }
+                    }                    
                 }
                 catch { }
                 if (!string.IsNullOrEmpty(p))
                 {
                     pps.SearchDirectory(vm.path);
                     pageTransitionControl.ShowPage(_page_CurrentPage);
+                    vm.list_selected_items.Clear();
                 }
                 return;
             }
@@ -685,6 +456,8 @@ namespace Perspective
                 vm.path_previous.RemoveAt(vm.path_previous.IndexOf(vm.path_previous.Last()));
 
                 pageTransitionControl.ShowPage(_page_CurrentPage);
+
+                vm.list_selected_items.Clear();
             }
         }
 
@@ -702,6 +475,7 @@ namespace Perspective
                 vm.path_after.RemoveAt(vm.path_after.IndexOf(vm.path_after.Last()));
 
                 pageTransitionControl.ShowPage(_page_CurrentPage);
+                vm.list_selected_items.Clear();
             }
         }
 
@@ -776,7 +550,7 @@ namespace Perspective
                     {
                         File.Delete(tagTxtPath);
                     }
-                    else vm.txt_msg = tag + " not exist";
+                    else vm.msg.txt_msg1 = tag + " not exist";
 
                     foreach(string s in vm.list_selectedTags)
                     {
@@ -820,129 +594,89 @@ namespace Perspective
         {
             if (e.Key == Key.Delete)
             {
-                if (vm.list_selected_files.Count != 0)
+                if (vm.list_selected_items.Count != 0)
                 {
-                    foreach (string str in vm.list_selected_files)
+                    foreach (DataModel dm in vm.list_selected_items)
                     {
-                        string s = Path.GetFileName(str);
-                        var result = from m in vm.list_FileDataModels
-                                     where m.Names == s
-                                     select m;
-
-                        List<DataModel> datas = result.ToList();
-
-                        if (File.Exists(str)) //刪除指定文件至資源回收筒，並顯示進度視窗
+                        if (File.Exists(dm.pathInfo)) //刪除指定文件至資源回收筒，並顯示進度視窗
                         {
                             try
                             {
-                                FileSystem.DeleteFile(str, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
-                                foreach (DataModel d in datas) vm.list_FileDataModels.Remove(d);
+                                FileSystem.DeleteFile(dm.pathInfo, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
+                                if(dm.DirOrFile)
+                                    vm.list_FileDataModels.Remove(dm);
+                                else
+                                    vm.list_DirDataModels.Remove(dm);
                             }
                             catch { }
                         }
-                        else vm.txt_msg = "File is not exist";
-                    }
-                }
-
-                if (vm.list_selected_dirs.Count != 0)
-                {
-                    foreach(string str in vm.list_selected_dirs)
-                    {
-                        string s = Path.GetFileName(str);
-                        var result = from m in vm.list_DirDataModels
-                                     where m.Names == s
-                                     select m;
-
-                        List<DataModel> datas = result.ToList();                        
-
-                        if (Directory.Exists(str))  //刪除指定文件至資源回收筒，並顯示進度視窗
-                        {
-                            try
-                            {
-                                FileSystem.DeleteDirectory(str, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
-                                foreach (DataModel d in datas) vm.list_DirDataModels.Remove(d);
-                            }
-                            catch { }
-                        }
-                        else vm.txt_msg = "Directory is not exist.";
+                        else vm.msg.txt_msg1 = "Files are not exist";
                     }
                 }
             }
             else if (e.Key == Key.X && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
                 clip_or_copy = false;
-                if (vm.list_selected_files.Count != 0)
+                if (vm.list_selected_items.Count != 0)
                 {
-                    vm.path_Files_clipboard = vm.list_selected_files;
+                    vm.path_clipboard = vm.list_selected_items;
                 }
 
-                if (vm.list_selected_dirs.Count != 0)
-                {
-                    vm.path_Dirs_clipboard = vm.list_selected_dirs;
-                }
-
-                int selectedCount = vm.path_Dirs_clipboard.Count + vm.path_Files_clipboard.Count;
+                int selectedCount = vm.path_clipboard.Count;
                 if (selectedCount == 1)
-                    vm.txt_msg = "Clip " + selectedCount.ToString() + " item";
+                    vm.msg.txt_msg1 = "Clip " + selectedCount.ToString() + " item";
                 else
-                    vm.txt_msg = "Clip " + selectedCount.ToString() + " items";
+                    vm.msg.txt_msg1 = "Clip " + selectedCount.ToString() + " items";
             }
             else if (e.Key == Key.C && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
                 clip_or_copy = true;
-                
-                if (vm.list_selected_files.Count != 0)
-                {
-                    vm.path_Files_clipboard = vm.list_selected_files;
-                }
 
-                if (vm.list_selected_dirs.Count != 0)
+                if (vm.list_selected_items.Count != 0)
                 {
-                    vm.path_Dirs_clipboard = vm.list_selected_dirs;
+                    vm.path_clipboard = vm.list_selected_items;
                 }
 
                 int selectedCount = vm.path_Dirs_clipboard.Count + vm.path_Files_clipboard.Count;
                 if(selectedCount==1)
-                    vm.txt_msg = "Copy " + selectedCount.ToString() + " item";
+                    vm.msg.txt_msg1 = "Copy " + selectedCount.ToString() + " item";
                 else
-                    vm.txt_msg = "Copy " + selectedCount.ToString() + " items";
+                    vm.msg.txt_msg1 = "Copy " + selectedCount.ToString() + " items";
             }
             else if (e.Key == Key.V && (Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)))
             {
-                if (vm.path_Files_clipboard.Count != 0)
+                if (vm.path_clipboard.Count != 0)
                 {
-                    foreach(string s in vm.path_Files_clipboard)
+                    foreach(DataModel dm in vm.path_clipboard)
                     {
-                        string newFilePath = vm.path + @"\" + Path.GetFileName(s);
+                        string newFilePath = vm.path + @"\" + dm.Names;
                         if (!clip_or_copy)
-                        {                            
-                            try { File.Move(s, newFilePath); }
-                            catch { vm.txt_msg = "Selected Files are not exist."; }
+                        {
+                            if (dm.DirOrFile)
+                            {
+                                try { File.Move(dm.pathInfo, newFilePath); }
+                                catch { vm.msg.txt_msg1 = "Selected Files are not exist."; }
+                            }                            
+                            else
+                            {
+                                try { Directory.Move(dm.pathInfo, newFilePath); }
+                                catch { vm.msg.txt_msg1 = "Selected Files are not exist."; }
+                            }
                         }
                         else
                         {
-                            try { File.Copy(s, newFilePath); }
-                            catch { }
+                            if (dm.DirOrFile)
+                            {
+                                try { File.Copy(dm.pathInfo, newFilePath); }
+                                catch { }
+                            }
+                            else
+                            {
+                                try { File.Copy(dm.pathInfo, newFilePath); }
+                                catch { }
+                            }
                         }
                     }                    
-                }
-
-                if (vm.path_Dirs_clipboard.Count != 0)
-                {
-                    foreach (string s in vm.path_Dirs_clipboard)
-                    {
-                        string newFilePath = vm.path + @"\" + Path.GetFileName(s);
-                        if (clip_or_copy)
-                        {                            
-                            try { File.Move(s, newFilePath); }
-                            catch { vm.txt_msg = "Selected Directories are not exist.";  }
-                        }
-                        else
-                        {
-                            try { File.Copy(s, newFilePath); }
-                            catch { }
-                        }
-                    }
                 }
 
                 pps.SearchDirectory(vm.path);
@@ -1013,7 +747,7 @@ namespace Perspective
                 Thickness margin = grid_shortCutPath.Margin;
                 margin.Right = (p.X- point.X);
                 grid_shortCutPath.Margin = margin;
-                vm.txt_msg = point.X.ToString() + " , " + point.Y.ToString();
+                vm.msg.txt_msg1 = point.X.ToString() + " , " + point.Y.ToString();
             }
         }
 
@@ -1080,28 +814,19 @@ namespace Perspective
         {
             if (!isSelectedAll)
             {
-                foreach (DataModel dm in vm.list_DirDataModels)
+                vm.list_selected_items.Clear();
+                vm.list_selected_items.AddRange(vm.list_FileDataModels.ToList());
+                vm.list_selected_items.AddRange(vm.list_DirDataModels.ToList());
+                foreach (DataModel dm in vm.list_selected_items)
                 {
-                    if (!vm.list_selected_dirs.Contains(dm.pathInfo))
-                    {
-                        vm.list_selected_dirs.Add(dm.pathInfo);
-                        dm.isChecked = true;
-                    }
+                    dm.isChecked = true;
                 }
-
-                foreach (DataModel dm in vm.list_FileDataModels)
-                {
-                    if (!vm.list_selected_files.Contains(dm.pathInfo))
-                    {
-                        vm.list_selected_files.Add(dm.pathInfo);
-                        dm.isChecked = true;
-                    }
-                }                
             }
             else
             {
-                vm.list_selected_dirs.Clear();
-                vm.list_selected_files.Clear();
+                vm.list_selected_items.Clear();
+                //vm.list_selected_dirs.Clear();
+                //vm.list_selected_files.Clear();
 
                 foreach (DataModel dm in vm.list_DirDataModels)
                 {
@@ -1116,11 +841,26 @@ namespace Perspective
 
             isSelectedAll = !isSelectedAll;
 
-            int selectedCount = vm.path_Dirs_clipboard.Count + vm.path_Files_clipboard.Count;
+            int selectedCount = vm.list_selected_items.Count;
             if (selectedCount == 1)
-                vm.txt_msg = "Select " + selectedCount.ToString() + " item";
+                vm.msg.txt_msg1 = "Select " + selectedCount.ToString() + " item";
             else
-                vm.txt_msg = "Select " + selectedCount.ToString() + " items";
+                vm.msg.txt_msg1 = "Select " + selectedCount.ToString() + " items";
+        }
+
+        private void btn_OrderByName_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void btn_OrderByDateTime_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void Window_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            vm._isLMouseDown_in_MainPage = false;
         }
 
         private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)

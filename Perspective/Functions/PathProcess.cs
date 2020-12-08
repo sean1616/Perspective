@@ -160,10 +160,17 @@ namespace Perspective.Functions
             {
                 using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
                 {
-                    bitmap.BeginInit();
-                    bitmap.CacheOption = BitmapCacheOption.OnLoad;
-                    bitmap.StreamSource = stream;
-                    bitmap.EndInit();
+                    try
+                    {
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = stream;
+                        bitmap.EndInit();
+                    }
+                    catch
+                    {
+                        bitmap = new BitmapImage();
+                    }
                 }
             }
             else if (code == 2)  //video
@@ -228,9 +235,10 @@ namespace Perspective.Functions
                 if (Directory.Exists(@s))
                 {
                     // This path is a directory
-                    vm.list_directories.Add(s);
-                    vm.list_dirNames.Add(Path.GetFileName(s));
-                    vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s });
+                    //vm.list_directories.Add(s);
+                    //vm.list_dirNames.Add(Path.GetFileName(s));
+                    vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false,
+                        pathInfo = s, DirOrFile=false });
                 }
             }
             #endregion
@@ -256,7 +264,16 @@ namespace Perspective.Functions
                     return;
                 }
                 string s = vm.searchFiles_Result[i];
-                DataModel dm = new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false, pathInfo = s };
+                FileInfo fi = new FileInfo(s);
+                DataModel dm = new DataModel()
+                {
+                    Names = Path.GetFileName(s),
+                    Visibility_btn_remove = false,
+                    pathInfo = s,
+                    updateTime = fi.LastWriteTime,
+                    creationTime = fi.CreationTime,
+                    DirOrFile = true
+                };
                 worker.ReportProgress((int)i, dm);
             }
         }
@@ -276,9 +293,9 @@ namespace Perspective.Functions
 
             int itemsCount = vm.list_FileDataModels.Count + vm.list_DirDataModels.Count;
             if (itemsCount == 1)
-                vm.txt_msg = itemsCount.ToString() + " item";
+                vm.msg.txt_msg1 = itemsCount.ToString() + " item";
             else
-                vm.txt_msg = itemsCount.ToString() + " items";
+                vm.msg.txt_msg1 = itemsCount.ToString() + " items";
         }
 
         //檔案載入小圖顯示

@@ -1,20 +1,20 @@
-﻿Mobius Link v1.0.5
+﻿Mobius Link v1.0.6
 
 
 winexe
 C#
 .cs
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\
+C:\Users\sean_wu\source\repos\Perspective\Perspective\obj\Debug\
 Perspective
 none
 false
 DEBUG;TRACE
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\App.xaml
+C:\Users\sean_wu\source\repos\Perspective\Perspective\App.xaml
 6-57834446
 
-151728193175
-17-1627751070
+201663147106
+17744942662
 Dictionary_Style.xaml;MainWindow.xaml;Navigations\Page_CurrentPage.xaml;Navigations\Window_AddTags.xaml;Properties\DesignTimeResources.xaml;UI\UC_FileBox.xaml;
 
-False
+True
 

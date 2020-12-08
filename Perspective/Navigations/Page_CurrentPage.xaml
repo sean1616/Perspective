@@ -5,12 +5,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Perspective.Navigations"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:uc="clr-namespace:Perspective.UI"
-    d:DesignHeight="450"
+    xmlns:uc="clr-namespace:Perspective.UI"    
+             PreviewMouseLeftButtonDown="Border_PreviewMouseLeftButtonDown"
+             d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
-    <Grid>
-        <ScrollViewer x:Name="viewer" Grid.Row="2">
+    <Grid>       
+        <ScrollViewer x:Name="viewer" Grid.Row="2" PreviewKeyDown="viewer_PreviewKeyDown">
             <StackPanel>
                 <ItemsControl
                     x:Name="itms_directories"
@@ -28,9 +29,10 @@
                             <uc:UC_FileBox
                                 Width="140"
                                 Height="160"
+                                Tbtn_MouseEnter="UC_Tbtn_MouseEnter"
                                 MouseDoubleClick="UC_FileBox_MouseDoubleClick"
-                                Tbtn_Checked="tbtn_directories_Checked"
-                                Tbtn_UnChecked="tbtn_directories_Unchecked"
+                                Tbtn_Checked="tbtn_Checked"
+                                Tbtn_UnChecked="tbtn_Unchecked"
                                 btn_delete_Click="UC_FileBox_btn_delete_Click"
                                 imgSource="../Resources/folder.png"
                                 path_info="{Binding pathInfo}"
@@ -57,9 +59,10 @@
                             <uc:UC_FileBox
                                 Width="140"
                                 Height="160"
+                                Tbtn_MouseEnter="UC_Tbtn_MouseEnter"
                                 MouseDoubleClick="UC_FileBox_MouseDoubleClick"
-                                Tbtn_Checked="tbtn_files_Checked"
-                                Tbtn_UnChecked="tbtn_files_Unchecked"
+                                Tbtn_Checked="tbtn_Checked"
+                                Tbtn_UnChecked="tbtn_Unchecked"
                                 imgSource="{Binding imgSource}"
                                 path_info="{Binding pathInfo}"
                                 str_btn_text="{Binding Names}"

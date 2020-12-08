@@ -44,18 +44,20 @@ namespace Perspective.ViewModels
         public ObservableCollection<string> path_after { get; set; } = new ObservableCollection<string>();
 
         //public string path_origin_clipboard { get; set; } = "";
+        public List<DataModel> path_clipboard { get; set; } = new List<DataModel>();
         public ObservableCollection<string> path_Files_clipboard { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> path_Dirs_clipboard { get; set; } = new ObservableCollection<string>();
 
+        public bool _isLMouseDown_in_MainPage { get; set; } = false;
 
-        private string _txt_msg = "Message";
-        public string txt_msg
+        private MsgModel _msg = new MsgModel();
+        public MsgModel msg
         {
-            get { return _txt_msg; }
+            get { return _msg; }
             set
             {
-                _txt_msg = value;
-                OnPropertyChanged_Normal("txt_msg");
+                _msg = value;
+                OnPropertyChanged_Normal("msg");
             }
         }
 
@@ -72,6 +74,17 @@ namespace Perspective.ViewModels
                 OnPropertyChanged_Normal("list_TagModels");
             }
         }
+
+        //private ObservableCollection<DataModel> _list_DataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.1" } };
+        //public ObservableCollection<DataModel> list_DataModels
+        //{
+        //    get { return _list_DataModels; }
+        //    set
+        //    {
+        //        _list_DataModels = value;
+        //        OnPropertyChanged_Normal("list_DataModels");
+        //    }
+        //}
 
         private ObservableCollection<DataModel> _list_DirDataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.1" } };
         public ObservableCollection<DataModel> list_DirDataModels
@@ -150,27 +163,29 @@ namespace Perspective.ViewModels
             }
         }
 
-        private ObservableCollection<string> _list_selected_files = new ObservableCollection<string>();
-        public ObservableCollection<string> list_selected_files
-        {
-            get { return _list_selected_files; }
-            set
-            {
-                _list_selected_files = value;
-                OnPropertyChanged_Normal("list_selected_files");
-            }
-        }
+        public List<DataModel> list_selected_items { get; set; } = new List<DataModel>();
 
-        private ObservableCollection<string> _list_selected_dirs = new ObservableCollection<string>();
-        public ObservableCollection<string> list_selected_dirs
-        {
-            get { return _list_selected_dirs; }
-            set
-            {
-                _list_selected_dirs = value;
-                OnPropertyChanged_Normal("list_selected_dirs");
-            }
-        }
+        //private ObservableCollection<string> _list_selected_files = new ObservableCollection<string>();
+        //public ObservableCollection<string> list_selected_files
+        //{
+        //    get { return _list_selected_files; }
+        //    set
+        //    {
+        //        _list_selected_files = value;
+        //        OnPropertyChanged_Normal("list_selected_files");                
+        //    }
+        //}
+
+        //private ObservableCollection<string> _list_selected_dirs = new ObservableCollection<string>();
+        //public ObservableCollection<string> list_selected_dirs
+        //{
+        //    get { return _list_selected_dirs; }
+        //    set
+        //    {
+        //        _list_selected_dirs = value;
+        //        OnPropertyChanged_Normal("list_selected_dirs");
+        //    }
+        //}
 
         private ObservableCollection<string> _list_tags = new ObservableCollection<string>();
         public ObservableCollection<string> list_tags

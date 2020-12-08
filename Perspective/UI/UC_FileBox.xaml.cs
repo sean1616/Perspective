@@ -96,6 +96,12 @@ namespace Perspective.UI
             Tbtn_UnChecked(sender, e);
         }
 
+        public event RoutedEventHandler Tbtn_MouseEnter = delegate { };
+        private void tbtn_MouseEnter(object sender, MouseEventArgs e)
+        {            
+            Tbtn_MouseEnter(sender, e);
+        }
+
         public event RoutedEventHandler btn_delete_Click = delegate { };
         private void Button_Click(object sender, RoutedEventArgs e)
         {
@@ -103,5 +109,6 @@ namespace Perspective.UI
         }
         #endregion
 
+        
     }
 }
