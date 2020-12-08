@@ -39,6 +39,7 @@ namespace Perspective
         ItemsControl itemsControl = new ItemsControl();
 
         Page_CurrentPage _page_CurrentPage;
+        Page_Setting _page_Setting;
 
         System.Timers.Timer timer_showFilebox = new System.Timers.Timer();
 
@@ -53,6 +54,7 @@ namespace Perspective
             this.DataContext = vm;
 
             _page_CurrentPage = new Page_CurrentPage(vm);
+            _page_Setting = new Page_Setting(vm);
 
             tagsDirectoryPath = currentPath + @"\Tags";
             InTagsDirectoryPath = currentPath + @"\InTags";
@@ -129,17 +131,15 @@ namespace Perspective
 
             if (_window_addTags.ShowDialog() == false)
             {
-                if (!string.IsNullOrEmpty(_window_addTags.NewTagName))
-                {
-                    Button btn_tag = new Button { Content = _window_addTags.NewTagName };
-                    btn_tag.Style = style_tag;
-                    btn_tag.Click += Btn_tag_Click;
-                    //vm.list_tags = new System.Collections.ObjectModel.ObservableCollection<string>(vm.list_tags);
-
-                    //stkpanel_tags.Children.Add(btn_tag);
-                    if (!vm.dictonary_tag_files.ContainsKey(_window_addTags.NewTagName))
-                        vm.dictonary_tag_files.Add(_window_addTags.NewTagName, new ObservableCollection<string>());
-                }                    
+                //if (!string.IsNullOrEmpty(_window_addTags.NewTagName))
+                //{
+                //    Button btn_tag = new Button { Content = _window_addTags.NewTagName };
+                //    btn_tag.Style = style_tag;
+                //    btn_tag.Click += Btn_tag_Click;
+                   
+                //    if (!vm.dictonary_tag_files.ContainsKey(_window_addTags.NewTagName))
+                //        vm.dictonary_tag_files.Add(_window_addTags.NewTagName, new ObservableCollection<string>());
+                //}                    
             }
         }
 
@@ -147,26 +147,22 @@ namespace Perspective
         private void Btn_tag_Click(object sender, RoutedEventArgs e)
         {
             ToggleButton btn = (ToggleButton)sender;
-            string tag = btn.Content.ToString();
+            TagModel tm = (TagModel)btn.DataContext;
+            string tag = tm.tagName;
 
             //將此標籤加入/移除List_selectedTag
-            TagModel tagModel = new TagModel() { tagName = tag };
             if ((bool)btn.IsChecked)
             {
-                if (!vm.list_selectedTags.Contains(tag)) vm.list_selectedTags.Add(tag);                                
-                vm.list_selectedTagModels.Add(tagModel);
+                if (!vm.list_selectedTagModels.Contains(tm)) vm.list_selectedTagModels.Add(tm);
             }
             else
             {
-                vm.list_selectedTags.Remove(tag);
-                vm.list_selectedTagModels.Remove(tagModel);
+                vm.list_selectedTagModels.Remove(tm);
             }
                         
             pps.Refresh_Taged_File(tagsDirectoryPath);
 
             vm.list_selected_items.Clear();
-            //vm.list_selected_files.Clear();
-            //vm.list_selected_dirs.Clear();
         }
 
         private IEnumerable<string> GetFilesIntersection(List<string> list)
@@ -574,20 +570,20 @@ namespace Perspective
             }
         }
 
-        private void btn_addTag_Click(object sender, RoutedEventArgs e)
-        {
-            string tag = txt_nTagName.Text;
-            if (!string.IsNullOrEmpty(tag))
-            {
-                vm.list_tags.Add(tag);
-                vm.list_TagModels.Add(new TagModel() { tagName = tag, isChecked = false });
-                vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
+        //private void btn_addTag_Click(object sender, RoutedEventArgs e)
+        //{
+        //    string tag = txt_nTagName.Text;
+        //    if (!string.IsNullOrEmpty(tag))
+        //    {
+        //        vm.list_tags.Add(tag);
+        //        vm.list_TagModels.Add(new TagModel() { tagName = tag, isChecked = false });
+        //        vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
 
-                string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
-                if (!File.Exists(tagTxtPath))
-                    using (StreamWriter sw = File.CreateText(@tagTxtPath)) { }  //建立空的文件檔
-            }
-        }
+        //        string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+        //        if (!File.Exists(tagTxtPath))
+        //            using (StreamWriter sw = File.CreateText(@tagTxtPath)) { }  //建立空的文件檔
+        //    }
+        //}
 
         bool clip_or_copy = false;
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -649,7 +645,7 @@ namespace Perspective
                 {
                     foreach(DataModel dm in vm.path_clipboard)
                     {
-                        string newFilePath = vm.path + @"\" + dm.Names;
+                        string newFilePath = vm.path + @"\" + dm.Name;
                         if (!clip_or_copy)
                         {
                             if (dm.DirOrFile)
@@ -789,14 +785,14 @@ namespace Perspective
                 return;
             }
             
-            var listDirs = vm.list_DirDataModels.Where(x => x.Names.Contains(vm.txt_for_searchFiles)).ToList();
+            var listDirs = vm.list_DirDataModels.Where(x => x.Name.Contains(vm.txt_for_searchFiles)).ToList();
             vm.list_DirDataModels.Clear();
             foreach (DataModel d in listDirs)
             {
                 vm.list_DirDataModels.Add(d);
             }
 
-            var listFiles = vm.list_FileDataModels.Where(x => x.Names.Contains(vm.txt_for_searchFiles)).ToList();
+            var listFiles = vm.list_FileDataModels.Where(x => x.Name.Contains(vm.txt_for_searchFiles)).ToList();
             vm.list_FileDataModels.Clear();
             foreach (DataModel d in listFiles)
             {
@@ -850,17 +846,47 @@ namespace Perspective
 
         private void btn_OrderByName_Click(object sender, RoutedEventArgs e)
         {
+            var list_dirs = vm.list_DirDataModels.OrderBy(x => x.Name).ToList();
+            vm.list_DirDataModels = new ObservableCollection<DataModel>(list_dirs);
 
+            var list_files = vm.list_FileDataModels.OrderBy(x => x.Name).ToList();
+            vm.list_FileDataModels = new ObservableCollection<DataModel>(list_files);
         }
 
         private void btn_OrderByDateTime_Click(object sender, RoutedEventArgs e)
         {
+            var list_dirs = vm.list_DirDataModels.OrderBy(x => x.updateTime).ToList();
+            vm.list_DirDataModels = new ObservableCollection<DataModel>(list_dirs);
 
+            var list_files = vm.list_FileDataModels.OrderBy(x => x.updateTime).ToList();
+            vm.list_FileDataModels = new ObservableCollection<DataModel>(list_files);
+        }
+
+        private void Btn_OrderByType_Click(object sender, RoutedEventArgs e)
+        {
+            var list_files = vm.list_FileDataModels.OrderBy(x => x.ExtensionName).ToList();
+            vm.list_FileDataModels = new ObservableCollection<DataModel>(list_files);
+
+            List<string> tags = new List<string>() { "#txt", "#zip", "#pdf" };
+            foreach(string tag in tags)
+            {
+                pps.AddNewTag(tag, false);
+            }            
         }
 
         private void Window_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
             vm._isLMouseDown_in_MainPage = false;
+        }
+        bool _isPage = false;
+        private void Btn_Setting_Click(object sender, RoutedEventArgs e)
+        {
+            if(_isPage)
+                pageTransitionControl.ShowPage(_page_CurrentPage);
+            else
+                pageTransitionControl.ShowPage(_page_Setting);
+
+            _isPage = !_isPage;
         }
 
         private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)

@@ -6,6 +6,7 @@ using System.Text;
 using System.ComponentModel;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using Perspective.ViewModels;
 using Perspective.Models;
@@ -25,6 +26,29 @@ namespace Perspective.Functions
         public PathProcess(VM vm)
         {
             this.vm = vm;
+        }
+
+        public void AddNewTag(string tag, bool _isCreatTagTxt)
+        {
+            if (!string.IsNullOrEmpty(tag))
+            {
+                TagModel model = new TagModel() { tagName = tag, isChecked = false };
+
+                if (!vm.list_TagModels.Contains(model))
+                {
+                    vm.list_tags.Add(tag);
+                    vm.list_TagModels.Add(model);
+                }
+
+                if (_isCreatTagTxt)
+                {
+                    vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
+
+                    string tagTxtPath = currentPath + @"\Tags\" + tag + @".txt";   //Txt path of this tag
+                    if (!File.Exists(tagTxtPath))
+                        using (StreamWriter sw = File.CreateText(@tagTxtPath)) { }  //建立空的文件檔
+                }
+            }
         }
 
         public int IsImageJudge(string path)
@@ -235,10 +259,9 @@ namespace Perspective.Functions
                 if (Directory.Exists(@s))
                 {
                     // This path is a directory
-                    //vm.list_directories.Add(s);
-                    //vm.list_dirNames.Add(Path.GetFileName(s));
-                    vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), Visibility_btn_remove = false,
-                        pathInfo = s, DirOrFile=false });
+                    DirectoryInfo di = new DirectoryInfo(s);
+                    vm.list_DirDataModels.Add(new DataModel() { Name = Path.GetFileName(s), Visibility_btn_remove = false,
+                        pathInfo = s, DirOrFile=false, updateTime=di.LastWriteTime, creationTime=di.CreationTime });
                 }
             }
             #endregion
@@ -267,7 +290,8 @@ namespace Perspective.Functions
                 FileInfo fi = new FileInfo(s);
                 DataModel dm = new DataModel()
                 {
-                    Names = Path.GetFileName(s),
+                    Name = Path.GetFileName(s),
+                    ExtensionName = fi.Extension,
                     Visibility_btn_remove = false,
                     pathInfo = s,
                     updateTime = fi.LastWriteTime,
@@ -375,7 +399,7 @@ namespace Perspective.Functions
 
                 foreach (string s in list_F_intersection)
                 {
-                    DataModel dataModel = new DataModel() { Names = Path.GetFileName(s), pathInfo = s, imgSource = LoadImage(s) };
+                    DataModel dataModel = new DataModel() { Name = Path.GetFileName(s), pathInfo = s, imgSource = LoadImage(s) };
 
                     vm.list_FileDataModels.Add(dataModel);
                 }
@@ -388,7 +412,7 @@ namespace Perspective.Functions
 
                 foreach (string s in list_D_intersection)
                 {
-                    vm.list_DirDataModels.Add(new DataModel() { Names = Path.GetFileName(s), pathInfo = s });
+                    vm.list_DirDataModels.Add(new DataModel() { Name = Path.GetFileName(s), pathInfo = s });
                 }
             }
             else

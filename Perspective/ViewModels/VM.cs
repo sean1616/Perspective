@@ -24,6 +24,17 @@ namespace Perspective.ViewModels
 
         public int ExpanderItemsHeigh { get; set; } = 25;
 
+        private string _txt_localPath = "";
+        public string txt_localPath
+        {
+            get { return _txt_localPath; }
+            set
+            {
+                _txt_localPath = value;
+                OnPropertyChanged_Normal("txt_localPath");
+            }
+        }
+
         private string _txt_for_searchFiles = "";
         public string txt_for_searchFiles
         {
@@ -86,7 +97,7 @@ namespace Perspective.ViewModels
         //    }
         //}
 
-        private ObservableCollection<DataModel> _list_DirDataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.1" } };
+        private ObservableCollection<DataModel> _list_DirDataModels = new ObservableCollection<DataModel>() { new DataModel() { Name = "No.1" } };
         public ObservableCollection<DataModel> list_DirDataModels
         {
             get { return _list_DirDataModels; }
@@ -108,7 +119,7 @@ namespace Perspective.ViewModels
         //    }
         //}
 
-        private ObservableCollection<DataModel> _list_FileDataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.2" } };
+        private ObservableCollection<DataModel> _list_FileDataModels = new ObservableCollection<DataModel>() { new DataModel() { Name = "No.2" } };
         public ObservableCollection<DataModel> list_FileDataModels
         {
             get { return _list_FileDataModels; }

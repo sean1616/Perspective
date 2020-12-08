@@ -153,6 +153,16 @@ namespace Perspective.Properties {
         /// <summary>
         ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
         /// </summary>
+        internal static System.Drawing.Bitmap Mobius {
+            get {
+                object obj = ResourceManager.GetObject("Mobius", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   查詢類型 System.Drawing.Bitmap 的當地語系化資源。
+        /// </summary>
         internal static System.Drawing.Bitmap network {
             get {
                 object obj = ResourceManager.GetObject("network", resourceCulture);

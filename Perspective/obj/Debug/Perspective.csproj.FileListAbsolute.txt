@@ -57,14 +57,6 @@ D:\SeanWu\Repository\Perspective\Perspective\Perspective\bin\Debug\WpfPageTransi
 D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Navigations\Page_CurrentPage.g.cs
 D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Navigations\Page_CurrentPage.baml
 D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Perspective.csproj.CopyComplete
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\bin\Debug\Mobius Link v1.0.5.exe.config
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\bin\Debug\Mobius Link v1.0.5.exe
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\bin\Debug\Mobius Link v1.0.5.pdb
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Mobius Link v1.0.5_MarkupCompile.cache
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Mobius Link v1.0.5_MarkupCompile.lref
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Mobius Link v1.0.5.g.resources
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Mobius Link v1.0.5.exe
-D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Mobius Link v1.0.5.pdb
 C:\Users\sean_wu\source\repos\Perspective\Perspective\bin\Debug\Wpf_Control_Library.dll
 C:\Users\sean_wu\source\repos\Perspective\Perspective\bin\Debug\Wpf_Control_Library.pdb
 D:\SeanWu\Repository\Perspective\Perspective\Perspective\bin\Debug\Wpf_Control_Library.pdb
@@ -76,3 +68,13 @@ C:\Users\sean_wu\source\repos\Perspective\Perspective\obj\Debug\Mobius Link v1.0
 C:\Users\sean_wu\source\repos\Perspective\Perspective\obj\Debug\Mobius Link v1.0.6.g.resources
 C:\Users\sean_wu\source\repos\Perspective\Perspective\obj\Debug\Mobius Link v1.0.6.exe
 C:\Users\sean_wu\source\repos\Perspective\Perspective\obj\Debug\Mobius Link v1.0.6.pdb
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\bin\Debug\Mobius Link v1.0.6.exe.config
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\bin\Debug\Mobius Link v1.0.6.exe
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\bin\Debug\Mobius Link v1.0.6.pdb
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Mobius Link v1.0.6_MarkupCompile.cache
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Mobius Link v1.0.6_MarkupCompile.lref
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Mobius Link v1.0.6.g.resources
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Mobius Link v1.0.6.exe
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Mobius Link v1.0.6.pdb
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Navigations\Page_Setting.g.cs
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Navigations\Page_Setting.baml

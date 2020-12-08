@@ -11,8 +11,9 @@ namespace Perspective.Models
     public class DataModel:NotifyBase
     {
         public bool DirOrFile { get; set; }
-        public string Names { get; set; }
+        public string Name { get; set; }
         public string pathInfo { get; set; }
+        public string ExtensionName { get; set; }
         public bool Selected { get; set; }
         public DateTime updateTime { get; set; }
         public DateTime creationTime { get; set; }

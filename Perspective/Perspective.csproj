@@ -38,7 +38,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>hnet.com-image.ico</ApplicationIcon>
+    <ApplicationIcon>Mobius.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
@@ -77,6 +77,9 @@
     <Compile Include="Navigations\Page_CurrentPage.xaml.cs">
       <DependentUpon>Page_CurrentPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Navigations\Page_Setting.xaml.cs">
+      <DependentUpon>Page_Setting.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Navigations\Window_AddTags.xaml.cs">
       <DependentUpon>Window_AddTags.xaml</DependentUpon>
     </Compile>
@@ -103,6 +106,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="Navigations\Page_CurrentPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Navigations\Page_Setting.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -203,6 +210,12 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Resources\pdf.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Mobius.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\Mobius.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

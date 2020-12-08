@@ -57,7 +57,7 @@ namespace Perspective.Navigations
                                   
             if (fi.Exists)
             {
-                vm.msg.txt_msg2 = dm.Names;
+                vm.msg.txt_msg2 = dm.Name;
 
                 // Get file size  
                 string sizeUnit = "Byte";

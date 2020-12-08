@@ -56,6 +56,7 @@
                 MouseLeftButtonUp="border_title_MouseLeftButtonUp"
                 MouseMove="border_title_MouseMove"
                 PreviewMouseLeftButtonDown="border_title_PreviewMouseLeftButtonDown" />
+            <Image Source="/Resources/Mobius.png" Margin="7"/>
             <TextBlock
                 Grid.Column="1"
                 Margin="-0.001,5.852,0,5.852"
@@ -65,7 +66,7 @@
                 MouseLeftButtonUp="border_title_MouseLeftButtonUp"
                 MouseMove="border_title_MouseMove"
                 PreviewMouseLeftButtonDown="border_title_PreviewMouseLeftButtonDown"
-                Text=" Mobius Link" />
+                Text="Mobius Link" />
             <Button
                 Name="btn_help"
                 Grid.Column="3"
@@ -144,10 +145,10 @@
                 Content="Path Location"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button
-                x:Name="btn_test"
+                x:Name="btn_Setting"
                 Grid.Column="10"
-                Click="Btn_test_Click"
-                Content="Test"
+                Click="Btn_Setting_Click"
+                Content="Setting"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button
                 x:Name="btn_RecycleBin"
@@ -167,11 +168,15 @@
                     Content="Order by Name"
                     Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button x:Name="btn_OrderByDateTime"
-                    Grid.Column="4"
+                    Grid.Column="5"
                     Click="btn_OrderByDateTime_Click"
                     Content="Order by DataTime"
                     Style="{DynamicResource BtnStyle_FilePicBox}" />
-
+            <Button x:Name="btn_OrderByType"
+                    Grid.Column="6"
+                    Click="Btn_OrderByType_Click"
+                    Content="Order by Type"
+                    Style="{DynamicResource BtnStyle_FilePicBox}" />
         </Grid>
 
         <Grid x:Name="grid_shortCutPath" Grid.Row="3">
@@ -403,7 +408,7 @@
                     x:Name="btn_addTag"
                     Grid.Column="6"
                     Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}"
-                    Click="btn_addTag_Click"
+                    Click="Btn_addTagWindow_Click"
                     Content="../Resources/add.png"
                     FontFamily="Segoe Print"
                     Style="{DynamicResource BtnStyle_ImgCenter}" />
