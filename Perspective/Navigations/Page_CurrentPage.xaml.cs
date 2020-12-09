@@ -45,7 +45,13 @@ namespace Perspective.Navigations
         private void tbtn_Checked(object sender, RoutedEventArgs e)
         {
             ToggleButton uc = (ToggleButton)sender;
-            DataModel dm = (DataModel)uc.DataContext;
+            string s = uc.Tag.ToString();
+            DataModel dm = new DataModel();
+            try
+            {
+                dm = (DataModel)uc.DataContext;
+            }
+            catch { return; }
 
             if (!vm.list_selected_items.Contains(dm))
             {
@@ -102,7 +108,13 @@ namespace Perspective.Navigations
         private void tbtn_Unchecked(object sender, RoutedEventArgs e)
         {
             ToggleButton uc = (ToggleButton)sender;
-            DataModel dm = (DataModel)uc.DataContext;
+            string s = uc.Tag.ToString();
+            DataModel dm = new DataModel();
+            try
+            {
+                 dm= (DataModel)uc.DataContext;
+            }
+            catch { return; }
 
             if (vm.list_selected_items.Contains(dm))
             {
@@ -150,8 +162,11 @@ namespace Perspective.Navigations
         //}
 
         private void UC_FileBox_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
+        {            
             UC_FileBox uc = (UC_FileBox)sender;
+            uc.tbtn_isChecked = false;
+            e.Handled = true;
+            
 
             if (File.Exists(@uc.path_info))  // This path is a file
             {
@@ -204,17 +219,13 @@ namespace Perspective.Navigations
             }
         }
        
-        private void Border_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            vm._isLMouseDown_in_MainPage = true;
-        }
 
         private void UC_Tbtn_MouseEnter(object sender, RoutedEventArgs e)
         {
             ToggleButton uc = (ToggleButton)sender;
             DataModel dm = (DataModel)uc.DataContext;
 
-            if (vm._isLMouseDown_in_MainPage)
+            if (Mouse.LeftButton==MouseButtonState.Pressed)
             {
                 uc.IsChecked = true;
 

@@ -71,6 +71,7 @@
     </ApplicationDefinition>
     <Compile Include="Functions\ListCollection.cs" />
     <Compile Include="Functions\PathProcess.cs" />
+    <Compile Include="Functions\SetupIniIp.cs" />
     <Compile Include="Models\DataModel.cs" />
     <Compile Include="Models\MsgModel.cs" />
     <Compile Include="Models\TagModel.cs" />

@@ -3,12 +3,13 @@ using System.ComponentModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
-using System.Windows.Media.Imaging;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Perspective.ViewModels;
 using Perspective.Models;
+using Perspective.Functions;
 
 namespace Perspective.ViewModels
 {
@@ -18,6 +19,18 @@ namespace Perspective.ViewModels
         {
            
         }
+
+        private string _ini_path = @"D:\MobiusLink\Instrument.ini";
+        public string ini_path
+        {
+            get { return _ini_path; }
+            set
+            {
+                _ini_path = value;
+                OnPropertyChanged_Normal("ini_path");
+            }
+        }
+        public static SetupIniIP ini = new SetupIniIP();
 
         public BackgroundWorker worker = new BackgroundWorker();
         public DispatcherTimer timer = new DispatcherTimer();
@@ -48,6 +61,26 @@ namespace Perspective.ViewModels
             }
         }
 
+        public string Ini_Read(string Section, string key)
+        {
+            string _ini_read;
+            if (File.Exists(ini_path))
+            {
+                _ini_read = ini.IniReadValue(Section, key, ini_path);
+            }
+            else
+                _ini_read = "";
+
+            return _ini_read;
+        }
+
+        public void Ini_Write(string Section, string key, string value)
+        {
+            if (!File.Exists(ini_path))
+                Directory.CreateDirectory(System.IO.Directory.GetParent(ini_path).ToString());  //建立資料夾
+            ini.IniWriteValue(Section, key, value, ini_path);  //創建ini file並寫入基本設定
+        }
+
         public string[] searchFiles_Result { get; set; } = new string[] { };
 
         public ObservableCollection<DataModel> temp_list_DirDataModels { get; set; } = new ObservableCollection<DataModel>();
@@ -61,7 +94,17 @@ namespace Perspective.ViewModels
         public ObservableCollection<string> path_Files_clipboard { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<string> path_Dirs_clipboard { get; set; } = new ObservableCollection<string>();
 
-        public bool _isLMouseDown_in_MainPage { get; set; } = false;
+        private double _colum_collectionPath_width = 145;
+        public double colum_collectionPath_width
+        {
+            get { return _colum_collectionPath_width; }
+            set
+            {
+                _colum_collectionPath_width = value;
+                OnPropertyChanged_Normal("colum_collectionPath_width");
+            }
+        }
+        //public bool _isLMouseDown_in_MainPage { get; set; } = false;
 
         private MsgModel _msg = new MsgModel();
         public MsgModel msg

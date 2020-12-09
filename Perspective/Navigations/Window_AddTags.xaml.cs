@@ -33,7 +33,9 @@ namespace Perspective.Navigations
 
             this.vm = vm;
 
-            tagsDirectoryPath = currentPath + @"\Tags";
+            tagsDirectoryPath = vm.tagsDirectoryPath;
+
+            
         }
 
         string _NewTagName = "";
@@ -68,10 +70,20 @@ namespace Perspective.Navigations
                    
                 vm.dictonary_tag_files.Add(tag, new List<string>());
 
-                string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+                string tagTxtPath = "";
+                if (!vm._isInTagMode)
+                    tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+                else tagTxtPath = vm.IntagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
+
+
                 if (!File.Exists(tagTxtPath))
                     using (StreamWriter sw = File.CreateText(@tagTxtPath)) { }  //建立空的文件檔
             }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            txt_newTagName.Focus();
         }
     }
 }

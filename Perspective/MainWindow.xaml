@@ -16,7 +16,6 @@
     BorderThickness="0.8"
     KeyDown="Window_KeyDown"
     Loaded="Window_Loaded"
-    PreviewMouseLeftButtonUp="Window_PreviewMouseLeftButtonUp"
     ResizeMode="CanResizeWithGrip"
     SizeChanged="Window_SizeChanged"
     WindowStyle="None"
@@ -28,7 +27,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition />
+            <ColumnDefinition x:Name="col_pathCollection" Width="{Binding colum_collectionPath_width}"/>
             <ColumnDefinition Width="8*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -143,13 +142,7 @@
                 Grid.Column="2"
                 Click="btn_open_path_location_Click"
                 Content="Path Location"
-                Style="{DynamicResource BtnStyle_FilePicBox}" />
-            <Button
-                x:Name="btn_Setting"
-                Grid.Column="10"
-                Click="Btn_Setting_Click"
-                Content="Setting"
-                Style="{DynamicResource BtnStyle_FilePicBox}" />
+                Style="{DynamicResource BtnStyle_FilePicBox}" />            
             <Button
                 x:Name="btn_RecycleBin"
                 Grid.Column="3"
@@ -177,17 +170,29 @@
                     Click="Btn_OrderByType_Click"
                     Content="Order by Type"
                     Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button
+                x:Name="btn_Test"
+                Grid.Column="10"
+                Click="Btn_Test_Click_1"
+                Content="Test"
+                Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button
+                x:Name="btn_Setting"
+                Grid.Column="10"
+                Click="Btn_Setting_Click"
+                Content="Setting"
+                Style="{DynamicResource BtnStyle_FilePicBox}" />
         </Grid>
 
         <Grid x:Name="grid_shortCutPath" Grid.Row="3">
             <Border
-                Background="LightGray"
+                Background="LightGray"     
                 MouseDown="Border_MouseDown"
+                MouseUp="Border_MouseUp"
                 MouseEnter="Border_MouseEnter"
                 MouseLeave="Border_MouseLeave"
-                MouseMove="Border_MouseMove"
-                MouseUp="Border_MouseUp" />
-            <ScrollViewer Margin="0,0,3,0" Background="White">
+                MouseMove="Border_MouseMove" />
+            <ScrollViewer Margin="0,0,3,0" Background="White" MouseMove="Border_MouseMove" MouseUp="Border_MouseUp">
                 <StackPanel>
                     <Expander Header="快速存取" IsExpanded="True">
                         <StackPanel>
@@ -417,6 +422,8 @@
             <pageTransitions:PageTransition
                 Name="pageTransitionControl"
                 Grid.Row="0"
+                MouseUp="Border_MouseUp"
+                MouseMove="Border_MouseMove"
                 TransitionType="SlideAndFade" />
 
             <!--<Image x:Name="img_test" Source="{Binding bbb}"/>-->

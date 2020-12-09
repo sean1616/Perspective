@@ -6,7 +6,6 @@
     xmlns:local="clr-namespace:Perspective.Navigations"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:Perspective.UI"    
-             PreviewMouseLeftButtonDown="Border_PreviewMouseLeftButtonDown"
              d:DesignHeight="450"
     d:DesignWidth="800"
     mc:Ignorable="d">
@@ -59,8 +58,9 @@
                             <uc:UC_FileBox
                                 Width="140"
                                 Height="160"
+                                PreviewMouseDoubleClick="UC_FileBox_MouseDoubleClick"
                                 Tbtn_MouseEnter="UC_Tbtn_MouseEnter"
-                                MouseDoubleClick="UC_FileBox_MouseDoubleClick"
+                                
                                 Tbtn_Checked="tbtn_Checked"
                                 Tbtn_UnChecked="tbtn_Unchecked"
                                 imgSource="{Binding imgSource}"

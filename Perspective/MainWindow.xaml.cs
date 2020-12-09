@@ -56,8 +56,12 @@ namespace Perspective
             _page_CurrentPage = new Page_CurrentPage(vm);
             _page_Setting = new Page_Setting(vm);
 
-            vm.tagsDirectoryPath = currentPath + @"\Tags";
-            vm.IntagsDirectoryPath = currentPath + @"\InTags";
+            //vm.tagsDirectoryPath = currentPath + @"\Tags";
+            //vm.IntagsDirectoryPath = currentPath + @"\InTags";
+            //vm.ini_path = currentPath + @"\Setting\Instrument.ini";
+
+            vm.tagsDirectoryPath = Directory.GetParent(vm.ini_path) + @"\Tags";
+            vm.IntagsDirectoryPath = Directory.GetParent(vm.ini_path) + @"\InTags";
 
             tagsDirectoryPath = vm.tagsDirectoryPath;
             InTagsDirectoryPath = vm.IntagsDirectoryPath;
@@ -66,9 +70,6 @@ namespace Perspective
             myBinding.Source = vm;
 
             pps = new PathProcess(vm);
-            //btn_2.SetBinding(Button.ContentProperty, myBinding);
-            //itms_directories.ItemsSource = vm.list_DirDataModels;
-            //itms_files.ItemsSource = vm.list_FileDataModels;
 
             grid_msg.DataContext = vm.msg;
 
@@ -562,24 +563,11 @@ namespace Perspective
 
                 vm.list_selectedTagModels.Clear();
 
+                pps.SearchDirectory(vm.path);
+
                 MessageBox.Show("Done");
             }
         }
-
-        //private void btn_addTag_Click(object sender, RoutedEventArgs e)
-        //{
-        //    string tag = txt_nTagName.Text;
-        //    if (!string.IsNullOrEmpty(tag))
-        //    {
-        //        vm.list_tags.Add(tag);
-        //        vm.list_TagModels.Add(new TagModel() { tagName = tag, isChecked = false });
-        //        vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
-
-        //        string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
-        //        if (!File.Exists(tagTxtPath))
-        //            using (StreamWriter sw = File.CreateText(@tagTxtPath)) { }  //建立空的文件檔
-        //    }
-        //}
 
         bool clip_or_copy = false;
         private void Window_KeyDown(object sender, KeyEventArgs e)
@@ -701,7 +689,7 @@ namespace Perspective
                 }
                 else
                 {
-                    tagsDirectoryPath = currentPath + @"\Tags";
+                    tagsDirectoryPath = vm.tagsDirectoryPath;
                     pps.GetSavedTags(tagsDirectoryPath, InTagsDirectoryPath);
                     border_tagBackground.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FFE7F1F0");
                 }
@@ -716,43 +704,52 @@ namespace Perspective
             pps.SearchDirectory(vm.path);
         }
 
-        int cc = 0; Point p = new Point();
         private void Border_MouseEnter(object sender, MouseEventArgs e)
         {
-
-            //++cc;
-            //vm.txt_msg = (++cc).ToString();
+            if(!_isMouseDown)
+                if (this.Cursor != Cursors.Wait)
+                    Mouse.OverrideCursor = Cursors.Hand;
         }
 
         private void Border_MouseLeave(object sender, MouseEventArgs e)
         {
-            //--cc;
-            //vm.txt_msg = (--cc).ToString();
+            if(!_isMouseDown)
+                if (this.Cursor != Cursors.Wait)
+                    Mouse.OverrideCursor = Cursors.Arrow;
         }
 
+        Point p = new Point();
+        bool _isMouseDown = false;
         private void Border_MouseMove(object sender, MouseEventArgs e)
         {
             if (_isMouseDown)
             {
-                var point = e.GetPosition(this);
-
-                Thickness margin = grid_shortCutPath.Margin;
-                margin.Right = (p.X- point.X);
-                grid_shortCutPath.Margin = margin;
-                vm.msg.txt_msg1 = point.X.ToString() + " , " + point.Y.ToString();
+                var point = e.GetPosition(col_pathCollection);
+                double delta_P = p.X - point.X;
+                vm.colum_collectionPath_width = vm.colum_collectionPath_width - (delta_P);
+                p = e.GetPosition(col_pathCollection);
+                vm.msg.txt_msg4 = delta_P.ToString();
+                vm.msg.txt_msg5 = vm.colum_collectionPath_width.ToString();
+                
+                //Thickness margin = grid_shortCutPath.Margin;
+                //margin.Right = (p.X- point.X);
+                //grid_shortCutPath.Margin = margin;
+                //vm.msg.txt_msg1 = point.X.ToString() + " , " + point.Y.ToString();
             }
         }
 
-        bool _isMouseDown = false;
         private void Border_MouseDown(object sender, MouseButtonEventArgs e)
         {
             _isMouseDown = true;
-            p = e.GetPosition(this);
+            p = e.GetPosition(col_pathCollection);
         }
 
         private void Border_MouseUp(object sender, MouseButtonEventArgs e)
         {
             _isMouseDown = false;
+
+            if (this.Cursor != Cursors.Wait)
+                Mouse.OverrideCursor = Cursors.Arrow;
         }
 
         private void Btn_RecycleBin_Click(object sender, RoutedEventArgs e)
@@ -870,10 +867,7 @@ namespace Perspective
             }            
         }
 
-        private void Window_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            vm._isLMouseDown_in_MainPage = false;
-        }
+       
         bool _isPage = false;
         private void Btn_Setting_Click(object sender, RoutedEventArgs e)
         {
@@ -883,6 +877,11 @@ namespace Perspective
                 pageTransitionControl.ShowPage(_page_Setting);
 
             _isPage = !_isPage;
+        }
+
+        private void Btn_Test_Click_1(object sender, RoutedEventArgs e)
+        {
+            vm.msg.txt_msg5 = col_pathCollection.ActualWidth.ToString();
         }
 
         private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)

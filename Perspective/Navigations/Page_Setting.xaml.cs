@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.IO;
 using Perspective.ViewModels;
 using Perspective.Models;
 
@@ -29,6 +30,8 @@ namespace Perspective.Navigations
 
             this.vm = vm;
             this.DataContext = vm;
+
+                        
         }
     }
 }

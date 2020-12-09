@@ -3,11 +3,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:vm="clr-namespace:Perspective.ViewModels"
              xmlns:uc="clr-namespace:Wpf_Control_Library;assembly=Wpf_Control_Library"
              xmlns:local="clr-namespace:Perspective.Navigations"
              mc:Ignorable="d" 
              d:DesignHeight="450"
              d:DesignWidth="800">
+
+    <UserControl.DataContext>
+        <vm:VM />
+    </UserControl.DataContext>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -27,6 +32,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
             <TextBox Name="txt_path"
                  Grid.Row="0"
@@ -34,7 +40,13 @@
                  Text="{Binding txt_localPath}"
                  HorizontalAlignment="Stretch"
                  VerticalContentAlignment="Center"/>
-            <uc:Text_TextBox Grid.Row="1" FontFamily="Segoe Print"/>
+            <TextBox Name="txt_IniPath"
+                 Grid.Row="1"
+                     FontFamily="Segoe Print"
+                 Text="{Binding ini_path}"
+                 HorizontalAlignment="Stretch"
+                 VerticalContentAlignment="Center"/>
+            <uc:Text_TextBox Grid.Row="2" FontFamily="Segoe Print"/>
         </Grid>
     </Grid>
 </UserControl>
