@@ -174,8 +174,9 @@ namespace Perspective.Navigations
 
             if (Directory.Exists(tagsDirectoryPath))
             {
-                foreach (string tag in vm.list_selectedTags)
+                foreach (TagModel tm in vm.list_selectedTagModels)
                 {
+                    string tag = tm.tagName;
                     string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
                     if (!File.Exists(tagTxtPath)) continue;
 

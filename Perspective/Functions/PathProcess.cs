@@ -28,21 +28,57 @@ namespace Perspective.Functions
             this.vm = vm;
         }
 
+        public void GetSavedTags(string tagsDirectoryPath, string InTagsDirectoryPath)
+        {
+            if (Directory.Exists(tagsDirectoryPath))
+            {
+                vm.list_TagModels = new ObservableCollection<TagModel>();
+
+                string[] tagsPath = Directory.GetFiles(tagsDirectoryPath);
+                foreach (string s in tagsPath)
+                {
+                    string tag = Path.GetFileNameWithoutExtension(s);
+                    //vm.list_tags.Add(tag);
+
+                    if (!vm.dictonary_tag_files.ContainsKey(tag))
+                    {
+                        vm.dictonary_tag_files.Add(tag, new List<string>());
+
+                        Get_AllFilesPath_in_Tags(s);
+                    }                        
+
+                    TagModel tagModel = new TagModel() { tagName = tag, isChecked = false };
+                    vm.list_TagModels.Add(tagModel);
+                }
+            }
+            else
+            {
+                Directory.CreateDirectory(tagsDirectoryPath);
+            }
+
+            #region Invisible tags
+            if (!Directory.Exists(InTagsDirectoryPath))
+            {
+                Directory.CreateDirectory(InTagsDirectoryPath);
+            }
+            #endregion
+        }
+
         public void AddNewTag(string tag, bool _isCreatTagTxt)
         {
             if (!string.IsNullOrEmpty(tag))
             {
                 TagModel model = new TagModel() { tagName = tag, isChecked = false };
 
-                if (!vm.list_TagModels.Contains(model))
+                List<TagModel> list = vm.list_TagModels.Where(x => x.tagName == tag).ToList();
+                if (list.Count==0)
                 {
-                    vm.list_tags.Add(tag);
                     vm.list_TagModels.Add(model);
                 }
 
                 if (_isCreatTagTxt)
                 {
-                    vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
+                    vm.dictonary_tag_files.Add(tag, new List<string>());
 
                     string tagTxtPath = currentPath + @"\Tags\" + tag + @".txt";   //Txt path of this tag
                     if (!File.Exists(tagTxtPath))
@@ -287,18 +323,18 @@ namespace Perspective.Functions
                     return;
                 }
                 string s = vm.searchFiles_Result[i];
-                FileInfo fi = new FileInfo(s);
-                DataModel dm = new DataModel()
-                {
-                    Name = Path.GetFileName(s),
-                    ExtensionName = fi.Extension,
-                    Visibility_btn_remove = false,
-                    pathInfo = s,
-                    updateTime = fi.LastWriteTime,
-                    creationTime = fi.CreationTime,
-                    DirOrFile = true
-                };
-                worker.ReportProgress((int)i, dm);
+                //FileInfo fi = new FileInfo(s);
+                //DataModel dm = new DataModel()
+                //{
+                //    Name = Path.GetFileName(s),
+                //    ExtensionName = fi.Extension,
+                //    Visibility_btn_remove = false,
+                //    pathInfo = s,
+                //    updateTime = fi.LastWriteTime,
+                //    creationTime = fi.CreationTime,
+                //    DirOrFile = true
+                //};
+                worker.ReportProgress((int)i, GetDataModel(s, false));
             }
         }
 
@@ -346,80 +382,142 @@ namespace Perspective.Functions
             timerCount++;
         }
 
-        public void Refresh_Taged_File(string tagsDirectoryPath)
+        //private DataModel GetDataModel(string path)
+        //{
+        //    FileInfo fi = new FileInfo(path);
+        //    DataModel dm = new DataModel()
+        //    {
+        //        Name = fi.Name,
+        //        ExtensionName = fi.Extension,
+        //        Visibility_btn_remove = false,
+        //        pathInfo = path,
+        //        updateTime = fi.LastWriteTime,
+        //        creationTime = fi.CreationTime,
+        //        DirOrFile = true
+        //    };
+        //    return dm;
+        //}
+
+        private DataModel GetDataModel(string path, bool _isImage)
         {
-            var list_all_files_in_tags = new List<List<string>>();
-            List<List<string>> list_all_Dirs_in_tags = new List<List<string>>();
+            DataModel dm;
+            FileInfo fi = new FileInfo(path);
+            if (_isImage)
+            {
+                dm = new DataModel()
+                {
+                    Name = fi.Name,
+                    ExtensionName = fi.Extension,
+                    Visibility_btn_remove = false,
+                    pathInfo = path,
+                    updateTime = fi.LastWriteTime,
+                    creationTime = fi.CreationTime,
+                    DirOrFile = true,
+                    imgSource = LoadImage(path)
+                };
+            }
+            else
+            {
+                dm = new DataModel()
+                {
+                    Name = fi.Name,
+                    ExtensionName = fi.Extension,
+                    Visibility_btn_remove = false,
+                    pathInfo = path,
+                    updateTime = fi.LastWriteTime,
+                    creationTime = fi.CreationTime,
+                    DirOrFile = true
+                };
+            }
+            return dm;
+        }
+
+        private void Get_AllFilesPath_in_Tags(string tagTxtPath)
+        {
+            string tag = Path.GetFileNameWithoutExtension(tagTxtPath);
+
+            //呼叫具此標籤的檔案們              
+            string[] lines;
+            
+            //Get all filepath in this tag
+            if (File.Exists(tagTxtPath))
+            {
+                lines = File.ReadAllLines(tagTxtPath);
+
+                vm.dictonary_tag_files[tag].Clear();
+                foreach (string filepath in lines)
+                {
+                    vm.dictonary_tag_files[tag].Add(filepath);
+                }
+            }            
+        }
+
+        public void Refresh_Taged_File(List<TagModel> tagModels)
+        {
+            //var list_all_files_in_tags = new List<List<string>>();
+            //List<List<string>> list_all_Dirs_in_tags = new List<List<string>>();
 
             vm.list_DirDataModels.Clear();
             vm.list_FileDataModels.Clear();
 
-            //將所有已選擇的標籤對應的檔案存成List
-            foreach (string t in vm.list_selectedTags)
+            FileAttributes attr;
+
+            if (vm.list_selectedTagModels.Count != 0)
             {
-                string tagTxtPath = tagsDirectoryPath + @"\" + t + @".txt";   //Txt path of this tag
 
-                //if (vm.dictonary_tag_files.ContainsKey(tag))
-
-                //呼叫具此標籤的檔案們              
-                string[] lines;
-                if (File.Exists(tagTxtPath))
+                var list = new List<string>();
+                for (int i = 0; i < tagModels.Count; i++)  //計算所有標籤中的物件路徑交集
                 {
-                    lines = File.ReadAllLines(tagTxtPath);
-                }
-                else continue;
-
-                List<string> list_f = new List<string>();
-                List<string> list_d = new List<string>();
-
-                foreach (string s in lines)
-                {
-                    if (File.Exists(@s)) // This path is a file
+                    if (i == 0)
                     {
-                        list_f.Add(s);
+                        string tag = tagModels[i].tagName;
+
+                        list = vm.dictonary_tag_files[tag];
                     }
-                    else if (Directory.Exists(@s)) // This path is a directory
+                    else
                     {
-                        list_d.Add(s);
+                        list = list.Intersect(vm.dictonary_tag_files[tagModels[i].tagName]).ToList();
                     }
                 }
 
-                list_all_files_in_tags.Add(list_f);
-                list_all_Dirs_in_tags.Add(list_d);
-            }
-
-
-            if (vm.list_selectedTags.Count != 0)
-            {
-                var list_F_intersection = GetFilesIntersection(list_all_files_in_tags[0]);
-                for (int i = 1; i < list_all_files_in_tags.Count; i++)
+                foreach(string s in list)
                 {
-                    list_F_intersection = list_F_intersection.Intersect(list_all_files_in_tags[i]);
+                    //DataModel dataModel = new DataModel() { Name = Path.GetFileName(s), pathInfo = s, imgSource = LoadImage(s) };
+
+                    vm.list_FileDataModels.Add(GetDataModel(s, true));
                 }
 
-                foreach (string s in list_F_intersection)
-                {
-                    DataModel dataModel = new DataModel() { Name = Path.GetFileName(s), pathInfo = s, imgSource = LoadImage(s) };
+                //var list_F_intersection = GetFilesIntersection(list_all_files_in_tags[0]);
+                //for (int i = 1; i < list_all_files_in_tags.Count; i++)
+                //{
+                //    list_F_intersection = list_F_intersection.Intersect(list_all_files_in_tags[i]);
+                //}
 
-                    vm.list_FileDataModels.Add(dataModel);
-                }
+                //foreach (string s in list_F_intersection)
+                //{
+                //    DataModel dataModel = new DataModel() { Name = Path.GetFileName(s), pathInfo = s, imgSource = LoadImage(s) };
 
-                var list_D_intersection = GetFilesIntersection(list_all_Dirs_in_tags[0]);
-                for (int i = 1; i < list_all_Dirs_in_tags.Count; i++)
-                {
-                    list_D_intersection = list_D_intersection.Intersect(list_all_Dirs_in_tags[i]);
-                }
+                //    vm.list_FileDataModels.Add(dataModel);
+                //}
 
-                foreach (string s in list_D_intersection)
-                {
-                    vm.list_DirDataModels.Add(new DataModel() { Name = Path.GetFileName(s), pathInfo = s });
-                }
+                //var list_D_intersection = GetFilesIntersection(list_all_Dirs_in_tags[0]);
+                //for (int i = 1; i < list_all_Dirs_in_tags.Count; i++)
+                //{
+                //    list_D_intersection = list_D_intersection.Intersect(list_all_Dirs_in_tags[i]);
+                //}
+
+                //foreach (string s in list_D_intersection)
+                //{
+                //    vm.list_DirDataModels.Add(new DataModel() { Name = Path.GetFileName(s), pathInfo = s });
+                //}
             }
             else
             {
                 SearchDirectory(vm.path);
             }
         }
+
+
 
         private IEnumerable<string> GetFilesIntersection(List<string> list)
         {

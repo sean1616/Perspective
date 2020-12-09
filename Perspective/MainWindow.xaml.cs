@@ -56,8 +56,11 @@ namespace Perspective
             _page_CurrentPage = new Page_CurrentPage(vm);
             _page_Setting = new Page_Setting(vm);
 
-            tagsDirectoryPath = currentPath + @"\Tags";
-            InTagsDirectoryPath = currentPath + @"\InTags";
+            vm.tagsDirectoryPath = currentPath + @"\Tags";
+            vm.IntagsDirectoryPath = currentPath + @"\InTags";
+
+            tagsDirectoryPath = vm.tagsDirectoryPath;
+            InTagsDirectoryPath = vm.IntagsDirectoryPath;
 
             Binding myBinding = new Binding("list_files[1]");
             myBinding.Source = vm;
@@ -86,14 +89,13 @@ namespace Perspective
             //style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
             //btn_tag.Style = style_tag;
 
-            GetSavedTags();
+            pps.GetSavedTags(tagsDirectoryPath, InTagsDirectoryPath);
 
             vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
             
             pps.SearchDirectory(vm.path);
 
             pageTransitionControl.ShowPage(_page_CurrentPage);
-
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -124,7 +126,7 @@ namespace Perspective
         }
 
 
-        Style style_tag;
+        //Style style_tag;
         private void Btn_addTagWindow_Click(object sender, RoutedEventArgs e)
         {          
             _window_addTags = new Window_AddTags(vm);
@@ -159,8 +161,9 @@ namespace Perspective
             {
                 vm.list_selectedTagModels.Remove(tm);
             }
-                        
-            pps.Refresh_Taged_File(tagsDirectoryPath);
+
+            pps.Refresh_Taged_File(vm.list_selectedTagModels.ToList());
+            //pps.Refresh_Taged_File(tagsDirectoryPath);
 
             vm.list_selected_items.Clear();
         }
@@ -196,7 +199,7 @@ namespace Perspective
                     File.Move(tempFile, tagPath);
                 }
 
-                pps.Refresh_Taged_File(tagsDirectoryPath);
+                //pps.Refresh_Taged_File(tagsDirectoryPath);
             }
         }
 
@@ -207,11 +210,12 @@ namespace Perspective
         private void btn_tag_PreviewMouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             ToggleButton btn = (ToggleButton)sender;
-            string tag = btn.Content.ToString();
+            TagModel tm = (TagModel)btn.DataContext;
+            string tag = tm.tagName;
 
             if (vm._isTagRemoveMode)
             {                
-                if (vm.list_tags.Contains(tag)) vm.list_tags.Remove(tag);
+                if (vm.list_TagModels.Contains(tm)) vm.list_TagModels.Remove(tm);
             }
             else
             {                
@@ -241,7 +245,7 @@ namespace Perspective
 
         private void btn_saveTag_Click(object sender, RoutedEventArgs e)
         {            
-            if (vm.list_tags.Count <= 0) return;
+            if (vm.list_TagModels.Count <= 0) return;
 
             if (Directory.Exists(tagsDirectoryPath))
             {
@@ -252,8 +256,9 @@ namespace Perspective
                     tags_already.Add(Path.GetFileNameWithoutExtension(s));
                 }
 
-                foreach(string s in vm.list_tags)
+                foreach(TagModel tm in vm.list_TagModels)
                 {
+                    string s = tm.tagName;
                     string tagTxtPath = tagsDirectoryPath + @"\" + s + @".txt";
                     if (!tags_already.Contains(s))  //若tag未有文字檔
                     {                        
@@ -281,51 +286,51 @@ namespace Perspective
                                    
         }
 
-        private void GetSavedTags()
-        {           
-            if (Directory.Exists(tagsDirectoryPath))
-            {
-                vm.list_TagModels = new ObservableCollection<TagModel>();
-                vm.list_tags = new System.Collections.ObjectModel.ObservableCollection<string>();
-                string[] tagsPath = Directory.GetFiles(tagsDirectoryPath);
-                foreach (string s in tagsPath)
-                {
-                    string tag = Path.GetFileNameWithoutExtension(s);
-                    vm.list_tags.Add(tag);
+        //private void GetSavedTags()
+        //{           
+        //    if (Directory.Exists(tagsDirectoryPath))
+        //    {
+        //        vm.list_TagModels = new ObservableCollection<TagModel>();
+        //        vm.list_tags = new System.Collections.ObjectModel.ObservableCollection<string>();
+        //        string[] tagsPath = Directory.GetFiles(tagsDirectoryPath);
+        //        foreach (string s in tagsPath)
+        //        {
+        //            string tag = Path.GetFileNameWithoutExtension(s);
+        //            vm.list_tags.Add(tag);
 
-                    if (!vm.dictonary_tag_files.ContainsKey(tag))
-                        vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
+        //            if (!vm.dictonary_tag_files.ContainsKey(tag))
+        //                vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
 
-                    TagModel tagModel = new TagModel() { tagName = tag, isChecked = false };
-                    vm.list_TagModels.Add(tagModel);
-                }
-            }
-            else
-            {
-                Directory.CreateDirectory(tagsDirectoryPath);
-            }
+        //            TagModel tagModel = new TagModel() { tagName = tag, isChecked = false };
+        //            vm.list_TagModels.Add(tagModel);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        Directory.CreateDirectory(tagsDirectoryPath);
+        //    }
 
-            #region Invisible tags
-            if (!Directory.Exists(InTagsDirectoryPath))
-            {
-                Directory.CreateDirectory(InTagsDirectoryPath);
-            }
-            #endregion
-        }
+        //    #region Invisible tags
+        //    if (!Directory.Exists(InTagsDirectoryPath))
+        //    {
+        //        Directory.CreateDirectory(InTagsDirectoryPath);
+        //    }
+        //    #endregion
+        //}
 
         private void btn_selectedTagClear_Click(object sender, RoutedEventArgs e)
         {
             vm.list_fileNames.Clear();
             vm.list_files.Clear();
-            vm.list_selectedTags.Clear();
+            vm.list_selectedTagModels.Clear();
 
-            GetSavedTags();
+            pps.GetSavedTags(tagsDirectoryPath, InTagsDirectoryPath);
 
-            string[] keys = vm.dictonary_tag_files.Keys.ToArray();
-            foreach(string key in keys)
-            {
-                vm.dictonary_tag_files[key] = new ObservableCollection<string>();
-            }
+            //string[] keys = vm.dictonary_tag_files.Keys.ToArray();
+            //foreach(string key in keys)
+            //{
+            //    vm.dictonary_tag_files[key] = new List<string>();
+            //}
             pps.SearchDirectory(vm.path);
 
             var v = (from tagM in vm.list_TagModels where tagM.isChecked == true select tagM );
@@ -388,8 +393,9 @@ namespace Perspective
 
             if (Directory.Exists(tagsDirectoryPath))
             {
-                foreach(string tag in vm.list_selectedTags)
+                foreach(TagModel tm in vm.list_selectedTagModels)
                 {
+                    string tag = tm.tagName;
                     string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";
                     if (!File.Exists(tagTxtPath)) continue;
 
@@ -530,7 +536,7 @@ namespace Perspective
 
         private void btn_deleteTag_Click(object sender, RoutedEventArgs e)
         {
-            if (vm.list_selectedTags.Count == 0)
+            if (vm.list_selectedTagModels.Count == 0)
             {
                 MessageBox.Show("No selected tag");
                 return;
@@ -538,33 +544,23 @@ namespace Perspective
 
             if (MessageBox.Show("Delete tags ?", "Question", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
             {
-                foreach (string tag in vm.list_selectedTags)
+                foreach (TagModel tm in vm.list_selectedTagModels)
                 {
+                    string tag = tm.tagName;
                     string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
 
                     if (File.Exists(tagTxtPath))
                     {
-                        File.Delete(tagTxtPath);
+                        FileSystem.DeleteFile(tagTxtPath, UIOption.AllDialogs, RecycleOption.SendToRecycleBin, UICancelOption.ThrowException);
                     }
                     else vm.msg.txt_msg1 = tag + " not exist";
-
-                    foreach(string s in vm.list_selectedTags)
-                    {
-                        vm.list_tags.Remove(s);
-                    }
-                    //foreach(TagModel t in vm.list_selectedTagModels)
-                    //{
-                    //    vm.list_TagModels.Remove(t);
-                    //}
-
-
+                    
                     List<TagModel> tagModels = vm.list_TagModels.Where(x => x.tagName == tag).ToList();
                     foreach (TagModel t in tagModels)
                         vm.list_TagModels.Remove(t);
                 }
 
                 vm.list_selectedTagModels.Clear();
-                vm.list_selectedTags.Clear();
 
                 MessageBox.Show("Done");
             }
@@ -700,13 +696,13 @@ namespace Perspective
                 if (vm._isInTagMode)
                 {
                     tagsDirectoryPath = InTagsDirectoryPath;
-                    GetSavedTags();
+                    pps.GetSavedTags(tagsDirectoryPath, InTagsDirectoryPath);
                     border_tagBackground.Background = Brushes.Orange;
                 }
                 else
                 {
                     tagsDirectoryPath = currentPath + @"\Tags";
-                    GetSavedTags();
+                    pps.GetSavedTags(tagsDirectoryPath, InTagsDirectoryPath);
                     border_tagBackground.Background = (SolidColorBrush)new BrushConverter().ConvertFrom("#FFE7F1F0");
                 }
 
@@ -893,7 +889,7 @@ namespace Perspective
         {
             if (string.IsNullOrEmpty(txt_nTagName.Text))
             {
-                GetSavedTags();
+                pps.GetSavedTags(tagsDirectoryPath, InTagsDirectoryPath);
             }
         }
     }

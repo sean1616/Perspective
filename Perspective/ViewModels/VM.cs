@@ -22,6 +22,8 @@ namespace Perspective.ViewModels
         public BackgroundWorker worker = new BackgroundWorker();
         public DispatcherTimer timer = new DispatcherTimer();
 
+        public string tagsDirectoryPath { get; set; } = "";
+        public string IntagsDirectoryPath { get; set; } = "";
         public int ExpanderItemsHeigh { get; set; } = 25;
 
         private string _txt_localPath = "";
@@ -198,23 +200,23 @@ namespace Perspective.ViewModels
         //    }
         //}
 
-        private ObservableCollection<string> _list_tags = new ObservableCollection<string>();
-        public ObservableCollection<string> list_tags
-        {
-            get { return _list_tags; }
-            set
-            {
-                _list_tags = value;
-                OnPropertyChanged_Normal("list_tags");
-            }
-        }
+        //private ObservableCollection<string> _list_tags = new ObservableCollection<string>();
+        //public ObservableCollection<string> list_tags
+        //{
+        //    get { return _list_tags; }
+        //    set
+        //    {
+        //        _list_tags = value;
+        //        OnPropertyChanged_Normal("list_tags");
+        //    }
+        //}
 
 
-        public ObservableCollection<string> list_selectedTags { get; set; } = new ObservableCollection<string>();
+        //public ObservableCollection<string> list_selectedTags { get; set; } = new ObservableCollection<string>();
         public ObservableCollection<TagModel> list_selectedTagModels { get; set; } = new ObservableCollection<TagModel>();
 
 
-        public Dictionary<string, ObservableCollection<string>> dictonary_tag_files { get; set; } = new Dictionary<string, ObservableCollection<string>>();
+        public Dictionary<string, List<string>> dictonary_tag_files { get; set; } = new Dictionary<string, List<string>>();
 
         private string _path = @"D:\Download";
         public string path

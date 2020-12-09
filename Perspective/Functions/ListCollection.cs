@@ -18,20 +18,20 @@ namespace Perspective.Functions
             this.vm = vm;
         }
 
-        public void RemoveTag(string tag, string tagPath)
-        {
-            if (vm.list_tags.Contains(tag))
-                vm.list_tags.Remove(tag);
+        //public void RemoveTag(string tag, string tagPath)
+        //{
+        //    if (vm.list_tags.Contains(tag))
+        //        vm.list_tags.Remove(tag);
 
-            if (vm.dictonary_tag_files.ContainsKey(tag))
-                vm.dictonary_tag_files.Remove(tag);
+        //    if (vm.dictonary_tag_files.ContainsKey(tag))
+        //        vm.dictonary_tag_files.Remove(tag);
 
-            if (File.Exists(@tagPath))
-            {
-                File.Delete(tagPath);
-                MessageBox.Show("Tag removed");
-            }
-        }
+        //    if (File.Exists(@tagPath))
+        //    {
+        //        File.Delete(tagPath);
+        //        MessageBox.Show("Tag removed");
+        //    }
+        //}
 
         
     }

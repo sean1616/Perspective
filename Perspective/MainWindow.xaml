@@ -327,8 +327,8 @@
                     <ColumnDefinition Width="8*" />
                     <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}" />
                     <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}" />
-                    <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}" />
+                    <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}" />
                 </Grid.ColumnDefinitions>
                 <Button
@@ -367,7 +367,7 @@
 
                 <Button
                     x:Name="btn_deleteTag"
-                    Grid.Column="2"
+                    Grid.Column="4"
                     Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}"
                     Click="btn_deleteTag_Click"
                     Content="../Resources/delete.png"
@@ -380,16 +380,17 @@
                     Content="../Resources/save.png"
                     FontFamily="Segoe Print"
                     Style="{DynamicResource BtnStyle_ImgCenter}" />
-                <!--<Button x:Name="btn_RefreshTags"
-                        Grid.Column="4"
-                        Click="btn_RefreshTags_Click"
-                        Content="Refresh"
+                <Button x:Name="btn_addTag"
+                        Grid.Column="2"
+                        Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}"
+                        Click="Btn_addTagWindow_Click"
+                        Content="../Resources/add.png"
                         FontFamily="Segoe Print"
-                        Style="{DynamicResource BtnStyle_TxtCenter}" />-->
+                        Style="{DynamicResource BtnStyle_ImgCenter}" />
 
                 <TextBox
                     x:Name="txt_nTagName"
-                    Grid.Column="4"
+                    Grid.Column="5"
                     Height="{Binding ActualHeight, ElementName=itms_tags}"
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
@@ -398,20 +399,13 @@
                     TextChanged="Txt_nTagName_TextChanged" />
                 <Button
                     x:Name="btn_searchTag"
-                    Grid.Column="5"
+                    Grid.Column="6"
                     Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}"
                     Click="btn_searchTag_Click"
                     Content="../Resources/search.png"
                     FontFamily="Segoe Print"
                     Style="{DynamicResource BtnStyle_ImgCenter}" />
-                <Button
-                    x:Name="btn_addTag"
-                    Grid.Column="6"
-                    Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}"
-                    Click="Btn_addTagWindow_Click"
-                    Content="../Resources/add.png"
-                    FontFamily="Segoe Print"
-                    Style="{DynamicResource BtnStyle_ImgCenter}" />
+                
             </Grid>
 
 

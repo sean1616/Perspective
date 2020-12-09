@@ -62,12 +62,11 @@ namespace Perspective.Navigations
                 TagModel model = new TagModel() { tagName = tag, isChecked = false };
                 
                 if (!vm.list_TagModels.Contains(model))
-                {
-                    vm.list_tags.Add(tag);
+                {                    
                     vm.list_TagModels.Add(model);
                 }
                    
-                vm.dictonary_tag_files.Add(tag, new ObservableCollection<string>());
+                vm.dictonary_tag_files.Add(tag, new List<string>());
 
                 string tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
                 if (!File.Exists(tagTxtPath))
