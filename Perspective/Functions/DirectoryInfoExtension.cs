@@ -12,11 +12,15 @@ namespace Perspective.Functions
     {
         public static long GetSize(string path)
         {
-            Type tp = Type.GetTypeFromProgID("Scripting.FileSystemObject");
-            object fso = Activator.CreateInstance(tp);
-            object fd = tp.InvokeMember("GetFolder", BindingFlags.InvokeMethod, null, fso, new object[] { path });
-            long ret = Convert.ToInt64(tp.InvokeMember("Size", BindingFlags.GetProperty, null, fd, null));
-            Marshal.ReleaseComObject(fso);
+            long ret = 0;
+            try {
+                Type tp = Type.GetTypeFromProgID("Scripting.FileSystemObject");
+                object fso = Activator.CreateInstance(tp);
+                object fd = tp.InvokeMember("GetFolder", BindingFlags.InvokeMethod, null, fso, new object[] { path });
+                ret = Convert.ToInt64(tp.InvokeMember("Size", BindingFlags.GetProperty, null, fd, null));
+                Marshal.ReleaseComObject(fso);
+            }
+            catch { }
             return ret;
         }
     }

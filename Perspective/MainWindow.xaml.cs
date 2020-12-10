@@ -64,6 +64,7 @@ namespace Perspective
 
             vm.tagsDirectoryPath = Directory.GetParent(vm.ini_path) + @"\Tags";
             vm.IntagsDirectoryPath = Directory.GetParent(vm.ini_path) + @"\InTags";
+            vm.DirectFolders_DirectoryPath = Directory.GetParent(vm.ini_path) + @"\DirectFolders\DirecFolders.txt";
 
             tagsDirectoryPath = vm.tagsDirectoryPath;
             InTagsDirectoryPath = vm.IntagsDirectoryPath;
@@ -72,7 +73,8 @@ namespace Perspective
             myBinding.Source = vm;
 
             pps = new PathProcess(vm);
-
+           
+            //itemsource_directFolders.ItemsSource = vm.list_DirectFolderModels;
             grid_msg.DataContext = vm.msg;
 
             #region Background worker setting
@@ -91,6 +93,8 @@ namespace Perspective
         {
             //style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
             //btn_tag.Style = style_tag;
+
+            pps.GetSavedDirectFolders(vm.DirectFolders_DirectoryPath);
 
             pps.GetSavedTags(tagsDirectoryPath, InTagsDirectoryPath);
 
@@ -115,9 +119,9 @@ namespace Perspective
                 {
                     vm.list_PathBoxModels.Clear();
                     pps.SearchDirectory(tbk.Text);
-                }                   
+                }
 
-                if (e.Key == Key.Enter) vm.Visibility_txt_path = true;
+                vm.Visibility_txt_path = true;
             }
         }
 
@@ -706,10 +710,19 @@ namespace Perspective
             }
         }
 
-        private void Btn_UserDir_Click(object sender, RoutedEventArgs e)
+        private void Btn_DirecFolder_Click(object sender, RoutedEventArgs e)
         {
-            vm.path = @"D:\SeanWu";
-            pps.SearchDirectory(vm.path);
+            Button btn = (Button)sender;
+
+            DirectFolderModel dfm;
+            try
+            {
+                dfm = (DirectFolderModel)btn.DataContext;
+            }
+            catch { return; }
+
+            vm.path = dfm.pathInfo;
+            pps.SearchDirectory(dfm.pathInfo);
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)
@@ -898,6 +911,67 @@ namespace Perspective
         {
             vm.Visibility_txt_path = false;
             txt_path.Focus();
+        }
+
+        private void btn_pathBox_Click(object sender, RoutedEventArgs e)
+        {
+            Button btn = (Button)sender;
+            PathBoxModel pathBox = (PathBoxModel)btn.DataContext;
+            vm.path = pathBox.pathInfo;
+            pps.SearchDirectory(vm.path);
+        }
+
+        private void Txt_path_LostFocus(object sender, RoutedEventArgs e)
+        {
+            vm.Visibility_txt_path = true;
+        }
+
+        private void Txt_search_MouseEnter(object sender, MouseEventArgs e)
+        {
+            if (this.Cursor != Cursors.Wait)
+                Mouse.OverrideCursor = Cursors.IBeam;
+        }
+
+        private void Txt_search_MouseLeave(object sender, MouseEventArgs e)
+        {
+            if (this.Cursor != Cursors.Wait)
+                Mouse.OverrideCursor = Cursors.Arrow;
+        }
+
+        private void MenuItem_SavePath_Click(object sender, RoutedEventArgs e)
+        {
+            if (!string.IsNullOrEmpty(vm.path))
+            {
+                DirectFolderModel model = new DirectFolderModel() { pathInfo = vm.path, Name = new DirectoryInfo(vm.path).Name, user = "user", visible = true };
+
+                if (!vm.list_DirectFolderModels.Contains(model))
+                {
+                    vm.list_DirectFolderModels.Add(model);
+                }
+
+                //vm.dictonary_tag_files.Add(tag, new List<string>());
+
+                string DirectFolderTxtPath = vm.DirectFolders_DirectoryPath;   //Txt path of this tag
+                if (!File.Exists(DirectFolderTxtPath))
+                    using (StreamWriter sw = File.CreateText(@DirectFolderTxtPath)) { }  //建立空的文件檔
+
+                string[] lines = System.IO.File.ReadAllLines(DirectFolderTxtPath);
+                try
+                {
+                    using (StreamWriter file = new StreamWriter(@DirectFolderTxtPath, true))
+                    {
+                        foreach (DirectFolderModel dfm in vm.list_DirectFolderModels)
+                        {
+                            if (!lines.Contains(dfm.pathInfo))
+                            {
+                                //vm.dictonary_tag_files[tag].Add(dm.pathInfo);
+                                file.WriteLine(dfm.pathInfo);  //寫入選取的檔案or資料夾 路徑
+                            }
+                        }
+                    }
+                }
+                catch { }
+            }
         }
 
         private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)

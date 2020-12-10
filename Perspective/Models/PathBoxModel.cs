@@ -9,5 +9,6 @@ namespace Perspective.Models
     public class PathBoxModel
     {
         public string Name { get; set; } = "";
+        public string pathInfo { get; set; } = "";
     }
 }

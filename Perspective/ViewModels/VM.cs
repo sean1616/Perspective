@@ -48,7 +48,9 @@ namespace Perspective.ViewModels
 
         public string tagsDirectoryPath { get; set; } = "";
         public string IntagsDirectoryPath { get; set; } = "";
-        public int ExpanderItemsHeigh { get; set; } = 25;
+        public string DirectFolders_DirectoryPath { get; set; } = "";
+
+        public int ExpanderItemsHeigh { get; set; } = 30;
 
         private string _txt_localPath = "";
         public string txt_localPath
@@ -130,6 +132,17 @@ namespace Perspective.ViewModels
 
         public bool _isInTagMode { get; set; } = false;
         public bool _isTagEditMode { get; set; } = false;
+
+        private ObservableCollection<DirectFolderModel> _list_DirectFolderModels = new ObservableCollection<DirectFolderModel>();
+        public ObservableCollection<DirectFolderModel> list_DirectFolderModels
+        {
+            get { return _list_DirectFolderModels; }
+            set
+            {
+                _list_DirectFolderModels = value;
+                OnPropertyChanged_Normal("list_DirectFolderModels");
+            }
+        }
 
         private ObservableCollection<TagModel> _list_TagModels = new ObservableCollection<TagModel>();
         public ObservableCollection<TagModel> list_TagModels
@@ -282,11 +295,23 @@ namespace Perspective.ViewModels
                 _path = value;
                 OnPropertyChanged_Normal("path");
 
-                string[] list_splitPath=_path.Split('\\');
-                foreach(string s in list_splitPath)
+                if (!string.IsNullOrEmpty(_path))
                 {
-                    list_PathBoxModels.Add(new PathBoxModel() { Name = s });
-                }
+                    string[] list_splitPath = _path.Split('\\');
+                    string pathBox_pathInfo = list_splitPath[0];
+
+                    for (int i = 0; i < list_splitPath.Length; i++)
+                    {
+                        if (i > 0)
+                        {
+                            pathBox_pathInfo = string.Concat(pathBox_pathInfo, @"\", list_splitPath[i]);
+                        }
+                        else pathBox_pathInfo = string.Concat(pathBox_pathInfo, @"\");
+
+                        if (!string.IsNullOrWhiteSpace(list_splitPath[i]))
+                            list_PathBoxModels.Add(new PathBoxModel() { Name = list_splitPath[i], pathInfo = pathBox_pathInfo });
+                    }                                      
+                }              
             }
         }
 

@@ -199,27 +199,28 @@
                 MouseMove="Border_MouseMove" />
             <ScrollViewer Margin="0,0,3,0" Background="White" MouseMove="Border_MouseMove" MouseUp="Border_MouseUp">
                 <StackPanel>
-                    <Expander Header="快速存取" IsExpanded="True">
-                        <StackPanel>
-                            <Button
-                                x:Name="btn_UserDir"
-                                Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"
-                                Click="Btn_UserDir_Click"
-                                Content="SeanWu"
-                                Style="{DynamicResource BtnStyle_TxtCenter}" />
-                            <Button
-                                Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"
-                                Content="Download"
-                                Style="{DynamicResource BtnStyle_TxtCenter}" />
-                            <Button
-                                Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"
-                                Content="Repository"
-                                Style="{DynamicResource BtnStyle_TxtCenter}" />
-                            <Button
-                                Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"
-                                Content="Media"
-                                Style="{DynamicResource BtnStyle_TxtCenter}" />
-                        </StackPanel>
+                    <Expander Header="快速存取" IsExpanded="True" >
+                        <Expander.ContextMenu>
+                            <ContextMenu>
+                                <MenuItem x:Name="menuItem_SavePath" Header="Save Path to Favorite" Click="MenuItem_SavePath_Click"/>
+                            </ContextMenu>
+                        </Expander.ContextMenu>
+                        <ItemsControl
+                            ItemsSource="{Binding list_DirectFolderModels}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Vertical" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Button  Content="{Binding Name}" 
+                                             Height="30"
+                                            Click="Btn_DirecFolder_Click"
+                                            Style="{DynamicResource BtnStyle_TxtCenter}"/>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
                     </Expander>
                     <Expander Header="本機" IsExpanded="True">
                         <StackPanel>
@@ -252,8 +253,7 @@
                                 Content="Document"
                                 Style="{DynamicResource BtnStyle_TxtCenter}" />
                         </StackPanel>
-                    </Expander>
-                    <Expander />
+                    </Expander>                   
                 </StackPanel>
             </ScrollViewer>
         </Grid>
@@ -262,7 +262,7 @@
             Grid.Row="2"
             Grid.Column="0"
             Grid.ColumnSpan="2"
-            Margin="5,0,-5,0"
+            Margin="5,0,5,0"
             Background="#FFFBFBFB">
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -298,12 +298,17 @@
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
                     FontFamily="Segoe Print"
+                    FontSize="{Binding FontSize, ElementName=txt_searchFiles}"
+                    LostFocus="Txt_path_LostFocus"
+                    MouseEnter="Txt_search_MouseEnter"
+                    MouseLeave="Txt_search_MouseLeave"
                     PreviewKeyDown="Txt_path_PreviewKeyDown"
                     PreviewMouseDoubleClick="Txt_path_PreviewMouseDoubleClick"                        
                     Text="{Binding path}" />
 
                 <Grid Grid.Column="2"
-                      Visibility="{Binding Visibility_txt_path , Converter={StaticResource visConverter}}">
+                      Visibility="{Binding Visibility_txt_path , Converter={StaticResource visConverter}}"
+                      Height="{Binding ActualHeight, ElementName=txt_path, Mode=OneWay}">
                     <Border Background="White"
                             PreviewMouseDown="Border_PreviewMouseDown"/>
                     <ItemsControl ItemsSource="{Binding list_PathBoxModels}">
@@ -316,7 +321,8 @@
                             <DataTemplate>
                                 <Button Content="{Binding Name}"
                                         Style="{DynamicResource BtnStyle_TxtCenter}"
-                                        Margin="2,0" />
+                                        Click="btn_pathBox_Click"
+                                        Margin="1,0" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
@@ -339,10 +345,13 @@
 
                 <TextBox
                     x:Name="txt_searchFiles"
-                    Grid.Column="5"
+                    Grid.Column="5"                    
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
+                    FontSize="15"
                     FontFamily="Segoe Print"
+                    MouseLeave="Txt_search_MouseLeave"
+                    MouseEnter="Txt_search_MouseEnter"
                     Text="{Binding txt_for_searchFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     TextChanged="txt_searchFiles_TextChanged" />
                 <Button
@@ -352,7 +361,7 @@
                     Style="{DynamicResource BtnStyle_ImgCenter}" />
             </Grid>
 
-            <Grid x:Name="grid_tags" Grid.Row="1">
+            <Grid x:Name="grid_tags" Grid.Row="1" Height="{Binding ActualHeight, ElementName=txt_path, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}" />
                     <ColumnDefinition Width="8*" />
@@ -426,6 +435,8 @@
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
                     FontFamily="Segoe Print"
+                    MouseEnter="Txt_search_MouseEnter"
+                    MouseLeave="Txt_search_MouseLeave"
                     PreviewKeyDown="txt_nTagName_PreviewKeyDown"
                     TextChanged="Txt_nTagName_TextChanged" />
                 <Button

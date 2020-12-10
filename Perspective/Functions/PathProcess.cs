@@ -28,6 +28,34 @@ namespace Perspective.Functions
             this.vm = vm;
         }
 
+        public void GetSavedDirectFolders(string DirectFoldersPath)
+        {
+            if (File.Exists(DirectFoldersPath))
+            {
+                vm.list_DirectFolderModels = new ObservableCollection<DirectFolderModel>();
+
+                string[] DirectFolders = File.ReadAllLines(DirectFoldersPath);
+                foreach (string s in DirectFolders)
+                {
+                    var dirName = new DirectoryInfo(s).Name;
+                    DirectFolderModel dfm = new DirectFolderModel() { Name = dirName, pathInfo = s, user = "user", visible = true };
+                    vm.list_DirectFolderModels.Add(dfm);
+                }
+            }
+            else
+            {
+                if (!Directory.Exists(@"D:\MobiusLink"))
+                {
+                    Directory.CreateDirectory(@"D:\MobiusLink");
+                }
+                if (!Directory.Exists(new DirectoryInfo(DirectFoldersPath).Parent.FullName))
+                {
+                    Directory.CreateDirectory(new DirectoryInfo(DirectFoldersPath).Parent.FullName);
+                }                    
+                File.Create(DirectFoldersPath);
+            }
+        }
+
         public void GetSavedTags(string tagsDirectoryPath, string InTagsDirectoryPath)
         {
             if (Directory.Exists(tagsDirectoryPath))

@@ -74,8 +74,7 @@ namespace Perspective.Navigations
                 if (!vm._isInTagMode)
                     tagTxtPath = tagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
                 else tagTxtPath = vm.IntagsDirectoryPath + @"\" + tag + @".txt";   //Txt path of this tag
-
-
+                
                 if (!File.Exists(tagTxtPath))
                     using (StreamWriter sw = File.CreateText(@tagTxtPath)) { }  //建立空的文件檔
             }
