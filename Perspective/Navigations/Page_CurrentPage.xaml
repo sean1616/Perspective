@@ -59,8 +59,7 @@
                                 Width="140"
                                 Height="160"
                                 PreviewMouseDoubleClick="UC_FileBox_MouseDoubleClick"
-                                Tbtn_MouseEnter="UC_Tbtn_MouseEnter"
-                                
+                                Tbtn_MouseEnter="UC_Tbtn_MouseEnter"                                
                                 Tbtn_Checked="tbtn_Checked"
                                 Tbtn_UnChecked="tbtn_Unchecked"
                                 imgSource="{Binding imgSource}"

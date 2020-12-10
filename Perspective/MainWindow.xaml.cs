@@ -60,6 +60,8 @@ namespace Perspective
             //vm.IntagsDirectoryPath = currentPath + @"\InTags";
             //vm.ini_path = currentPath + @"\Setting\Instrument.ini";
 
+            vm.path = @"D:\Download"; ;
+
             vm.tagsDirectoryPath = Directory.GetParent(vm.ini_path) + @"\Tags";
             vm.IntagsDirectoryPath = Directory.GetParent(vm.ini_path) + @"\InTags";
 
@@ -109,7 +111,13 @@ namespace Perspective
             if (e.Key == Key.Enter)
             {
                 TextBox tbk = (TextBox)sender;
-                pps.SearchDirectory(tbk.Text);
+                if (tbk.Text != vm.path)
+                {
+                    vm.list_PathBoxModels.Clear();
+                    pps.SearchDirectory(tbk.Text);
+                }                   
+
+                if (e.Key == Key.Enter) vm.Visibility_txt_path = true;
             }
         }
 
@@ -884,6 +892,14 @@ namespace Perspective
             vm.msg.txt_msg5 = col_pathCollection.ActualWidth.ToString();
         }
 
+        
+
+        private void Border_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            vm.Visibility_txt_path = false;
+            txt_path.Focus();
+        }
+
         private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (string.IsNullOrEmpty(txt_nTagName.Text))
@@ -891,5 +907,9 @@ namespace Perspective
                 pps.GetSavedTags(tagsDirectoryPath, InTagsDirectoryPath);
             }
         }
+
+
     }
+
+  
 }

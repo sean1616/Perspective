@@ -9,6 +9,7 @@
     xmlns:pageTransitions="clr-namespace:WpfPageTransitions;assembly=WpfPageTransitions"
     xmlns:uc="clr-namespace:Perspective.UI"
     xmlns:vm="clr-namespace:Perspective.ViewModels"
+    xmlns:iv="clr-namespace:Perspective.ValueConverters"
     Title="MainWindow"
     Width="1300"
     Height="800"
@@ -24,6 +25,10 @@
     <Window.DataContext>
         <vm:VM />
     </Window.DataContext>
+
+    <Window.Resources>
+        <iv:VisibleConverter x:Key="visConverter" />
+    </Window.Resources>
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -294,9 +299,30 @@
                     VerticalContentAlignment="Center"
                     FontFamily="Segoe Print"
                     PreviewKeyDown="Txt_path_PreviewKeyDown"
-                    PreviewMouseDoubleClick="Txt_path_PreviewMouseDoubleClick"
+                    PreviewMouseDoubleClick="Txt_path_PreviewMouseDoubleClick"                        
                     Text="{Binding path}" />
-                <Viewbox HorizontalAlignment="Left" />
+
+                <Grid Grid.Column="2"
+                      Visibility="{Binding Visibility_txt_path , Converter={StaticResource visConverter}}">
+                    <Border Background="White"
+                            PreviewMouseDown="Border_PreviewMouseDown"/>
+                    <ItemsControl ItemsSource="{Binding list_PathBoxModels}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <Button Content="{Binding Name}"
+                                        Style="{DynamicResource BtnStyle_TxtCenter}"
+                                        Margin="2,0" />
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </Grid>
+                
+                <!--<Viewbox HorizontalAlignment="Left" />-->
 
                 <Button
                     Grid.Column="3"

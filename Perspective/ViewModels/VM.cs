@@ -32,6 +32,17 @@ namespace Perspective.ViewModels
         }
         public static SetupIniIP ini = new SetupIniIP();
 
+        private bool _Visibility_txt_path = true;
+        public bool Visibility_txt_path
+        {
+            get { return _Visibility_txt_path; }
+            set
+            {
+                _Visibility_txt_path = value;
+                OnPropertyChanged_Normal("Visibility_txt_path");
+            }
+        }
+
         public BackgroundWorker worker = new BackgroundWorker();
         public DispatcherTimer timer = new DispatcherTimer();
 
@@ -131,16 +142,16 @@ namespace Perspective.ViewModels
             }
         }
 
-        //private ObservableCollection<DataModel> _list_DataModels = new ObservableCollection<DataModel>() { new DataModel() { Names = "No.1" } };
-        //public ObservableCollection<DataModel> list_DataModels
-        //{
-        //    get { return _list_DataModels; }
-        //    set
-        //    {
-        //        _list_DataModels = value;
-        //        OnPropertyChanged_Normal("list_DataModels");
-        //    }
-        //}
+        private ObservableCollection<PathBoxModel> _list_PathBoxModels = new ObservableCollection<PathBoxModel>();
+        public ObservableCollection<PathBoxModel> list_PathBoxModels
+        {
+            get { return _list_PathBoxModels; }
+            set
+            {
+                _list_PathBoxModels = value;
+                OnPropertyChanged_Normal("list_PathBoxModels");
+            }
+        }
 
         private ObservableCollection<DataModel> _list_DirDataModels = new ObservableCollection<DataModel>() { new DataModel() { Name = "No.1" } };
         public ObservableCollection<DataModel> list_DirDataModels
@@ -267,8 +278,15 @@ namespace Perspective.ViewModels
             get { return _path; }
             set
             {
+                list_PathBoxModels.Clear();
                 _path = value;
                 OnPropertyChanged_Normal("path");
+
+                string[] list_splitPath=_path.Split('\\');
+                foreach(string s in list_splitPath)
+                {
+                    list_PathBoxModels.Add(new PathBoxModel() { Name = s });
+                }
             }
         }
 

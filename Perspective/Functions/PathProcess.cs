@@ -144,7 +144,13 @@ namespace Perspective.Functions
                 case ".doc":
                     img_strSource = currentPath + @"\ImgSource\doc.png";
                     break;
+                case ".docx":
+                    img_strSource = currentPath + @"\ImgSource\doc.png";
+                    break;
                 case ".ppt":
+                    img_strSource = currentPath + @"\ImgSource\ppt.png";
+                    break;
+                case ".pptx":
                     img_strSource = currentPath + @"\ImgSource\ppt.png";
                     break;
                 case ".gif":
@@ -188,10 +194,10 @@ namespace Perspective.Functions
 
                 vm.list_DirDataModels.Clear();
                 vm.list_FileDataModels.Clear();
-                vm.list_files.Clear();
+                //vm.list_files.Clear();
                 vm.list_directories.Clear();
-                vm.list_dirNames.Clear();
-                vm.list_fileNames.Clear();
+                //vm.list_dirNames.Clear();
+                //vm.list_fileNames.Clear();                
 
                 if (File.Exists(@path))  // This path is a file
                 {
@@ -323,17 +329,6 @@ namespace Perspective.Functions
                     return;
                 }
                 string s = vm.searchFiles_Result[i];
-                //FileInfo fi = new FileInfo(s);
-                //DataModel dm = new DataModel()
-                //{
-                //    Name = Path.GetFileName(s),
-                //    ExtensionName = fi.Extension,
-                //    Visibility_btn_remove = false,
-                //    pathInfo = s,
-                //    updateTime = fi.LastWriteTime,
-                //    creationTime = fi.CreationTime,
-                //    DirOrFile = true
-                //};
                 worker.ReportProgress((int)i, GetDataModel(s, false));
             }
         }
@@ -381,22 +376,6 @@ namespace Perspective.Functions
 
             timerCount++;
         }
-
-        //private DataModel GetDataModel(string path)
-        //{
-        //    FileInfo fi = new FileInfo(path);
-        //    DataModel dm = new DataModel()
-        //    {
-        //        Name = fi.Name,
-        //        ExtensionName = fi.Extension,
-        //        Visibility_btn_remove = false,
-        //        pathInfo = path,
-        //        updateTime = fi.LastWriteTime,
-        //        creationTime = fi.CreationTime,
-        //        DirOrFile = true
-        //    };
-        //    return dm;
-        //}
 
         private DataModel GetDataModel(string path, bool _isImage)
         {
@@ -517,7 +496,31 @@ namespace Perspective.Functions
             }
         }
 
+        public void Set_FileBox_Info(DataModel dm)
+        {
+            // get the file attributes for file or directory
+            FileAttributes attr = File.GetAttributes(dm.pathInfo);
 
+            //detect whether its a directory or file
+            if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+            {
+                var directory_size = DirectoryInfoExtension.GetSize(@dm.pathInfo);
+                vm.msg.txt_msg3 = string.Concat("大小: ", MathCalculation.Calculate_FileSize(directory_size));
+            }
+            else
+            {
+                FileInfo fi = new FileInfo(dm.pathInfo);
+                if (fi.Exists)
+                {
+                    vm.msg.txt_msg3 = string.Concat("大小: ", MathCalculation.Calculate_FileSize(fi.Length));
+                }
+            }
+            vm.msg.txt_msg2 = dm.Name;
+
+            vm.msg.txt_msg4 = string.Concat("建立日期: ", dm.creationTime.ToShortDateString(), " ", dm.creationTime.ToShortTimeString());
+            vm.msg.txt_msg5 = string.Concat("修改日期: ", dm.updateTime.ToShortDateString(), " ", dm.updateTime.ToShortTimeString());
+
+        }
 
         private IEnumerable<string> GetFilesIntersection(List<string> list)
         {
@@ -603,5 +606,7 @@ namespace Perspective.Functions
 
         //    return bitmap;
         //}
-    }
+
+        
+    }    
 }

@@ -58,51 +58,46 @@ namespace Perspective.Navigations
                 vm.list_selected_items.Add(dm);
                 vm.msg.txt_msg1 = string.Concat((vm.list_selected_items.Count), " items");
             }
+
+            pps.Set_FileBox_Info(dm);
+
+            //// get the file attributes for file or directory
+            //FileAttributes attr = File.GetAttributes(dm.pathInfo);
+
+            ////detect whether its a directory or file
+            //if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
+            //{
+            //    var directory_size = DirectoryInfoExtension.GetSize(@dm.pathInfo);
+            //    vm.msg.txt_msg2 = dm.Name;
+            //    vm.msg.txt_msg3 = string.Concat("大小: ", MathCalculation.Calculate_FileSize(directory_size));
+            //    vm.msg.txt_msg4 = string.Concat("建立日期: ", dm.creationTime.ToShortDateString(), " ", dm.creationTime.ToShortTimeString());
+            //    vm.msg.txt_msg5 = string.Concat("修改日期: ", dm.updateTime.ToShortDateString(), " ", dm.updateTime.ToShortTimeString());
+            //}
+            //else
+            //{
+            //    FileInfo fi = new FileInfo(dm.pathInfo);
+
+            //    if (fi.Exists)
+            //    {
+            //        vm.msg.txt_msg2 = dm.Name;                   
+            //        vm.msg.txt_msg3 = string.Concat("大小: ", MathCalculation.Calculate_FileSize(fi.Length));
+            //        vm.msg.txt_msg4 = string.Concat("建立日期: ", dm.creationTime.ToShortDateString(), " ", dm.creationTime.ToShortTimeString());
+            //        vm.msg.txt_msg5 = string.Concat("修改日期: ", dm.updateTime.ToShortDateString(), " ", dm.updateTime.ToShortTimeString());
+            //        //Console.WriteLine("File Size in Bytes: {0}", size);
+            //        //// File ReadOnly ?  
+            //        //bool IsReadOnly = fi.IsReadOnly;
+            //        //Console.WriteLine("Is ReadOnly: {0}", IsReadOnly);
+            //        //// Creation, last access, and last write time   
+            //        //DateTime creationTime = fi.CreationTime;
+            //        //Console.WriteLine("Creation time: {0}", creationTime);
+            //        //DateTime accessTime = fi.LastAccessTime;
+            //        //Console.WriteLine("Last access time: {0}", accessTime);
+            //        //DateTime updatedTime = fi.LastWriteTime;
+            //        //Console.WriteLine("Last write time: {0}", updatedTime);
+            //    }
+            //}
+
             
-            FileInfo fi = new FileInfo(dm.pathInfo);
-                                  
-            if (fi.Exists)
-            {
-                vm.msg.txt_msg2 = dm.Name;
-
-                // Get file size  
-                string sizeUnit = "Byte";
-                double size = fi.Length;
-                if((size / 10000) < 1000 && (size / 10000) > 1)
-                {
-                    size = Math.Round(size / 1000, 1);
-                    sizeUnit = "KB";
-                }
-                else if ((size / 10000000) < 1000 && (size / 10000000)>1)
-                {
-                    size = Math.Round(size / 1000000, 1);
-                    sizeUnit = " MB";
-                }
-                else if ((size / 1000000000)<1000 && (size / 1000000000)>1)
-                {
-                    size = Math.Round(size / 1000000000, 1);
-                    sizeUnit = " GB";
-                }
-                vm.msg.txt_msg3 = string.Concat("大小: ", size.ToString(), sizeUnit);
-
-                //DateTime creationTime = fi.CreationTime;
-                //vm.msg.txt_msg4 = string.Concat("建立日期: ", creationTime.ToShortDateString(), " ", creationTime.ToShortTimeString());
-                vm.msg.txt_msg4 = string.Concat("建立日期: ", dm.creationTime.ToShortDateString(), " ", dm.creationTime.ToShortTimeString());
-
-                //DateTime updatedTime = fi.LastWriteTime;
-                vm.msg.txt_msg5 = string.Concat("修改日期: ", dm.updateTime.ToShortDateString(), " ", dm.updateTime.ToShortTimeString());
-                //Console.WriteLine("File Size in Bytes: {0}", size);
-                //// File ReadOnly ?  
-                //bool IsReadOnly = fi.IsReadOnly;
-                //Console.WriteLine("Is ReadOnly: {0}", IsReadOnly);
-                //// Creation, last access, and last write time   
-                //DateTime creationTime = fi.CreationTime;
-                //Console.WriteLine("Creation time: {0}", creationTime);
-                //DateTime accessTime = fi.LastAccessTime;
-                //Console.WriteLine("Last access time: {0}", accessTime);
-                //DateTime updatedTime = fi.LastWriteTime;
-                //Console.WriteLine("Last write time: {0}", updatedTime);
-            }
         }
 
         private void tbtn_Unchecked(object sender, RoutedEventArgs e)
@@ -165,17 +160,15 @@ namespace Perspective.Navigations
         {            
             UC_FileBox uc = (UC_FileBox)sender;
             uc.tbtn_isChecked = false;
-            e.Handled = true;
-            
+            e.Handled = true;            
 
             if (File.Exists(@uc.path_info))  // This path is a file
             {
                 Process.Start(@uc.path_info);
             }
             else if (Directory.Exists(@uc.path_info))  // This path is a directory
-            {
+            {                
                 vm.path_previous.Add(vm.path);
-
                 vm.path = uc.path_info;
                 
                 pps.SearchDirectory(vm.path);

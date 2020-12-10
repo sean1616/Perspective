@@ -69,11 +69,14 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Functions\DirectoryInfoExtension.cs" />
     <Compile Include="Functions\ListCollection.cs" />
+    <Compile Include="Functions\MathCalculation.cs" />
     <Compile Include="Functions\PathProcess.cs" />
     <Compile Include="Functions\SetupIniIp.cs" />
     <Compile Include="Models\DataModel.cs" />
     <Compile Include="Models\MsgModel.cs" />
+    <Compile Include="Models\PathBoxModel.cs" />
     <Compile Include="Models\TagModel.cs" />
     <Compile Include="Navigations\Page_CurrentPage.xaml.cs">
       <DependentUpon>Page_CurrentPage.xaml</DependentUpon>
