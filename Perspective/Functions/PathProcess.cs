@@ -341,7 +341,7 @@ namespace Perspective.Functions
             DataModel[] dataModels = new DataModel[files.Length];
 
             vm.searchFiles_Result = files;
-
+            
             vm.worker.RunWorkerAsync();   //Background worker start to set thumbnail image to file which is a picture
             #endregion
         }
@@ -524,7 +524,9 @@ namespace Perspective.Functions
             }
         }
 
-        public void Set_FileBox_Info(DataModel dm)
+        
+
+        public async void Set_FileBox_Info(DataModel dm)
         {
             // get the file attributes for file or directory
             FileAttributes attr = File.GetAttributes(dm.pathInfo);
@@ -532,7 +534,13 @@ namespace Perspective.Functions
             //detect whether its a directory or file
             if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
             {
-                var directory_size = DirectoryInfoExtension.GetSize(@dm.pathInfo);
+                //非同步執行緒計算檔案大小
+                Task task1 = Task.Factory.StartNew(() => 1);
+                var directory_size = await Task.Run(() => DirectoryInfoExtension.GetSize(@dm.pathInfo));
+
+                //var directory_size = DirectoryInfoExtension.GetSize(@dm.pathInfo);
+
+
                 vm.msg.txt_msg3 = string.Concat("大小: ", MathCalculation.Calculate_FileSize(directory_size));
             }
             else
@@ -635,6 +643,39 @@ namespace Perspective.Functions
         //    return bitmap;
         //}
 
-        
+        public void DoWork_GetSize(object sender, DoWorkEventArgs e)
+        {
+            BackgroundWorker worker = sender as BackgroundWorker;
+            for (int i = 0; i < vm.searchFiles_Result.Length; i++)
+            {
+                if (worker.CancellationPending)
+                {
+                    e.Cancel = true;
+                    return;
+                }
+                string s = vm.searchFiles_Result[i];
+                worker.ReportProgress((int)i, GetDataModel(s, false));
+            }
+        }
+
+        public void DuringWork_GetSize(object sender, ProgressChangedEventArgs e)
+        {
+            DataModel dm = (DataModel)e.UserState;
+
+            vm.list_FileDataModels.Add((DataModel)e.UserState);
+        }
+
+        //此步驟所有資料夾/檔案皆已載入頁面，尚餘檔案的小圖未載入
+        public void RunWorkerCompleted_GetSize(object sender, RunWorkerCompletedEventArgs e)
+        {
+            timerCount = 0;
+            vm.timer.Start();
+
+            int itemsCount = vm.list_FileDataModels.Count + vm.list_DirDataModels.Count;
+            if (itemsCount == 1)
+                vm.msg.txt_msg1 = itemsCount.ToString() + " item";
+            else
+                vm.msg.txt_msg1 = itemsCount.ToString() + " items";
+        }
     }    
 }

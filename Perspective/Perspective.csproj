@@ -74,6 +74,7 @@
     <Compile Include="Functions\MathCalculation.cs" />
     <Compile Include="Functions\PathProcess.cs" />
     <Compile Include="Functions\SetupIniIp.cs" />
+    <Compile Include="Functions\SpecialFolders.cs" />
     <Compile Include="Models\DataModel.cs" />
     <Compile Include="Models\DirectFolderModel.cs" />
     <Compile Include="Models\MsgModel.cs" />
@@ -91,6 +92,7 @@
     <Compile Include="UI\UC_FileBox.xaml.cs">
       <DependentUpon>UC_FileBox.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ValueConverters\FileBoxNameConverter.cs" />
     <Compile Include="ValueConverters\VisibleConverter.cs" />
     <Compile Include="ViewModels\NotifyBase.cs" />
     <Compile Include="ViewModels\VM.cs" />

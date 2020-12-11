@@ -177,13 +177,13 @@
                     Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button
                 x:Name="btn_Test"
-                Grid.Column="10"
+                Grid.Column="7"
                 Click="Btn_Test_Click_1"
                 Content="Test"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button
                 x:Name="btn_Setting"
-                Grid.Column="10"
+                Grid.Column="8"
                 Click="Btn_Setting_Click"
                 Content="Setting"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
@@ -226,6 +226,7 @@
                         <StackPanel>
                             <Button
                                 Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"
+                                Click="Button_Click"
                                 Content="Desktop"
                                 Style="{DynamicResource BtnStyle_TxtCenter}" />
                             <Button
@@ -304,14 +305,15 @@
                     MouseLeave="Txt_search_MouseLeave"
                     PreviewKeyDown="Txt_path_PreviewKeyDown"
                     PreviewMouseDoubleClick="Txt_path_PreviewMouseDoubleClick"                        
-                    Text="{Binding path}" />
+                    Text="{Binding path, UpdateSourceTrigger=Explicit}" />
 
                 <Grid Grid.Column="2"
                       Visibility="{Binding Visibility_txt_path , Converter={StaticResource visConverter}}"
                       Height="{Binding ActualHeight, ElementName=txt_path, Mode=OneWay}">
                     <Border Background="White"
                             PreviewMouseDown="Border_PreviewMouseDown"/>
-                    <ItemsControl ItemsSource="{Binding list_PathBoxModels}">
+                    <ItemsControl x:Name="itemsControl_PahtBox"
+                                  ItemsSource="{Binding list_PathBoxModels}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" />

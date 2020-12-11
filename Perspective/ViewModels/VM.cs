@@ -44,6 +44,7 @@ namespace Perspective.ViewModels
         }
 
         public BackgroundWorker worker = new BackgroundWorker();
+        //public BackgroundWorker worker_getFileSize = new BackgroundWorker();
         public DispatcherTimer timer = new DispatcherTimer();
 
         public string tagsDirectoryPath { get; set; } = "";

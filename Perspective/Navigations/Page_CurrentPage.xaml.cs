@@ -59,45 +59,7 @@ namespace Perspective.Navigations
                 vm.msg.txt_msg1 = string.Concat((vm.list_selected_items.Count), " items");
             }
 
-            pps.Set_FileBox_Info(dm);
-
-            //// get the file attributes for file or directory
-            //FileAttributes attr = File.GetAttributes(dm.pathInfo);
-
-            ////detect whether its a directory or file
-            //if ((attr & FileAttributes.Directory) == FileAttributes.Directory)
-            //{
-            //    var directory_size = DirectoryInfoExtension.GetSize(@dm.pathInfo);
-            //    vm.msg.txt_msg2 = dm.Name;
-            //    vm.msg.txt_msg3 = string.Concat("大小: ", MathCalculation.Calculate_FileSize(directory_size));
-            //    vm.msg.txt_msg4 = string.Concat("建立日期: ", dm.creationTime.ToShortDateString(), " ", dm.creationTime.ToShortTimeString());
-            //    vm.msg.txt_msg5 = string.Concat("修改日期: ", dm.updateTime.ToShortDateString(), " ", dm.updateTime.ToShortTimeString());
-            //}
-            //else
-            //{
-            //    FileInfo fi = new FileInfo(dm.pathInfo);
-
-            //    if (fi.Exists)
-            //    {
-            //        vm.msg.txt_msg2 = dm.Name;                   
-            //        vm.msg.txt_msg3 = string.Concat("大小: ", MathCalculation.Calculate_FileSize(fi.Length));
-            //        vm.msg.txt_msg4 = string.Concat("建立日期: ", dm.creationTime.ToShortDateString(), " ", dm.creationTime.ToShortTimeString());
-            //        vm.msg.txt_msg5 = string.Concat("修改日期: ", dm.updateTime.ToShortDateString(), " ", dm.updateTime.ToShortTimeString());
-            //        //Console.WriteLine("File Size in Bytes: {0}", size);
-            //        //// File ReadOnly ?  
-            //        //bool IsReadOnly = fi.IsReadOnly;
-            //        //Console.WriteLine("Is ReadOnly: {0}", IsReadOnly);
-            //        //// Creation, last access, and last write time   
-            //        //DateTime creationTime = fi.CreationTime;
-            //        //Console.WriteLine("Creation time: {0}", creationTime);
-            //        //DateTime accessTime = fi.LastAccessTime;
-            //        //Console.WriteLine("Last access time: {0}", accessTime);
-            //        //DateTime updatedTime = fi.LastWriteTime;
-            //        //Console.WriteLine("Last write time: {0}", updatedTime);
-            //    }
-            //}
-
-            
+            pps.Set_FileBox_Info(dm);            
         }
 
         private void tbtn_Unchecked(object sender, RoutedEventArgs e)

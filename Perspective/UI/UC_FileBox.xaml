@@ -118,7 +118,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                     FontFamily="Segoe Print"
-                    FontSize="10"
+                    FontSize="11"
                     LineHeight="17"
                     Text="{Binding str_btn_text, FallbackValue=FileName, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}"
                     TextAlignment="Center"

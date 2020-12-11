@@ -13,7 +13,8 @@ namespace Perspective.Functions
         public static long GetSize(string path)
         {
             long ret = 0;
-            try {
+            try
+            {
                 Type tp = Type.GetTypeFromProgID("Scripting.FileSystemObject");
                 object fso = Activator.CreateInstance(tp);
                 object fd = tp.InvokeMember("GetFolder", BindingFlags.InvokeMethod, null, fso, new object[] { path });

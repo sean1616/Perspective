@@ -83,6 +83,11 @@ namespace Perspective
             vm.worker.ProgressChanged += new ProgressChangedEventHandler(pps.DuringWork);
             vm.worker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(pps.RunWorkerCompleted);
 
+            //vm.worker_getFileSize.WorkerReportsProgress = true;
+            //vm.worker_getFileSize.DoWork += new DoWorkEventHandler(pps.DoWork_GetSize);
+            //vm.worker_getFileSize.ProgressChanged += new ProgressChangedEventHandler(pps.DuringWork_GetSize);
+            //vm.worker_getFileSize.RunWorkerCompleted += new RunWorkerCompletedEventHandler(pps.RunWorkerCompleted_GetSize);
+
             vm.timer.Interval = TimeSpan.FromMilliseconds(20);
             vm.timer.Tick += pps._timer_Tick;
             #endregion
@@ -118,10 +123,14 @@ namespace Perspective
                 if (tbk.Text != vm.path)
                 {
                     vm.list_PathBoxModels.Clear();
-                    pps.SearchDirectory(tbk.Text);
+                    pps.SearchDirectory(@tbk.Text);
                 }
 
-                vm.Visibility_txt_path = true;
+                //手動更新Property(Textbox的UpdateSourceTrigger = Explicit)
+                BindingExpression binding = tbk.GetBindingExpression(TextBox.TextProperty);
+                binding.UpdateSource();
+
+                vm.Visibility_txt_path = true;                
             }
         }
 
@@ -456,7 +465,7 @@ namespace Perspective
                 if (!string.IsNullOrEmpty(p))
                 {
                     pps.SearchDirectory(vm.path);
-                    pageTransitionControl.ShowPage(_page_CurrentPage);
+                    //pageTransitionControl.ShowPage(_page_CurrentPage);
                     vm.list_selected_items.Clear();
                 }
                 return;
@@ -470,7 +479,7 @@ namespace Perspective
 
                 vm.path_previous.RemoveAt(vm.path_previous.IndexOf(vm.path_previous.Last()));
 
-                pageTransitionControl.ShowPage(_page_CurrentPage);
+                //pageTransitionControl.ShowPage(_page_CurrentPage);
 
                 vm.list_selected_items.Clear();
             }
@@ -489,7 +498,7 @@ namespace Perspective
 
                 vm.path_after.RemoveAt(vm.path_after.IndexOf(vm.path_after.Last()));
 
-                pageTransitionControl.ShowPage(_page_CurrentPage);
+                //pageTransitionControl.ShowPage(_page_CurrentPage);
                 vm.list_selected_items.Clear();
             }
         }
@@ -833,11 +842,7 @@ namespace Perspective
                 }
             }
             else
-            {
-                vm.list_selected_items.Clear();
-                //vm.list_selected_dirs.Clear();
-                //vm.list_selected_files.Clear();
-
+            {              
                 foreach (DataModel dm in vm.list_DirDataModels)
                 {
                     dm.isChecked = false;
@@ -847,6 +852,8 @@ namespace Perspective
                 {
                     dm.isChecked = false;
                 }
+
+                vm.list_selected_items.Clear();
             }
 
             isSelectedAll = !isSelectedAll;
@@ -902,7 +909,11 @@ namespace Perspective
 
         private void Btn_Test_Click_1(object sender, RoutedEventArgs e)
         {
-            vm.msg.txt_msg5 = col_pathCollection.ActualWidth.ToString();
+            //vm.msg.txt_msg5 = col_pathCollection.ActualWidth.ToString();
+            for (int i = 0; i < vm.list_selected_items.Count; i++)
+            {
+                vm.list_selected_items[i].isChecked = false;
+            }
         }
 
         
@@ -972,6 +983,13 @@ namespace Perspective
                 }
                 catch { }
             }
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            //string desktop = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);//桌面路徑 
+            vm.path = SpecialFolders.GetSpecialFolderPath("Desktop");
+            pps.SearchDirectory(vm.path);
         }
 
         private void Txt_nTagName_TextChanged(object sender, TextChangedEventArgs e)
