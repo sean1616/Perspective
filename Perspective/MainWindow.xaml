@@ -3,13 +3,13 @@
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iv="clr-namespace:Perspective.ValueConverters"
     xmlns:local="clr-namespace:Perspective"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
     xmlns:pageTransitions="clr-namespace:WpfPageTransitions;assembly=WpfPageTransitions"
     xmlns:uc="clr-namespace:Perspective.UI"
     xmlns:vm="clr-namespace:Perspective.ViewModels"
-    xmlns:iv="clr-namespace:Perspective.ValueConverters"
     Title="MainWindow"
     Width="1300"
     Height="800"
@@ -32,7 +32,7 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition x:Name="col_pathCollection" Width="{Binding colum_collectionPath_width}"/>
+            <ColumnDefinition x:Name="col_pathCollection" Width="{Binding colum_collectionPath_width}" />
             <ColumnDefinition Width="8*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
@@ -60,7 +60,7 @@
                 MouseLeftButtonUp="border_title_MouseLeftButtonUp"
                 MouseMove="border_title_MouseMove"
                 PreviewMouseLeftButtonDown="border_title_PreviewMouseLeftButtonDown" />
-            <Image Source="/Resources/Mobius.png" Margin="7"/>
+            <Image Margin="7" Source="/Resources/Mobius.png" />
             <TextBlock
                 Grid.Column="1"
                 Margin="-0.001,5.852,0,5.852"
@@ -147,7 +147,7 @@
                 Grid.Column="2"
                 Click="btn_open_path_location_Click"
                 Content="Path Location"
-                Style="{DynamicResource BtnStyle_FilePicBox}" />            
+                Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button
                 x:Name="btn_RecycleBin"
                 Grid.Column="3"
@@ -160,21 +160,24 @@
                 Click="btn_SelectAll_Click"
                 Content="Select All"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
-            <Button x:Name="btn_OrderByName"
-                    Grid.Column="4"
-                    Click="btn_OrderByName_Click"
-                    Content="Order by Name"
-                    Style="{DynamicResource BtnStyle_FilePicBox}" />
-            <Button x:Name="btn_OrderByDateTime"
-                    Grid.Column="5"
-                    Click="btn_OrderByDateTime_Click"
-                    Content="Order by DataTime"
-                    Style="{DynamicResource BtnStyle_FilePicBox}" />
-            <Button x:Name="btn_OrderByType"
-                    Grid.Column="6"
-                    Click="Btn_OrderByType_Click"
-                    Content="Order by Type"
-                    Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button
+                x:Name="btn_OrderByName"
+                Grid.Column="4"
+                Click="btn_OrderByName_Click"
+                Content="Order by Name"
+                Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button
+                x:Name="btn_OrderByDateTime"
+                Grid.Column="5"
+                Click="btn_OrderByDateTime_Click"
+                Content="Order by DataTime"
+                Style="{DynamicResource BtnStyle_FilePicBox}" />
+            <Button
+                x:Name="btn_OrderByType"
+                Grid.Column="6"
+                Click="Btn_OrderByType_Click"
+                Content="Order by Type"
+                Style="{DynamicResource BtnStyle_FilePicBox}" />
             <Button
                 x:Name="btn_Test"
                 Grid.Column="7"
@@ -191,22 +194,28 @@
 
         <Grid x:Name="grid_shortCutPath" Grid.Row="3">
             <Border
-                Background="LightGray"     
+                Background="LightGray"
                 MouseDown="Border_MouseDown"
-                MouseUp="Border_MouseUp"
                 MouseEnter="Border_MouseEnter"
                 MouseLeave="Border_MouseLeave"
-                MouseMove="Border_MouseMove" />
-            <ScrollViewer Margin="0,0,3,0" Background="White" MouseMove="Border_MouseMove" MouseUp="Border_MouseUp">
+                MouseMove="Border_MouseMove"
+                MouseUp="Border_MouseUp" />
+            <ScrollViewer
+                Margin="0,0,3,0"
+                Background="White"
+                MouseMove="Border_MouseMove"
+                MouseUp="Border_MouseUp">
                 <StackPanel>
-                    <Expander Header="快速存取" IsExpanded="True" >
+                    <Expander Header="快速存取" IsExpanded="True">
                         <Expander.ContextMenu>
                             <ContextMenu>
-                                <MenuItem x:Name="menuItem_SavePath" Header="Save Path to Favorite" Click="MenuItem_SavePath_Click"/>
+                                <MenuItem
+                                    x:Name="menuItem_SavePath"
+                                    Click="MenuItem_SavePath_Click"
+                                    Header="Save Path to Favorite" />
                             </ContextMenu>
                         </Expander.ContextMenu>
-                        <ItemsControl
-                            ItemsSource="{Binding list_DirectFolderModels}">
+                        <ItemsControl ItemsSource="{Binding list_DirectFolderModels}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <StackPanel Orientation="Vertical" />
@@ -214,10 +223,11 @@
                             </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate>
-                                    <Button  Content="{Binding Name}" 
-                                             Height="30"
-                                            Click="Btn_DirecFolder_Click"
-                                            Style="{DynamicResource BtnStyle_TxtCenter}"/>
+                                    <Button
+                                        Height="30"
+                                        Click="Btn_DirecFolder_Click"
+                                        Content="{Binding Name}"
+                                        Style="{DynamicResource BtnStyle_TxtCenter}" />
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -254,7 +264,7 @@
                                 Content="Document"
                                 Style="{DynamicResource BtnStyle_TxtCenter}" />
                         </StackPanel>
-                    </Expander>                   
+                    </Expander>
                 </StackPanel>
             </ScrollViewer>
         </Grid>
@@ -304,16 +314,15 @@
                     MouseEnter="Txt_search_MouseEnter"
                     MouseLeave="Txt_search_MouseLeave"
                     PreviewKeyDown="Txt_path_PreviewKeyDown"
-                    PreviewMouseDoubleClick="Txt_path_PreviewMouseDoubleClick"                        
+                    PreviewMouseDoubleClick="Txt_path_PreviewMouseDoubleClick"
                     Text="{Binding path, UpdateSourceTrigger=Explicit}" />
 
-                <Grid Grid.Column="2"
-                      Visibility="{Binding Visibility_txt_path , Converter={StaticResource visConverter}}"
-                      Height="{Binding ActualHeight, ElementName=txt_path, Mode=OneWay}">
-                    <Border Background="White"
-                            PreviewMouseDown="Border_PreviewMouseDown"/>
-                    <ItemsControl x:Name="itemsControl_PahtBox"
-                                  ItemsSource="{Binding list_PathBoxModels}">
+                <Grid
+                    Grid.Column="2"
+                    Height="{Binding ActualHeight, ElementName=txt_path, Mode=OneWay}"
+                    Visibility="{Binding Visibility_txt_path, Converter={StaticResource visConverter}}">
+                    <Border Background="White" PreviewMouseDown="Border_PreviewMouseDown" />
+                    <ItemsControl x:Name="itemsControl_PahtBox" ItemsSource="{Binding list_PathBoxModels}">
                         <ItemsControl.ItemsPanel>
                             <ItemsPanelTemplate>
                                 <StackPanel Orientation="Horizontal" />
@@ -321,15 +330,16 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <Button Content="{Binding Name}"
-                                        Style="{DynamicResource BtnStyle_TxtCenter}"
-                                        Click="btn_pathBox_Click"
-                                        Margin="1,0" />
+                                <Button
+                                    Margin="1,0"
+                                    Click="btn_pathBox_Click"
+                                    Content="{Binding Name}"
+                                    Style="{DynamicResource BtnStyle_TxtCenter}" />
                             </DataTemplate>
                         </ItemsControl.ItemTemplate>
                     </ItemsControl>
                 </Grid>
-                
+
                 <!--<Viewbox HorizontalAlignment="Left" />-->
 
                 <Button
@@ -347,13 +357,13 @@
 
                 <TextBox
                     x:Name="txt_searchFiles"
-                    Grid.Column="5"                    
+                    Grid.Column="5"
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
-                    FontSize="15"
                     FontFamily="Segoe Print"
-                    MouseLeave="Txt_search_MouseLeave"
+                    FontSize="15"
                     MouseEnter="Txt_search_MouseEnter"
+                    MouseLeave="Txt_search_MouseLeave"
                     Text="{Binding txt_for_searchFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
                     TextChanged="txt_searchFiles_TextChanged" />
                 <Button
@@ -363,7 +373,10 @@
                     Style="{DynamicResource BtnStyle_ImgCenter}" />
             </Grid>
 
-            <Grid x:Name="grid_tags" Grid.Row="1" Height="{Binding ActualHeight, ElementName=txt_path, Mode=OneWay}">
+            <Grid
+                x:Name="grid_tags"
+                Grid.Row="1"
+                Height="{Binding ActualHeight, ElementName=txt_path, Mode=OneWay}">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="{Binding ActualHeight, ElementName=grid_tags, Mode=OneWay}" />
                     <ColumnDefinition Width="8*" />
@@ -422,13 +435,14 @@
                     Content="../Resources/save.png"
                     FontFamily="Segoe Print"
                     Style="{DynamicResource BtnStyle_ImgCenter}" />
-                <Button x:Name="btn_addTag"
-                        Grid.Column="2"
-                        Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}"
-                        Click="Btn_addTagWindow_Click"
-                        Content="../Resources/add.png"
-                        FontFamily="Segoe Print"
-                        Style="{DynamicResource BtnStyle_ImgCenter}" />
+                <Button
+                    x:Name="btn_addTag"
+                    Grid.Column="2"
+                    Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}"
+                    Click="Btn_addTagWindow_Click"
+                    Content="../Resources/add.png"
+                    FontFamily="Segoe Print"
+                    Style="{DynamicResource BtnStyle_ImgCenter}" />
 
                 <TextBox
                     x:Name="txt_nTagName"
@@ -449,20 +463,20 @@
                     Content="../Resources/search.png"
                     FontFamily="Segoe Print"
                     Style="{DynamicResource BtnStyle_ImgCenter}" />
-                
+
             </Grid>
 
 
         </Grid>
 
-        <Grid Grid.Row="3" Grid.Column="1">           
+        <Grid Grid.Row="3" Grid.Column="1">
             <Border Grid.Row="0" Background="White" />
 
             <pageTransitions:PageTransition
                 Name="pageTransitionControl"
                 Grid.Row="0"
-                MouseUp="Border_MouseUp"
                 MouseMove="Border_MouseMove"
+                MouseUp="Border_MouseUp"
                 TransitionType="SlideAndFade" />
 
             <!--<Image x:Name="img_test" Source="{Binding bbb}"/>-->
@@ -522,54 +536,60 @@
                 </StackPanel>
             </ScrollViewer>-->
 
-           
+
 
         </Grid>
-        <Grid x:Name="grid_msg"
-              Grid.Row="4"
-              Grid.ColumnSpan="2">
+        <Grid
+            x:Name="grid_msg"
+            Grid.Row="4"
+            Grid.ColumnSpan="2">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="0.03*"
-                                  MinWidth="15" />
-                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.03*" MinWidth="15" />
+                <ColumnDefinition Width="0.5*" />
                 <ColumnDefinition Width="0.6*" />
-                <ColumnDefinition Width="0.5*"/>
+                <ColumnDefinition Width="0.5*" />
                 <ColumnDefinition />
                 <ColumnDefinition />
             </Grid.ColumnDefinitions>
-            <Border x:Name="border_msg"
-                    Grid.ColumnSpan="6"
-                    Background="#FFA5E2DD" />
-            <TextBlock x:Name="txt_msg1"
-                       Grid.Column="1"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       FontFamily="Segoe Print"
-                       Text="{Binding txt_msg1, FallbackValue=MSG}" />
-            <TextBlock x:Name="txt_msg2"
-                       Grid.Column="2"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       FontFamily="Segoe Print"
-                       Text="{Binding txt_msg2}" />
-            <TextBlock x:Name="txt_msg3"
-                       Grid.Column="3"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       FontFamily="Segoe Print"
-                       Text="{Binding txt_msg3}" />
-            <TextBlock x:Name="txt_msg4"
-                       Grid.Column="4"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       FontFamily="Segoe Print"
-                       Text="{Binding txt_msg4}" />
-            <TextBlock x:Name="txt_msg5"
-                       Grid.Column="5"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Center"
-                       FontFamily="Segoe Print"
-                       Text="{Binding txt_msg5}" />
+            <Border
+                x:Name="border_msg"
+                Grid.ColumnSpan="6"
+                Background="#FFA5E2DD" />
+            <TextBlock
+                x:Name="txt_msg1"
+                Grid.Column="1"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontFamily="Segoe Print"
+                Text="{Binding txt_msg1, FallbackValue=MSG}" />
+            <TextBlock
+                x:Name="txt_msg2"
+                Grid.Column="2"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontFamily="Segoe Print"
+                Text="{Binding txt_msg2}" />
+            <TextBlock
+                x:Name="txt_msg3"
+                Grid.Column="3"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontFamily="Segoe Print"
+                Text="{Binding txt_msg3}" />
+            <TextBlock
+                x:Name="txt_msg4"
+                Grid.Column="4"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontFamily="Segoe Print"
+                Text="{Binding txt_msg4}" />
+            <TextBlock
+                x:Name="txt_msg5"
+                Grid.Column="5"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Center"
+                FontFamily="Segoe Print"
+                Text="{Binding txt_msg5}" />
         </Grid>
 
     </Grid>

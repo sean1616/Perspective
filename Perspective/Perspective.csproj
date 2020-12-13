@@ -42,6 +42,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -63,6 +66,9 @@
     <Reference Include="Wpf_Control_Library">
       <HintPath>..\..\Wpf_Control_Library\Wpf_Control_Library\bin\Debug\Wpf_Control_Library.dll</HintPath>
     </Reference>
+    <Reference Include="Xabe.FFmpeg, Version=4.4.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Xabe.FFmpeg.4.4.0\lib\netstandard2.0\Xabe.FFmpeg.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -75,6 +81,7 @@
     <Compile Include="Functions\PathProcess.cs" />
     <Compile Include="Functions\SetupIniIp.cs" />
     <Compile Include="Functions\SpecialFolders.cs" />
+    <Compile Include="Functions\VideoConverter.cs" />
     <Compile Include="Models\DataModel.cs" />
     <Compile Include="Models\DirectFolderModel.cs" />
     <Compile Include="Models\MsgModel.cs" />

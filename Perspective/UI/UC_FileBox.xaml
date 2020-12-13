@@ -84,11 +84,11 @@
 
     <Grid Margin="10">
         <ToggleButton
-            FocusVisualStyle="{x:Null}"
-            MouseEnter="tbtn_MouseEnter"
             Checked="Tbtn_Checked_Click"
+            FocusVisualStyle="{x:Null}"
             IsChecked="{Binding tbtn_isChecked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}"
             MouseDoubleClick="Tbtn_DoubleClick_Click"
+            MouseEnter="tbtn_MouseEnter"
             Style="{DynamicResource Tbtn_FileBox}"
             Tag="{Binding path_info, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}"
             Unchecked="Tbtn_UnChecked_Click">

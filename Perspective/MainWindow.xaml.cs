@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.ComponentModel;
@@ -18,6 +17,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using Microsoft.VisualBasic.FileIO;
+using Xabe.FFmpeg;
 
 using Perspective.Functions;
 using Perspective.ViewModels;
@@ -42,8 +42,7 @@ namespace Perspective
         Page_Setting _page_Setting;
 
         System.Timers.Timer timer_showFilebox = new System.Timers.Timer();
-
-        
+                
         string currentPath = Directory.GetCurrentDirectory();
         string tagsDirectoryPath = "", InTagsDirectoryPath = "";
 
@@ -909,11 +908,7 @@ namespace Perspective
 
         private void Btn_Test_Click_1(object sender, RoutedEventArgs e)
         {
-            //vm.msg.txt_msg5 = col_pathCollection.ActualWidth.ToString();
-            for (int i = 0; i < vm.list_selected_items.Count; i++)
-            {
-                vm.list_selected_items[i].isChecked = false;
-            }
+           
         }
 
         
@@ -1000,8 +995,14 @@ namespace Perspective
             }
         }
 
+        private async void GetVideoImage(string inputPath, string outputPath)
+        {
+            //string output = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + FileExtensions.Png);
+            IConversionResult result = await Conversion.Snapshot(inputPath, outputPath, TimeSpan.FromSeconds(0)).Start();
+
+        }
+      
 
     }
 
-  
 }

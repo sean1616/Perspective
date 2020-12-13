@@ -26,6 +26,7 @@ namespace Perspective.ValueConverters
                     StringBuilder sb = new StringBuilder(input);
                     sb.Replace(str_middle, "...");
                     result = sb.ToString();
+
                 }
                 catch
                 {
