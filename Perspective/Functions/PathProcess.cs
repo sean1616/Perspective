@@ -338,7 +338,7 @@ namespace Perspective.Functions
 
             #region 搜尋本資料夾內的所有檔案
             string[] files = Directory.GetFiles(targetDirectory);
-            DataModel[] dataModels = new DataModel[files.Length];
+            //DataModel[] dataModels = new DataModel[files.Length];
 
             vm.searchFiles_Result = files;
             
@@ -357,20 +357,24 @@ namespace Perspective.Functions
                     return;
                 }
                 string s = vm.searchFiles_Result[i];
-                worker.ReportProgress((int)i, GetDataModel(s, false));
+                worker.ReportProgress((int)i, GetDataModel(s, false));  //將檔案路徑轉成檔案資訊
             }
         }
 
         public void DuringWork(object sender, ProgressChangedEventArgs e)
         {
             DataModel dm = (DataModel)e.UserState;
-
-            vm.list_FileDataModels.Add((DataModel)e.UserState);
+            if (dm != null)
+                vm.list_FileDataModels.Add((DataModel)e.UserState);
         }
 
         //此步驟所有資料夾/檔案皆已載入頁面，尚餘檔案的小圖未載入
         public void RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
+            //Save all files/dirs to temp list
+            List<DataModel> ld = vm.list_DirDataModels.ToList();
+            vm.temp_list_DirDataModels = new System.Collections.ObjectModel.ObservableCollection<DataModel>(ld);
+
             timerCount = 0;
             vm.timer.Start();
 
@@ -390,17 +394,18 @@ namespace Perspective.Functions
                 vm.timer.Stop();
 
                 //Save all files/dirs to temp list
-                List<DataModel> ld = vm.list_DirDataModels.ToList();
-                vm.temp_list_DirDataModels = new System.Collections.ObjectModel.ObservableCollection<DataModel>(ld);
+                //List<DataModel> ld = vm.list_DirDataModels.ToList();
+                //vm.temp_list_DirDataModels = new System.Collections.ObjectModel.ObservableCollection<DataModel>(ld);
 
-                ld = vm.list_FileDataModels.ToList();
-                vm.temp_list_FileDataModels = new System.Collections.ObjectModel.ObservableCollection<DataModel>(ld);
+                //ld = vm.list_FileDataModels.ToList();
+                //vm.temp_list_FileDataModels = new System.Collections.ObjectModel.ObservableCollection<DataModel>(ld);
 
                
                 return;
             }
             string path = vm.list_FileDataModels[timerCount].pathInfo;
             vm.list_FileDataModels[timerCount].imgSource = LoadImage(path);
+            vm.temp_list_FileDataModels.Add(vm.list_FileDataModels[timerCount]);
 
             timerCount++;
         }
@@ -409,33 +414,39 @@ namespace Perspective.Functions
         {
             DataModel dm;
             FileInfo fi = new FileInfo(path);
-            if (_isImage)
+            var filtered = !fi.Attributes.HasFlag(FileAttributes.Hidden);  //Check file is hidden or not
+            //var filtered = true;
+            if (filtered)
             {
-                dm = new DataModel()
+                if (_isImage)
                 {
-                    Name = fi.Name,
-                    ExtensionName = fi.Extension,
-                    Visibility_btn_remove = false,
-                    pathInfo = path,
-                    updateTime = fi.LastWriteTime,
-                    creationTime = fi.CreationTime,
-                    DirOrFile = true,
-                    imgSource = LoadImage(path)
-                };
-            }
-            else
-            {
-                dm = new DataModel()
+                    dm = new DataModel()
+                    {
+                        Name = fi.Name,
+                        ExtensionName = fi.Extension,
+                        Visibility_btn_remove = false,
+                        pathInfo = path,
+                        updateTime = fi.LastWriteTime,
+                        creationTime = fi.CreationTime,
+                        DirOrFile = true,
+                        imgSource = LoadImage(path)
+                    };
+                }
+                else
                 {
-                    Name = fi.Name,
-                    ExtensionName = fi.Extension,
-                    Visibility_btn_remove = false,
-                    pathInfo = path,
-                    updateTime = fi.LastWriteTime,
-                    creationTime = fi.CreationTime,
-                    DirOrFile = true
-                };
+                    dm = new DataModel()
+                    {
+                        Name = fi.Name,
+                        ExtensionName = fi.Extension,
+                        Visibility_btn_remove = false,
+                        pathInfo = path,
+                        updateTime = fi.LastWriteTime,
+                        creationTime = fi.CreationTime,
+                        DirOrFile = true
+                    };
+                }
             }
+            else dm = null;
             return dm;
         }
 

@@ -681,7 +681,11 @@ namespace Perspective
 
                 pps.SearchDirectory(vm.path);
             }
-
+            else  //Search texbox key in
+            {
+                if (e.Key != Key.LeftCtrl && e.Key != Key.RightCtrl)
+                    txt_searchFiles.Focus();
+            }
         }
 
         private void btn_searchTag_Click(object sender, RoutedEventArgs e)
