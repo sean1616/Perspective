@@ -358,10 +358,13 @@
                 <TextBox
                     x:Name="txt_searchFiles"
                     Grid.Column="5"
-                    VerticalAlignment="Center"
+                    FocusManager.IsFocusScope="True"
+                         KeyboardNavigation.TabNavigation="Cycle"
+                         VerticalAlignment="Center"
                     VerticalContentAlignment="Center"
                     FontFamily="Segoe Print"
                     FontSize="15"
+                    TabIndex="1"
                     MouseEnter="Txt_search_MouseEnter"
                     MouseLeave="Txt_search_MouseLeave"
                     Text="{Binding txt_for_searchFiles, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
@@ -447,6 +450,8 @@
                 <TextBox
                     x:Name="txt_nTagName"
                     Grid.Column="5"
+                         TabIndex="2"
+                         KeyboardNavigation.TabNavigation="Contained"
                     Height="{Binding ActualHeight, ElementName=itms_tags}"
                     VerticalAlignment="Center"
                     VerticalContentAlignment="Center"

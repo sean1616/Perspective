@@ -5,6 +5,7 @@
     xmlns:ValueConverters="clr-namespace:Perspective.ValueConverters"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="clr-namespace:Perspective.Navigations"
+    xmlns:vm="clr-namespace:Perspective.ViewModels"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:uc="clr-namespace:Perspective.UI"
     d:DesignHeight="450"
@@ -14,6 +15,10 @@
     <UserControl.Resources>
         <ValueConverters:FileBoxNameConverter x:Key="FileBoxNameConverter" />
     </UserControl.Resources>
+
+    <UserControl.DataContext>
+        <vm:VM />
+    </UserControl.DataContext>
 
     <Grid>
         <ScrollViewer

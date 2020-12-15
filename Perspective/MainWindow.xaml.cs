@@ -684,7 +684,8 @@ namespace Perspective
             else  //Search texbox key in
             {
                 if (e.Key != Key.LeftCtrl && e.Key != Key.RightCtrl)
-                    txt_searchFiles.Focus();
+                   if(!txt_nTagName.IsFocused)
+                        txt_searchFiles.Focus();
             }
         }
 
@@ -997,6 +998,11 @@ namespace Perspective
             {
                 pps.GetSavedTags(tagsDirectoryPath, InTagsDirectoryPath);
             }
+        }
+
+        private void txt_nTagName_LostFocus(object sender, RoutedEventArgs e)
+        {
+            txt_searchFiles.Focus();
         }
 
         private async void GetVideoImage(string inputPath, string outputPath)

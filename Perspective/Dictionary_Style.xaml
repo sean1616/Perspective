@@ -29,6 +29,8 @@
 
     <Style x:Key="style_WindowFuncBtn" TargetType="{x:Type Button}">
         <Setter Property="SnapsToDevicePixels" Value="True" />
+        <Setter Property="KeyboardNavigation.IsTabStop"
+                Value="False" />
         <Setter Property="Tag" Value="" />
         <Setter Property="Template">
             <Setter.Value>
@@ -249,6 +251,8 @@
         <Setter Property="BorderBrush" Value="{StaticResource Button.Static.Border}" />
         <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}" />
         <Setter Property="BorderThickness" Value="1" />
+        <Setter Property="KeyboardNavigation.IsTabStop"
+                Value="False" />
         <Setter Property="HorizontalContentAlignment" Value="Center" />
         <Setter Property="VerticalContentAlignment" Value="Center" />
         <Setter Property="Padding" Value="1" />
