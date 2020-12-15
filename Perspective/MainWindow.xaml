@@ -477,71 +477,14 @@
         <Grid Grid.Row="3" Grid.Column="1">
             <Border Grid.Row="0" Background="White" />
 
-            <pageTransitions:PageTransition
+            <StackPanel Orientation="Horizontal">
+                <pageTransitions:PageTransition
                 Name="pageTransitionControl"
-                Grid.Row="0"
                 MouseMove="Border_MouseMove"
                 MouseUp="Border_MouseUp"
                 TransitionType="SlideAndFade" />
-
-            <!--<Image x:Name="img_test" Source="{Binding bbb}"/>-->
-            <!--<ScrollViewer x:Name="viewer"
-                          Grid.Row="2">
-                <StackPanel>
-                    <ItemsControl x:Name="itms_directories"
-                                  AllowDrop="True"
-                                  HorizontalAlignment="Left"
-                                  VerticalAlignment="Top"
-                                  ItemsSource="{Binding list_DirDataModels}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="{Binding unigrid_column}" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <uc:UC_FileBox Width="140"
-                                               Height="160"
-                                               MouseDoubleClick="UC_FileBox_MouseDoubleClick"
-                                               Tbtn_Checked="tbtn_directories_Checked"
-                                               Tbtn_UnChecked="tbtn_directories_Unchecked"
-                                               btn_delete_Click="UC_FileBox_btn_delete_Click"
-                                               imgSource="../Resources/folder.png"
-                                               path_info="{Binding pathInfo}"
-                                               str_btn_text="{Binding Names}"
-                                               vis_btn_remove="{Binding Visibility_btn_remove}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-
-                    <ItemsControl x:Name="itms_files"
-                                  Grid.Row="2"
-                                  HorizontalAlignment="Left"
-                                  VerticalAlignment="Top"
-                                  ItemsSource="{Binding list_FileDataModels}">
-                        <ItemsControl.ItemsPanel>
-                            <ItemsPanelTemplate>
-                                <UniformGrid Columns="{Binding unigrid_column}" />
-                            </ItemsPanelTemplate>
-                        </ItemsControl.ItemsPanel>
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate>
-                                <uc:UC_FileBox Width="140"
-                                               Height="160"
-                                               Tbtn_Checked="tbtn_files_Checked"
-                                               Tbtn_UnChecked="tbtn_files_Unchecked"
-                                               MouseDoubleClick="UC_FileBox_MouseDoubleClick"
-                                               imgSource="{Binding imgSource}"
-                                               path_info="{Binding pathInfo}"
-                                               str_btn_text="{Binding Names}"
-                                               vis_btn_remove="{Binding Visibility_btn_remove}" />
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-            </ScrollViewer>-->
-
-
+            </StackPanel>
+          
 
         </Grid>
         <Grid
