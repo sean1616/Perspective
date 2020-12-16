@@ -239,12 +239,14 @@
                                 Click="Button_Click"
                                 Content="Desktop"
                                 Style="{DynamicResource BtnStyle_TxtCenter}" />
-                            <Button
-                                Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"
+                            <Button x:Name="btn_C"
+                                    Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"
                                 Content="(C:)"
+                                Click="btn_C_Click"
                                 Style="{DynamicResource BtnStyle_TxtCenter}" />
-                            <Button
-                                Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"
+                            <Button x:Name="btn_D"
+                                    Click="btn_D_Click"
+                                    Height="{Binding ExpanderItemsHeigh, FallbackValue=25}"
                                 Content="(D:)"
                                 Style="{DynamicResource BtnStyle_TxtCenter}" />
                             <Button

@@ -1005,6 +1005,18 @@ namespace Perspective
             txt_searchFiles.Focus();
         }
 
+        private void btn_C_Click(object sender, RoutedEventArgs e)
+        {
+            vm.path = @"C:\";
+            pps.SearchDirectory(vm.path);
+        }
+
+        private void btn_D_Click(object sender, RoutedEventArgs e)
+        {
+            vm.path = @"D:\";
+            pps.SearchDirectory(vm.path);
+        }
+
         private async void GetVideoImage(string inputPath, string outputPath)
         {
             //string output = Path.Combine(Path.GetTempPath(), Guid.NewGuid() + FileExtensions.Png);
