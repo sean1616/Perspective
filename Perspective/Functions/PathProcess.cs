@@ -3,11 +3,13 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Diagnostics;
 using System.ComponentModel;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
+using DexterLib;
 using Perspective.ViewModels;
 using Perspective.Models;
 
@@ -127,17 +129,17 @@ namespace Perspective.Functions
                 if (string.Compare(fileExtension, s) == 0)
                 {
                     _isImg = 1;
-                    break;
+                    return _isImg;
                 }
             }
 
-            string[] list_video_extension = new string[] { ".mp4" };
+            string[] list_video_extension = new string[] { ".mp4", ".mkv", ".avi" };
             foreach (string s in list_video_extension)
             {
                 if (string.Compare(fileExtension, s) == 0)
                 {
                     _isImg = 2;
-                    break;
+                    return _isImg;
                 }
             }
 
@@ -222,10 +224,14 @@ namespace Perspective.Functions
 
                 vm.list_DirDataModels.Clear();
                 vm.list_FileDataModels.Clear();
-                //vm.list_files.Clear();
                 vm.list_directories.Clear();
-                //vm.list_dirNames.Clear();
-                //vm.list_fileNames.Clear();                
+
+                string[] files = Directory.GetFiles(vm.ThumbnailPath);
+                if (files.Length > 0)
+                {
+                    foreach (string s in files)
+                        File.Delete(s);
+                }
 
                 if (File.Exists(@path))  // This path is a file
                 {
@@ -249,7 +255,7 @@ namespace Perspective.Functions
         {
             var bitmap = new BitmapImage();
 
-            int code = IsImageJudge(path);
+            int code = IsImageJudge(path);   //1 is image, 2 is video
             if (code == 1)  //image
             {
                 using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -269,28 +275,25 @@ namespace Perspective.Functions
             }
             else if (code == 2)  //video
             {
-                //System.Windows.Shell.ShellFile shellFile = ShellFile.FromFilePath(VideoFileName);
-                //Bitmap bm = shellFile.Thumbnail.Bitmap;
+                string newImgPath = string.Concat(vm.ThumbnailPath, @"\", Path.GetFileNameWithoutExtension(path), @".jpg");
+               
+                int getFrame_TimePosition = 3;  //Second(S)
+                GetThumb(path, newImgPath, getFrame_TimePosition);  //將影片中的特定幀存成圖片
 
-                //add_Video_Image(path);
-
-                //var renderTargetBitmap = source;
-                //var bitmapImage = new BitmapImage();
-                //var bitmapEncoder = new PngBitmapEncoder();
-                //bitmapEncoder.Frames.Add(BitmapFrame.Create(renderTargetBitmap));
-
-                //using (var stream = new MemoryStream())
-                //{
-                //    bitmapEncoder.Save(stream);
-                //    stream.Seek(0, SeekOrigin.Begin);
-
-                //    bitmapImage.BeginInit();
-                //    bitmapImage.CacheOption = BitmapCacheOption.OnLoad;
-                //    bitmapImage.StreamSource = stream;
-                //    bitmapImage.EndInit();
-                //}
-
-                //bitmap = bitmapImage;
+                using (var stream = new FileStream(newImgPath, FileMode.Open, FileAccess.Read, FileShare.Read))
+                {
+                    try
+                    {
+                        bitmap.BeginInit();
+                        bitmap.CacheOption = BitmapCacheOption.OnLoad;
+                        bitmap.StreamSource = stream;
+                        bitmap.EndInit();
+                    }
+                    catch
+                    {
+                        bitmap = new BitmapImage();
+                    }
+                }
             }
             else
             {
@@ -573,6 +576,140 @@ namespace Perspective.Functions
         {
             List<string> listF = list;
             return listF;
+        }
+
+        public static string GetThumb(string videoPath, string newImgPath, int specificFrame)
+        {
+            string thumb = "";
+
+            try
+            {
+                //每幾幀取一次圖
+                //string s = "ffmpeg -i D:\\Download\\1234.mp4 -vf select='not(mod(n,2000))' -vsync 0D:\\Download\\\\image%d.jpg";
+
+                //在特定秒數取圖
+                //string s = "ffmpeg -ss 5 -i D:\\Download\\1234.mp4 -s 360x200 -f image2 -vframes 1 -y D:\\Download\\1234.jpg";
+                var processInfo = new ProcessStartInfo();
+                processInfo.FileName = VM.FFmpegPath;
+                processInfo.Arguments = string.Format("-ss {0} -i {1} -s 480x270 -f image2 -vframes 1 -y {2}", specificFrame, "\"" + videoPath + "\"", "\"" + newImgPath + "\"");
+                processInfo.CreateNoWindow = true;
+                processInfo.UseShellExecute = false;
+                using (var process = new Process())
+                {
+                    process.StartInfo = processInfo;
+                    process.Start();
+                    process.WaitForExit();
+                    thumb = newImgPath;                    
+                }
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+            }
+
+            return thumb;
+        }
+
+        #region FFmpeg參數說明
+//        ffmpeg.exe -i F:/娱乐/动力之歌.mp3 -ab 56 -ar 22050 -b 500 -r 15 -s 320x240 f:/11.flv
+//ffmpeg -i F:/01.wmv -ab 56 -ar 22050 -b 500 -r 15 -s 320x240 f:/test.flv
+//使用-ss参数 作用（time_off set the start time offset），可以从指定时间点开始转换任务。如:
+//转换文件格式的同时抓缩微图：
+//ffmpeg -i "test.avi" -y -f image2 -ss 8 -t 0.001 -s 350x240 'test.jpg'
+//对已有flv抓图：
+//ffmpeg -i "test.flv" -y -f image2 -ss 8 -t 0.001 -s 350x240 'test.jpg'
+//-ss后跟的时间单位为秒
+//Ffmpeg转换命令
+//ffmpeg -y -i test.mpeg -bitexact -vcodec h263 -b 128 -r 15 -s 176x144 -acodec aac -ac 2 -ar 22500
+//-ab 24 -f 3gp test.3gp
+//或者
+//ffmpeg -y -i test.mpeg -ac 1 -acodec amr_nb -ar 8000 -s 176x144 -b 128 -r 15 test.3gp
+//ffmpeg参数设定解说
+//-bitexact 使用标准比特率
+//-vcodec xvid 使用xvid压缩
+//-s 320x240 指定分辨率
+//-r 29.97 桢速率（可以改，确认非标准桢率会导致音画不同步，所以只能设定为15或者29.97）
+//画面部分，选其一
+//-b<比特率> 指定压缩比特率，似乎ffmpeg是自动VBR的，指定了就大概是平均比特率，比如768，1500这样的
+//就是原来默认项目中有的
+//-qscale<数值> 以<数值>质量为基础的VBR，取值0.01-255，约小质量越好
+//-qmin<数值> 设定最小质量，与-qmax（设定最大质量）共用，比如-qmin 10 -qmax 31
+//-sameq 使用和源同样的质量
+//声音部分
+//-acodec aac 设定声音编码
+//-ac<数值> 设定声道数，1就是单声道，2就是立体声，转换单声道的TVrip可以用1（节省一半容量），高品质
+//的DVDrip就可以用2
+//-ar<采样率> 设定声音采样率，PSP只认24000
+//-ab<比特率> 设定声音比特率，前面-ac设为立体声时要以一半比特率来设置，比如192kbps的就设成96，转换
+//君默认比特率都较小，要听到较高品质声音的话建议设到160kbps（80）以上
+//-vol<百分比> 设定音量，某些DVDrip的AC3轨音量极小，转换时可以用这个提高音量，比如200就是原来的2倍
+//这样，要得到一个高画质音质低容量的MP4的话，首先画面最好不要用固定比特率，而用VBR参数让程序自己去
+//判断，而音质参数可以在原来的基础上提升一点，听起来要舒服很多，也不会太大（看情况调整
+//例子：ffmpeg -y -i "1.avi" -title "Test" -vcodec xvid -s 368x208 -r 29.97 -b 1500 -acodec aac -ac 2 -ar 24000 -ab 128 -vol 200 -f psp -muxvb 768 "1.mp4"
+
+//解释：以上命令可以在Dos命令行中输入，也可以创建到批处理文件中运行。不过，前提是：要在ffmpeg所在的目录中执行（转换君所在目录下面的cores子目录）。
+//参数：
+//-y（覆盖输出文件，即如果1.mp4文件已经存在的话，不经提示就覆盖掉了）
+//-i "1.avi"（输入文件是和ffmpeg在同一目录下的1.avi文件，可以自己加路径，改名字）
+//-title "Test"（在PSP中显示的影片的标题）
+//-vcodec xvid（使用XVID编码压缩视频，不能改的）
+//-s 368x208（输出的分辨率为368x208，注意片源一定要是16:9的不然会变形）
+//-r 29.97（帧数，一般就用这个吧）
+//-b 1500（视频数据流量，用-b xxxx的指令则使用固定码率，数字随便改，1500以上没效果；还可以用动态码率如：-qscale 4和-qscale 6，4的质量比6高）
+//-acodec aac（音频编码用AAC）
+//-ac 2（声道数1或2）
+//-ar 24000（声音的采样频率，好像PSP只能支持24000Hz）
+//-ab 128（音频数据流量，一般选择32、64、96、128）
+//-vol 200（200%的音量，自己改）
+//-f psp（输出psp专用格式）
+//-muxvb 768（好像是给PSP机器识别的码率，一般选择384、512和768，我改成1500，PSP就说文件损坏了）
+//"1.mp4"（输出文件名，也可以加路径改文件名）
+
+        #endregion
+
+        public string GetVideoFrames(string videoPath)
+        {
+            string output = "";
+
+            try
+            {
+                string s= "ffmpeg -discard nokey -i D:\\Download\\1234.mp4 -map 0:v:0 -c copy -f null -";
+                var processInfo = new ProcessStartInfo();
+                processInfo.FileName = VM.FFmpegPath;
+                processInfo.Arguments = "ffmpeg -discard nokey -i " + videoPath + " -map 0:v:0 -c copy -f null -";
+                //processInfo.Arguments = "ffprobe -v error -select_streams v:0 -show_entries stream=nb_frames -of default=nokey=1:noprint_wrappers=1 " + videoPath;
+                processInfo.CreateNoWindow = true;
+                processInfo.UseShellExecute = false;
+
+                Process process = new Process();
+                process.StartInfo = processInfo;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.StartInfo.RedirectStandardError = true;
+                process.StartInfo.CreateNoWindow = true;
+                //process.ErrorDataReceived += new DataReceivedEventHandler(Output);
+                process.Start();
+                //* Read the output (or the error)
+                output = process.StandardOutput.ReadToEnd();
+                Console.WriteLine(output);
+                string err = process.StandardError.ReadToEnd();
+                Console.WriteLine(err);
+                process.WaitForExit();
+                
+            }
+            catch (Exception ex)
+            {
+                string error = ex.Message;
+            }
+
+            return output;
+        }
+
+        private void Output(object sendProcess, DataReceivedEventArgs output)
+        {
+            if (!String.IsNullOrEmpty(output.Data))
+            {
+                vm.msg.txt_msg1 = output.Data.ToString();
+            }
         }
 
         private void add_Video_Image(string sFullname_Path_of_Video)

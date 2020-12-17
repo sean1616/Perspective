@@ -98,6 +98,12 @@ namespace Perspective
             //style_tag = Application.Current.FindResource("BtnStyle_TagBox") as Style;
             //btn_tag.Style = style_tag;
 
+            //建立存放影片大頭照資料夾
+            if (!Directory.Exists(vm.ThumbnailPath))
+            {
+                Directory.CreateDirectory(vm.ThumbnailPath);
+            }
+
             pps.GetSavedDirectFolders(vm.DirectFolders_DirectoryPath);
 
             pps.GetSavedTags(tagsDirectoryPath, InTagsDirectoryPath);
@@ -521,6 +527,14 @@ namespace Perspective
 
         private void btn_close_Click(object sender, RoutedEventArgs e)
         {
+            //刪除影片用大頭照
+            string[] files = Directory.GetFiles(vm.ThumbnailPath);
+            if (files.Length > 0)
+            {
+                foreach (string s in files)
+                    File.Delete(s);
+            }
+
             this.Close();
         }
 
@@ -913,7 +927,8 @@ namespace Perspective
 
         private void Btn_Test_Click_1(object sender, RoutedEventArgs e)
         {
-           
+            pps.GetVideoFrames(@"D:\Download\1234.mp4");
+            //PathProcess.generateThumb(@"D:\Download\1234.mp4", @"D:\Download\1234.jpg", 100);
         }
 
         
@@ -1015,6 +1030,19 @@ namespace Perspective
         {
             vm.path = @"D:\";
             pps.SearchDirectory(vm.path);
+        }
+
+        private void menuItem_Delete_Click(object sender, RoutedEventArgs e)
+        {
+            if(sender is MenuItem)
+            {
+                MenuItem btn = (MenuItem)sender;
+                DirectFolderModel dfm = (DirectFolderModel)btn.DataContext;
+                if (vm.list_DirectFolderModels.Contains(dfm))
+                {
+                    vm.list_DirectFolderModels.Remove(dfm);
+                }
+            }
         }
 
         private async void GetVideoImage(string inputPath, string outputPath)

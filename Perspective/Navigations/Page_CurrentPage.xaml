@@ -42,6 +42,9 @@
                             <uc:UC_FileBox
                                 Width="140"
                                 Height="160"
+                                PreviewMouseLeftButtonDown="UC_FileBox_PreviewMouseLeftButtonDown"
+                                PreviewMouseLeftButtonUp="UC_FileBox_PreviewMouseLeftButtonUp"
+                                Drop="UC_FileBox_Drop"
                                 MouseDoubleClick="UC_FileBox_MouseDoubleClick"
                                 Tbtn_Checked="tbtn_Checked"
                                 Tbtn_MouseEnter="UC_Tbtn_MouseEnter"

@@ -15,10 +15,20 @@ namespace Perspective.ViewModels
 {
     public class VM : NotifyBase
     {
+        public static string currentPath = Directory.GetCurrentDirectory();
+        //public static string FFmpegPath { get; set; } = @"D:\Download\ffmpeg-20200831-4a11a6f-win64-static\ffmpeg-20200831-4a11a6f-win64-static\bin\ffmpeg.exe";
+        public static string FFmpegPath { get; set; } = currentPath + @"\ffmpeg.exe";
+        public static string FFprobePath { get; set; } = @"D:\Download\ffmpeg-20200831-4a11a6f-win64-static\ffmpeg-20200831-4a11a6f-win64-static\bin\ffprobe.exe";
+
         public VM()
         {
            
         }
+
+        public string videoPath { get; set; }
+        public string newVideoPath { get; set; }
+
+        public string ThumbnailPath { get; set; } = string.Concat(currentPath, @"\Thumbnail");
 
         private string _ini_path = @"D:\MobiusLink\Instrument.ini";
         public string ini_path
@@ -328,5 +338,10 @@ namespace Perspective.ViewModels
         }
 
         public bool _isTagRemoveMode { get; set; } = false;
+
+        public DataModel dm { get; set; } = new DataModel();
+        public int index_dragItem { get; set; } = 0;
+        public int index_dropItem { get; set; } = 0;
+
     }
 }

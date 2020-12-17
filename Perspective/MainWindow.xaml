@@ -227,7 +227,16 @@
                                         Height="30"
                                         Click="Btn_DirecFolder_Click"
                                         Content="{Binding Name}"
-                                        Style="{DynamicResource BtnStyle_TxtCenter}" />
+                                        Style="{DynamicResource BtnStyle_TxtCenter}" >
+                                        <Button.ContextMenu>
+                                            <ContextMenu>
+                                                <MenuItem
+                                    x:Name="menuItem_Delete"
+                                    Click="menuItem_Delete_Click"
+                                    Header="Delete?" />
+                                            </ContextMenu>
+                                        </Button.ContextMenu>
+                                    </Button>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
@@ -477,16 +486,16 @@
         </Grid>
 
         <Grid Grid.Row="3" Grid.Column="1">
-            <Border Grid.Row="0" Background="White" />
-
-            <StackPanel Orientation="Horizontal">
-                <pageTransitions:PageTransition
+            <Border x:Name="border_PageBackground" Grid.Row="0" Background="White" />
+            <pageTransitions:PageTransition
                 Name="pageTransitionControl"
                 MouseMove="Border_MouseMove"
                 MouseUp="Border_MouseUp"
                 TransitionType="SlideAndFade" />
-            </StackPanel>
-          
+            <!--<StackPanel Orientation="Horizontal" Width="{Binding ActualWidth, ElementName=border_PageBackground}">
+               
+            </StackPanel>-->
+
 
         </Grid>
         <Grid

@@ -224,5 +224,46 @@ namespace Perspective.Navigations
 
             }
         }
+
+        private void UC_FileBox_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is UC_FileBox)
+            {
+                UC_FileBox uc = (UC_FileBox)sender;
+               
+                DataModel dm = (DataModel)uc.DataContext;
+                dm.isChecked = !dm.isChecked;
+            }
+        }
+
+
+        private void UC_FileBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if(sender is UC_FileBox)
+            {
+                UC_FileBox uc = (UC_FileBox)sender;
+                uc.Opacity = 0.5;
+                DataModel dm = (DataModel)uc.DataContext;
+                vm.dm = dm;
+
+                vm.index_dragItem = vm.list_DirDataModels.IndexOf(dm);
+                DragDrop.DoDragDrop(uc, uc.DataContext, DragDropEffects.Move);
+                
+            }
+           
+        }
+
+        private void UC_FileBox_Drop(object sender, DragEventArgs e)
+        {
+            UC_FileBox uc = (UC_FileBox)sender;
+            DataModel dm = (DataModel)uc.DataContext;
+            string s = dm.Name;
+            vm.index_dropItem = vm.list_DirDataModels.IndexOf(dm);
+
+            vm.list_DirDataModels.Remove(vm.dm);
+            vm.list_DirDataModels.Insert(vm.index_dropItem, vm.dm);
+        }
+
+        
     }
 }

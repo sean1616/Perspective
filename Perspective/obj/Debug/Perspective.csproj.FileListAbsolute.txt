@@ -282,3 +282,5 @@ C:\Users\sean_wu\source\repos\Perspective\Perspective\bin\Debug\Xabe.FFmpeg.dll
 C:\Users\sean_wu\source\repos\Perspective\Perspective\bin\Debug\Newtonsoft.Json.xml
 C:\Users\sean_wu\source\repos\Perspective\Perspective\bin\Debug\Xabe.FFmpeg.xml
 C:\Users\sean_wu\source\repos\Perspective\Perspective\obj\Debug\Mobius Link v1.0.6.exe.config
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Interop.DexterLib.dll
+D:\SeanWu\Repository\Perspective\Perspective\Perspective\obj\Debug\Perspective.csproj.ResolveComReference.cache
