@@ -18,6 +18,7 @@ using System.Diagnostics;
 using System.Windows.Controls.Primitives;
 using Microsoft.VisualBasic.FileIO;
 using Xabe.FFmpeg;
+using WpfPageTransitions;
 
 using Perspective.Functions;
 using Perspective.ViewModels;
@@ -40,6 +41,7 @@ namespace Perspective
 
         Page_CurrentPage _page_CurrentPage;
         Page_Setting _page_Setting;
+        Page_CurrentPage _page_CurrentPage_2;
 
         System.Timers.Timer timer_showFilebox = new System.Timers.Timer();
                 
@@ -54,7 +56,7 @@ namespace Perspective
 
             _page_CurrentPage = new Page_CurrentPage(vm);
             _page_Setting = new Page_Setting(vm);
-
+            _page_CurrentPage.Width = border_PageBackground.Width / 2;
             //vm.tagsDirectoryPath = currentPath + @"\Tags";
             //vm.IntagsDirectoryPath = currentPath + @"\InTags";
             //vm.ini_path = currentPath + @"\Setting\Instrument.ini";
@@ -113,11 +115,35 @@ namespace Perspective
             pps.SearchDirectory(vm.path);
 
             pageTransitionControl.ShowPage(_page_CurrentPage);
+
+            vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
         {
-            vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
+            if (stk_mainPage.Children.Count < 2)
+            {
+                if (pageTransitionControl.ActualWidth != 0)
+                {
+                    vm.unigrid_column = (int)Math.Truncate(border_PageBackground.ActualWidth / 140);
+                    vm.msg.txt_msg2 = vm.unigrid_column.ToString();
+                }
+            }
+            else
+            {
+                int width = (int)Math.Truncate(border_PageBackground.ActualWidth / 140);
+                if (width % 2 > 0)  //odd
+                {
+                    vm.unigrid_column = (width - 1) / 2;
+                }
+                else vm.unigrid_column = (width) / 2;
+
+                vm.msg.txt_msg2 = stk_mainPage.ActualWidth.ToString();
+
+
+                pageTransitionControl.Width = border_PageBackground.ActualWidth / 2;
+                _page_CurrentPage_2.Width = border_PageBackground.ActualWidth / 2;
+            }
         }
 
         private void Txt_path_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -1042,6 +1068,30 @@ namespace Perspective
                 {
                     vm.list_DirectFolderModels.Remove(dfm);
                 }
+            }
+        }
+
+        private void btn_addPage_Click(object sender, RoutedEventArgs e)
+        {
+            if (stk_mainPage.Children.Count < 2)
+            {
+                pageTransitionControl.Width = border_PageBackground.ActualWidth / 2;
+                _page_CurrentPage_2 = new Page_CurrentPage(vm);
+                _page_CurrentPage_2.Width = border_PageBackground.ActualWidth / 2;
+                vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
+                if (vm.unigrid_column % 2 > 0)  //odd
+                {
+                    vm.unigrid_column = (vm.unigrid_column - 5) / 2;
+                }
+                else vm.unigrid_column = (vm.unigrid_column - 4) / 2;
+
+                stk_mainPage.Children.Add(_page_CurrentPage_2);
+                vm.multiPages = true;
+            }
+            else
+            {
+                stk_mainPage.Children.RemoveAt(stk_mainPage.Children.Count-1);
+                vm.multiPages=false;
             }
         }
 

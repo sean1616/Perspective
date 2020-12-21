@@ -172,8 +172,7 @@ namespace Perspective.Navigations
                     File.Move(tempFile, tagTxtPath);
                 }
             }
-        }
-       
+        }       
 
         private void UC_Tbtn_MouseEnter(object sender, RoutedEventArgs e)
         {
@@ -236,19 +235,25 @@ namespace Perspective.Navigations
             }
         }
 
-
         private void UC_FileBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             if(sender is UC_FileBox)
             {
                 UC_FileBox uc = (UC_FileBox)sender;
-                uc.Opacity = 0.5;
+                //uc.Opacity = 0.5;
                 DataModel dm = (DataModel)uc.DataContext;
                 vm.dm = dm;
 
+                             
+
                 vm.index_dragItem = vm.list_DirDataModels.IndexOf(dm);
-                DragDrop.DoDragDrop(uc, uc.DataContext, DragDropEffects.Move);
-                
+                //DragDrop.DoDragDrop(uc, uc.DataContext, DragDropEffects.Move);
+
+                if (vm.multiPages)
+                {
+                    string pagePath = Directory.GetParent(dm.Name).FullName;
+                    vm.path = pagePath;
+                }
             }
            
         }

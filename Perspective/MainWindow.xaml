@@ -485,18 +485,17 @@
 
         </Grid>
 
-        <Grid Grid.Row="3" Grid.Column="1">
-            <Border x:Name="border_PageBackground" Grid.Row="0" Background="White" />
-            <pageTransitions:PageTransition
+        <Grid Grid.Row="3" Grid.Column="1" Name="grid_mainPage">
+            <Border x:Name="border_PageBackground" Background="#FFEAD4B9" />
+
+            <StackPanel x:Name="stk_mainPage" Orientation="Horizontal" Width="{Binding ActualWidth, ElementName=border_PageBackground}">
+                <pageTransitions:PageTransition      
+                    MaxWidth="{Binding ActualWidth, ElementName=border_PageBackground}"
                 Name="pageTransitionControl"
                 MouseMove="Border_MouseMove"
                 MouseUp="Border_MouseUp"
                 TransitionType="SlideAndFade" />
-            <!--<StackPanel Orientation="Horizontal" Width="{Binding ActualWidth, ElementName=border_PageBackground}">
-               
-            </StackPanel>-->
-
-
+            </StackPanel>
         </Grid>
         <Grid
             x:Name="grid_msg"
@@ -505,14 +504,15 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="0.03*" MinWidth="15" />
                 <ColumnDefinition Width="0.5*" />
-                <ColumnDefinition Width="0.6*" />
+                <ColumnDefinition Width="Auto" />
                 <ColumnDefinition Width="0.5*" />
                 <ColumnDefinition />
                 <ColumnDefinition />
+                <ColumnDefinition Width="0.5*" />
             </Grid.ColumnDefinitions>
             <Border
                 x:Name="border_msg"
-                Grid.ColumnSpan="6"
+                Grid.ColumnSpan="7"
                 Background="#FFA5E2DD" />
             <TextBlock
                 x:Name="txt_msg1"
@@ -527,7 +527,11 @@
                 HorizontalAlignment="Left"
                 VerticalAlignment="Center"
                 FontFamily="Segoe Print"
-                Text="{Binding txt_msg2}" />
+                 >
+                <Run Text="  "/>
+                <Run Text="{Binding txt_msg2}"/>
+                <Run Text="     "/>
+            </TextBlock>
             <TextBlock
                 x:Name="txt_msg3"
                 Grid.Column="3"
@@ -549,6 +553,14 @@
                 VerticalAlignment="Center"
                 FontFamily="Segoe Print"
                 Text="{Binding txt_msg5}" />
+            <StackPanel Orientation="Horizontal" Grid.Column="6" Margin="5" HorizontalAlignment="Right">
+                <Button x:Name="btn_addPage"
+                        Click="btn_addPage_Click"
+                        Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" 
+                        Style="{DynamicResource BtnStyle_ImgCenter}"/>
+                <Button x:Name="btn_gridMode" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Style="{DynamicResource BtnStyle_ImgCenter}"/>
+                <Button x:Name="btn_boxMode" Width="{Binding ActualHeight, Mode=OneWay, RelativeSource={RelativeSource Self}}" Style="{DynamicResource BtnStyle_ImgCenter}"/>
+            </StackPanel>
         </Grid>
 
     </Grid>

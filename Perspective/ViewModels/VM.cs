@@ -27,6 +27,7 @@ namespace Perspective.ViewModels
 
         public string videoPath { get; set; }
         public string newVideoPath { get; set; }
+        public bool multiPages { get; set; } = false;
 
         public string ThumbnailPath { get; set; } = string.Concat(currentPath, @"\Thumbnail");
 
