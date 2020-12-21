@@ -329,19 +329,32 @@ namespace Perspective.Functions
 
             foreach (string s in directories)
             {
+                // This path is a directory
                 if (Directory.Exists(@s))
                 {
-                    // This path is a directory
-                    DirectoryInfo di = new DirectoryInfo(s);
-                    vm.list_DirDataModels.Add(new DataModel() { Name = Path.GetFileName(s), Visibility_btn_remove = false,
-                        pathInfo = s, DirOrFile=false, updateTime=di.LastWriteTime, creationTime=di.CreationTime });
+                    FileInfo fi = new FileInfo(s);
+                    var filtered = !fi.Attributes.HasFlag(FileAttributes.Hidden);  //Check file is hidden or not
+                                                                                   //var filtered = true;
+                    if (filtered)
+                    {                        
+                        DirectoryInfo di = new DirectoryInfo(s);
+                        vm.list_DirDataModels.Add(new DataModel()
+                        {
+                            Name = Path.GetFileName(s),
+                            Visibility_btn_remove = false,
+                            pathInfo = s,
+                            DirOrFile = false,
+                            updateTime = di.LastWriteTime,
+                            creationTime = di.CreationTime
+                        });
+                    }
+                      
                 }
             }
             #endregion
 
             #region 搜尋本資料夾內的所有檔案
             string[] files = Directory.GetFiles(targetDirectory);
-            //DataModel[] dataModels = new DataModel[files.Length];
 
             vm.searchFiles_Result = files;
             
