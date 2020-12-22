@@ -85,6 +85,7 @@
     <Compile Include="Models\DataModel.cs" />
     <Compile Include="Models\DirectFolderModel.cs" />
     <Compile Include="Models\MsgModel.cs" />
+    <Compile Include="Models\PageModel.cs" />
     <Compile Include="Models\PathBoxModel.cs" />
     <Compile Include="Models\TagModel.cs" />
     <Compile Include="Navigations\Page_CurrentPage.xaml.cs">

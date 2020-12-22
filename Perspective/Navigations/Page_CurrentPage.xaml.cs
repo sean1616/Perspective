@@ -242,18 +242,12 @@ namespace Perspective.Navigations
                 UC_FileBox uc = (UC_FileBox)sender;
                 //uc.Opacity = 0.5;
                 DataModel dm = (DataModel)uc.DataContext;
-                vm.dm = dm;
-
-                             
+                vm.dm = dm;                             
 
                 vm.index_dragItem = vm.list_DirDataModels.IndexOf(dm);
                 //DragDrop.DoDragDrop(uc, uc.DataContext, DragDropEffects.Move);
 
-                if (vm.multiPages)
-                {
-                    string pagePath = Directory.GetParent(dm.Name).FullName;
-                    vm.path = pagePath;
-                }
+               
             }
            
         }
@@ -269,6 +263,17 @@ namespace Perspective.Navigations
             vm.list_DirDataModels.Insert(vm.index_dropItem, vm.dm);
         }
 
-        
+        private void page_GotFocus(object sender, RoutedEventArgs e)
+        {
+            //MessageBox.Show(this.Name);
+            vm.selectedPage = this.Name;
+            vm.msg.txt_msg2 = this.Name;
+
+            //if (vm.multiPages)
+            //{
+            //    string pagePath = this.grid_main.Tag.ToString();
+            //    vm.path = pagePath;
+            //}
+        }
     }
 }

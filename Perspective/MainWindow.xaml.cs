@@ -62,6 +62,9 @@ namespace Perspective
             //vm.ini_path = currentPath + @"\Setting\Instrument.ini";
 
             vm.path = @"D:\Download"; ;
+            //Binding newBinding = new Binding(vm.pageModel_1.pageName);
+            //_page_CurrentPage.grid_main.SetBinding(Grid.TagProperty, newBinding);
+            //vm.pageModel_1.pageName = vm.path;
 
             vm.tagsDirectoryPath = Directory.GetParent(vm.ini_path) + @"\Tags";
             vm.IntagsDirectoryPath = Directory.GetParent(vm.ini_path) + @"\InTags";
@@ -155,6 +158,7 @@ namespace Perspective
                 {
                     vm.list_PathBoxModels.Clear();
                     pps.SearchDirectory(@tbk.Text);
+                    vm.pageModel_1.pageName = vm.path;
                 }
 
                 //手動更新Property(Textbox的UpdateSourceTrigger = Explicit)
@@ -1077,13 +1081,16 @@ namespace Perspective
             {
                 pageTransitionControl.Width = border_PageBackground.ActualWidth / 2;
                 _page_CurrentPage_2 = new Page_CurrentPage(vm);
+                _page_CurrentPage_2.Name = "page_2";
                 _page_CurrentPage_2.Width = border_PageBackground.ActualWidth / 2;
+                //_page_CurrentPage_2.grid_main.SetBinding(Grid.TagProperty, vm.pageModel_2.pageName);
+                //vm.pageModel_2.pageName = vm.path;
                 vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
                 if (vm.unigrid_column % 2 > 0)  //odd
                 {
-                    vm.unigrid_column = (vm.unigrid_column - 5) / 2;
+                    vm.unigrid_column = (vm.unigrid_column - 1) / 2;
                 }
-                else vm.unigrid_column = (vm.unigrid_column - 4) / 2;
+                else vm.unigrid_column = (vm.unigrid_column) / 2;
 
                 stk_mainPage.Children.Add(_page_CurrentPage_2);
                 vm.multiPages = true;
