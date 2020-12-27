@@ -87,9 +87,10 @@
         <ToggleButton
             Checked="Tbtn_Checked_Click"
             FocusVisualStyle="{x:Null}"
-            IsChecked="{Binding tbtn_isChecked, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}"
+            IsChecked="{Binding tbtn_isChecked, Mode=TwoWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}"
             MouseDoubleClick="Tbtn_DoubleClick_Click"
             MouseEnter="tbtn_MouseEnter"
+            MouseLeave="tbtn_MouseLeave"
             Style="{DynamicResource Tbtn_FileBox}"
             Tag="{Binding path_info, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}"
             Unchecked="Tbtn_UnChecked_Click">
@@ -106,11 +107,33 @@
                     <ColumnDefinition />
                 </Grid.ColumnDefinitions>
 
-                <Viewbox Grid.Row="1" Grid.Column="1">
+                <Viewbox Grid.Row="1" Grid.Column="1" 
+                         Visibility="{Binding vis_img, Converter={StaticResource VisibleConverter}, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}">
                     <Image
                         HorizontalAlignment="Center"
                         RenderOptions.BitmapScalingMode="Fant"
                         Source="{Binding imgSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}" />
+                </Viewbox>
+                <Viewbox Grid.Row="1" Grid.Column="1">
+                    <MediaElement x:Name="mediaElement" FocusVisualStyle="{x:Null}" LoadedBehavior="Play" MediaEnded="mediaElement_MediaEnded"  MediaOpened="mediaElement_MediaOpened"
+                                  Stretch="UniformToFill" Volume="0" RenderOptions.BitmapScalingMode="HighQuality"
+                                  Source="{Binding mediaSource, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type local:UC_FileBox}}}">
+                        <!--<MediaElement.Triggers>
+                            <EventTrigger RoutedEvent="MediaElement.Loaded">
+                                <EventTrigger.Actions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            --><!-- The MediaTimeline has a RepeatBehavior="Forever" which makes the media play over and over indefinitely.--><!--                     
+                                            <MediaTimeline 
+                                                           Storyboard.TargetName="mediaElement"  
+                                                           RepeatBehavior="Forever" />                 
+
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </EventTrigger.Actions>
+                            </EventTrigger>
+                        </MediaElement.Triggers>-->
+                    </MediaElement>
                 </Viewbox>
                 <TextBlock
                     Grid.Row="2"

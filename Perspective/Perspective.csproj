@@ -87,6 +87,7 @@
     <Compile Include="Models\MsgModel.cs" />
     <Compile Include="Models\PageModel.cs" />
     <Compile Include="Models\PathBoxModel.cs" />
+    <Compile Include="Models\SettingModel.cs" />
     <Compile Include="Models\TagModel.cs" />
     <Compile Include="Navigations\Page_CurrentPage.xaml.cs">
       <DependentUpon>Page_CurrentPage.xaml</DependentUpon>

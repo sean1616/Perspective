@@ -128,7 +128,7 @@ namespace Perspective
             {
                 if (pageTransitionControl.ActualWidth != 0)
                 {
-                    vm.unigrid_column = (int)Math.Truncate(border_PageBackground.ActualWidth / 140);
+                    //vm.unigrid_column = (int)Math.Truncate(border_PageBackground.ActualWidth / 140);
                     vm.msg.txt_msg2 = vm.unigrid_column.ToString();
                 }
             }
@@ -137,9 +137,9 @@ namespace Perspective
                 int width = (int)Math.Truncate(border_PageBackground.ActualWidth / 140);
                 if (width % 2 > 0)  //odd
                 {
-                    vm.unigrid_column = (width - 1) / 2;
+                    //vm.unigrid_column = (width - 1) / 2;
                 }
-                else vm.unigrid_column = (width) / 2;
+                //else vm.unigrid_column = (width) / 2;
 
                 vm.msg.txt_msg2 = stk_mainPage.ActualWidth.ToString();
 
@@ -547,12 +547,14 @@ namespace Perspective
         {
             if (WindowState == WindowState.Normal)
             {
-                this.WindowState = WindowState.Maximized;
+                this.WindowState = WindowState.Maximized;                
             }
             else
             {
                 this.WindowState = WindowState.Normal;
-            }            
+            }
+            Task.Delay(500);
+            vm.pageModel_1.pageSize_Width = border_PageBackground.ActualWidth;
         }
 
         private void btn_close_Click(object sender, RoutedEventArgs e)
@@ -589,8 +591,12 @@ namespace Perspective
             if (mRestoreForDragMove && this.WindowState == WindowState.Normal)
             {
                 //mRestoreForDragMove = false;
-                mRestoreForDragMove = false;
-                this.DragMove();
+                try
+                {
+                    mRestoreForDragMove = false;
+                    this.DragMove();
+                }
+                catch { }
             }
         }
 
@@ -780,6 +786,9 @@ namespace Perspective
 
             vm.path = dfm.pathInfo;
             pps.SearchDirectory(dfm.pathInfo);
+
+            if (_isPage)
+                pageTransitionControl.ShowPage(_page_CurrentPage);
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)
@@ -1106,6 +1115,19 @@ namespace Perspective
         {
             vm.pageModel_1.pageSize_Width = border_PageBackground.ActualWidth;
             //MessageBox.Show(vm.pageModel_1.pageSize_Width.ToString());
+        }
+
+        private void Slider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)
+        {
+            foreach(DataModel dm in vm.list_DirDataModels)
+            {
+                dm.fileboxSize_Width = vm.pageModel_1.fileboxSize_Width;
+            }
+
+            foreach(DataModel dm in vm.list_FileDataModels)
+            {
+                dm.fileboxSize_Width = vm.pageModel_1.fileboxSize_Width;
+            }
         }
 
         private async void GetVideoImage(string inputPath, string outputPath)

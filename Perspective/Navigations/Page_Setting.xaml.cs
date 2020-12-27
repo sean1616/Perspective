@@ -24,14 +24,19 @@ namespace Perspective.Navigations
     public partial class Page_Setting : UserControl
     {
         VM vm;
+
+
         public Page_Setting(VM vm)
         {
             InitializeComponent();
 
             this.vm = vm;
             this.DataContext = vm;
+        }
 
-                        
+        private void ToggleButton_Checked(object sender, RoutedEventArgs e)
+        {
+            vm.settingModel.isInVisFlagShow = true;
         }
     }
 }

@@ -20,6 +20,7 @@ namespace Perspective.UI
     /// </summary>
     public partial class UC_FileBox : UserControl
     {
+        
         public UC_FileBox()
         {
             InitializeComponent();
@@ -34,6 +35,26 @@ namespace Perspective.UI
         {
             get { return (BitmapImage)GetValue(imgSource_Property); }
             set { SetValue(imgSource_Property, value); }
+        }
+
+        public static readonly DependencyProperty mediaSource_Property =
+                DependencyProperty.Register("mediaSource", typeof(string), typeof(UC_FileBox),
+                new UIPropertyMetadata(null));
+
+        public string mediaSource //提供內部binding之相依屬性
+        {
+            get { return (string)GetValue(mediaSource_Property); }
+            set { SetValue(mediaSource_Property, value); }
+        }
+
+        public static readonly DependencyProperty vis_img_Property =
+               DependencyProperty.Register("vis_img", typeof(bool), typeof(UC_FileBox),
+               new UIPropertyMetadata(null));
+
+        public bool vis_img //提供內部binding之相依屬性
+        {
+            get { return (bool)GetValue(vis_img_Property); }
+            set { SetValue(vis_img_Property, value); }
         }
 
         public static readonly DependencyProperty str_btn_text_Property =
@@ -102,13 +123,33 @@ namespace Perspective.UI
             Tbtn_MouseEnter(sender, e);
         }
 
+        public event RoutedEventHandler Tbtn_MouseLeave = delegate { };
+        private void tbtn_MouseLeave(object sender, MouseEventArgs e)
+        {
+            Tbtn_MouseLeave(sender, e);
+        }
+
         public event RoutedEventHandler btn_delete_Click = delegate { };
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             btn_delete_Click(sender, e);
         }
+
+
         #endregion
 
-        
+        private void mediaElement_MediaOpened(object sender, RoutedEventArgs e)
+        {
+            if (mediaElement.NaturalDuration.TimeSpan.TotalSeconds > 3)
+            {
+                mediaElement.Position = new TimeSpan(0,0,3);
+                //mediaElement.Play();
+            }
+        }
+
+        private void mediaElement_MediaEnded(object sender, RoutedEventArgs e)
+        {
+            mediaElement.Position = new TimeSpan(0, 0, 1);
+        }
     }
 }

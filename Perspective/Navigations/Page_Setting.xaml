@@ -47,6 +47,8 @@
                  HorizontalAlignment="Stretch"
                  VerticalContentAlignment="Center"/>
             <uc:Text_TextBox Grid.Row="2" FontFamily="Segoe Print"/>
+            <ToggleButton Content="InVisFlag" Grid.Row="3" IsChecked="{Binding settingModel.isInVisFlagShow}" />
+            <Slider Grid.Row="4" Interval="1" Minimum="1" Maximum="4" Value="{Binding pageModel_1.Page_unigrid_column}"/>
         </Grid>
     </Grid>
 </UserControl>

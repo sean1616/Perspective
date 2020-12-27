@@ -29,6 +29,8 @@ namespace Perspective.ViewModels
         public PageModel pageModel_1 { get; set; } = new PageModel() { pageName = "" };
         public PageModel pageModel_2 { get; set; } = new PageModel() { pageName = "" };
 
+        public SettingModel settingModel { get; set; } = new SettingModel() { isInVisFlagShow = true };
+
         private ObservableCollection<DirectFolderModel> _list_DirectFolderModels = new ObservableCollection<DirectFolderModel>();
         public ObservableCollection<DirectFolderModel> list_DirectFolderModels
         {

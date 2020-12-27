@@ -117,7 +117,7 @@ namespace Perspective.Functions
             }
         }
 
-        public int IsImageJudge(string path)
+        public int IsImageVideoJudge(string path)
         {
             int _isImg = 0;
 
@@ -225,6 +225,7 @@ namespace Perspective.Functions
                 vm.list_DirDataModels.Clear();
                 vm.list_FileDataModels.Clear();
                 vm.list_directories.Clear();
+                vm.temp_list_FileDataModels.Clear();
 
                 string[] files = Directory.GetFiles(vm.ThumbnailPath);
                 if (files.Length > 0)
@@ -255,7 +256,7 @@ namespace Perspective.Functions
         {
             var bitmap = new BitmapImage();
 
-            int code = IsImageJudge(path);   //1 is image, 2 is video
+            int code = IsImageVideoJudge(path);   //1 is image, 2 is video
             if (code == 1)  //image
             {
                 using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read))
@@ -334,7 +335,9 @@ namespace Perspective.Functions
                 {
                     FileInfo fi = new FileInfo(s);
                     var filtered = !fi.Attributes.HasFlag(FileAttributes.Hidden);  //Check file is hidden or not
-                                                                                   //var filtered = true;
+
+                    if (vm.settingModel.isInVisFlagShow) filtered = true;
+
                     if (filtered)
                     {                        
                         DirectoryInfo di = new DirectoryInfo(s);
@@ -347,8 +350,7 @@ namespace Perspective.Functions
                             updateTime = di.LastWriteTime,
                             creationTime = di.CreationTime
                         });
-                    }
-                      
+                    }                      
                 }
             }
             #endregion
@@ -604,7 +606,8 @@ namespace Perspective.Functions
                 //string s = "ffmpeg -ss 5 -i D:\\Download\\1234.mp4 -s 360x200 -f image2 -vframes 1 -y D:\\Download\\1234.jpg";
                 var processInfo = new ProcessStartInfo();
                 processInfo.FileName = VM.FFmpegPath;
-                processInfo.Arguments = string.Format("-ss {0} -i {1} -s 480x270 -f image2 -vframes 1 -y {2}", specificFrame, "\"" + videoPath + "\"", "\"" + newImgPath + "\"");
+                //processInfo.Arguments = string.Format("-ss {0} -i {1} -s 480x270 -f image2 -vframes 1 -y {2}", specificFrame, "\"" + videoPath + "\"", "\"" + newImgPath + "\"");
+                processInfo.Arguments = string.Format("-ss {0} -i {1} -f image2 -vframes 1 -y {2}", specificFrame, "\"" + videoPath + "\"", "\"" + newImgPath + "\"");
                 processInfo.CreateNoWindow = true;
                 processInfo.UseShellExecute = false;
                 using (var process = new Process())
@@ -746,12 +749,13 @@ namespace Perspective.Functions
             MediaPlayer mediaPlayer = sender as MediaPlayer;
             DrawingVisual drawingVisual = new DrawingVisual();
             DrawingContext drawingContext = drawingVisual.RenderOpen();
-            drawingContext.DrawVideo(mediaPlayer, new System.Windows.Rect(0, 0, 160, 100));
+            //drawingContext.DrawVideo(mediaPlayer, new System.Windows.Rect(0, 0, 160, 100));
             drawingContext.Close();
 
             double dpiX = 1 / 200;
             double dpiY = 1 / 200;
             RenderTargetBitmap bmp = new RenderTargetBitmap(160, 100, dpiX, dpiY, PixelFormats.Pbgra32);
+            //RenderTargetBitmap bmp=new RenderTargetBitmap(drawingContext.wi)
             bmp.Render(drawingVisual);
             //</ draw video_image >
 

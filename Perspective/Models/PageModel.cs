@@ -21,7 +21,7 @@ namespace Perspective.Models
                 OnPropertyChanged("pageSize_Width");
 
                 if(!double.IsNaN(value))
-                    Page_unigrid_column = (int)Math.Truncate(value / 140);
+                    Page_unigrid_column = (int)Math.Truncate(_pageSize_Width / _fileboxSize_Width);
             }
         }
 
@@ -33,6 +33,20 @@ namespace Perspective.Models
             {
                 _unigrid_column = value;
                 OnPropertyChanged_Normal("Page_unigrid_column");
+            }
+        }
+
+        private double _fileboxSize_Width = 140;
+        public double fileboxSize_Width
+        {
+            get { return _fileboxSize_Width; }
+            set
+            {
+                _fileboxSize_Width = value;
+                OnPropertyChanged("fileboxSize_Width");
+
+                if (!double.IsNaN(value))
+                    Page_unigrid_column = (int)Math.Truncate(_pageSize_Width / value);
             }
         }
     }

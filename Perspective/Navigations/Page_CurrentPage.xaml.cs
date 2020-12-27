@@ -56,6 +56,7 @@ namespace Perspective.Navigations
             if (!vm.list_selected_items.Contains(dm))
             {
                 vm.list_selected_items.Add(dm);
+                dm.isChecked = true;
                 vm.msg.txt_msg1 = string.Concat((vm.list_selected_items.Count), " items");
             }
 
@@ -76,7 +77,7 @@ namespace Perspective.Navigations
             if (vm.list_selected_items.Contains(dm))
             {
                 vm.list_selected_items.Remove(dm);
-
+                dm.isChecked = false;
                 vm.msg.txt_msg1 = string.Concat((vm.list_selected_items.Count), " items");
             }
         }
@@ -191,6 +192,32 @@ namespace Perspective.Navigations
 
                 vm.msg.txt_msg1 = string.Concat((vm.list_selected_items.Count), " items");
             }
+
+            #region Set media source
+            if (pps.IsImageVideoJudge(dm.pathInfo) == 2)
+            {
+                dm.Visibility_img = false;
+                dm.mediaSource = dm.pathInfo;
+            }            
+            #endregion
+        }
+
+        private void UC_FileBox_Tbtn_MouseLeave(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                ToggleButton uc = (ToggleButton)sender;
+                DataModel dm = (DataModel)uc.DataContext;
+
+                #region Set media source
+                if (!dm.isChecked)
+                {
+                    dm.Visibility_img = true;
+                    dm.mediaSource = string.Empty;
+                }
+                #endregion
+            }
+            catch { }
         }
 
         private void viewer_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -228,10 +255,14 @@ namespace Perspective.Navigations
         {
             if (sender is UC_FileBox)
             {
-                UC_FileBox uc = (UC_FileBox)sender;
-               
-                DataModel dm = (DataModel)uc.DataContext;
-                dm.isChecked = !dm.isChecked;
+                try
+                {
+                    UC_FileBox uc = (UC_FileBox)sender;
+
+                    DataModel dm = (DataModel)uc.DataContext;
+                    dm.isChecked = !dm.isChecked;
+                }
+                catch { }
             }
         }
 
@@ -275,5 +306,7 @@ namespace Perspective.Navigations
             //    vm.path = pagePath;
             //}
         }
+
+        
     }
 }

@@ -178,12 +178,13 @@
                 Click="Btn_OrderByType_Click"
                 Content="Order by Type"
                 Style="{DynamicResource BtnStyle_FilePicBox}" />
-            <Button
+            <Slider Grid.Column="7" Minimum="100" Maximum="600" Interval="10" VerticalAlignment="Center" Value="{Binding pageModel_1.fileboxSize_Width, FallbackValue=140, Mode=TwoWay}" ValueChanged="Slider_ValueChanged"/>
+            <!--<Button
                 x:Name="btn_Test"
                 Grid.Column="7"
                 Click="Btn_Test_Click_1"
                 Content="Test"
-                Style="{DynamicResource BtnStyle_FilePicBox}" />
+                Style="{DynamicResource BtnStyle_FilePicBox}" />-->
             <Button
                 x:Name="btn_Setting"
                 Grid.Column="8"

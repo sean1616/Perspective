@@ -26,7 +26,6 @@
         <ScrollViewer
             Width="{Binding pageModel_1.pageSize_Width}"
             x:Name="viewer"
-            Grid.Row="2"
             PreviewKeyDown="viewer_PreviewKeyDown">
             <StackPanel>
                 <ItemsControl
@@ -43,17 +42,19 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <uc:UC_FileBox
-                                Width="140"
-                                Height="160"
+                                Width="{Binding fileboxSize_Width}"
+                                Height="{Binding fileboxSize_Height}"
                                 PreviewMouseLeftButtonDown="UC_FileBox_PreviewMouseLeftButtonDown"
                                 PreviewMouseLeftButtonUp="UC_FileBox_PreviewMouseLeftButtonUp"
                                 Drop="UC_FileBox_Drop"
                                 MouseDoubleClick="UC_FileBox_MouseDoubleClick"
                                 Tbtn_Checked="tbtn_Checked"
                                 Tbtn_MouseEnter="UC_Tbtn_MouseEnter"
+                                Tbtn_MouseLeave="UC_FileBox_Tbtn_MouseLeave"
                                 Tbtn_UnChecked="tbtn_Unchecked"
                                 btn_delete_Click="UC_FileBox_btn_delete_Click"
                                 imgSource="../Resources/folder.png"
+                                vis_img="{Binding Visibility_img, FallbackValue=true}"
                                 path_info="{Binding pathInfo}"
                                 str_btn_text="{Binding Name}"
                                 tbtn_isChecked="{Binding isChecked, Mode=TwoWay}"
@@ -76,13 +77,16 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <uc:UC_FileBox
-                                Width="140"
-                                Height="160"
+                                Width="{Binding fileboxSize_Width}"
+                                Height="{Binding fileboxSize_Height}"
                                 PreviewMouseDoubleClick="UC_FileBox_MouseDoubleClick"
                                 Tbtn_Checked="tbtn_Checked"
                                 Tbtn_MouseEnter="UC_Tbtn_MouseEnter"
+                                Tbtn_MouseLeave="UC_FileBox_Tbtn_MouseLeave"
                                 Tbtn_UnChecked="tbtn_Unchecked"
+                                mediaSource="{Binding mediaSource}"
                                 imgSource="{Binding imgSource}"
+                                vis_img="{Binding Visibility_img}"
                                 path_info="{Binding pathInfo}"
                                 str_btn_text="{Binding Name, Converter={StaticResource FileBoxNameConverter}}"
                                 tbtn_isChecked="{Binding isChecked}"
