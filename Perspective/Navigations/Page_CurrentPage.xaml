@@ -22,11 +22,9 @@
         <vm:VM />
     </UserControl.DataContext>
 
-    <Grid x:Name="grid_main" >        
-        <Grid.DataContext>
-            <vm:VM />
-        </Grid.DataContext>
+    <Grid x:Name="grid_main" >    
         <ScrollViewer
+            Width="{Binding pageModel_1.pageSize_Width}"
             x:Name="viewer"
             Grid.Row="2"
             PreviewKeyDown="viewer_PreviewKeyDown">
@@ -39,7 +37,7 @@
                     ItemsSource="{Binding list_DirDataModels}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Columns="{Binding unigrid_column}" />
+                            <UniformGrid Columns="{Binding pageModel_1.Page_unigrid_column}" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -72,7 +70,7 @@
                     ItemsSource="{Binding list_FileDataModels}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <UniformGrid Columns="{Binding unigrid_column}" />
+                            <UniformGrid Columns="{Binding pageModel_1.Page_unigrid_column}" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -89,17 +87,6 @@
                                 str_btn_text="{Binding Name, Converter={StaticResource FileBoxNameConverter}}"
                                 tbtn_isChecked="{Binding isChecked}"
                                 vis_btn_remove="{Binding Visibility_btn_remove}" />
-                            <!--<Viewbox>
-                                    <ToggleButton
-                                        x:Name="tbtn_files"
-                                        Width="120"
-                                        Height="120"
-                                        Checked="tbtn_files_Checked"
-                                        Content="{Binding}"
-                                        MouseDoubleClick="tbtn_files_MouseDoubleClick"
-                                        Style="{DynamicResource TBtn_FileBox}"
-                                        Unchecked="tbtn_files_Unchecked" />
-                                </Viewbox>-->
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

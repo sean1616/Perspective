@@ -119,7 +119,7 @@ namespace Perspective
 
             pageTransitionControl.ShowPage(_page_CurrentPage);
 
-            vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
+            //vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
         }
 
         private void Window_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -1100,6 +1100,12 @@ namespace Perspective
                 stk_mainPage.Children.RemoveAt(stk_mainPage.Children.Count-1);
                 vm.multiPages=false;
             }
+        }
+
+        private void border_PageBackground_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            vm.pageModel_1.pageSize_Width = border_PageBackground.ActualWidth;
+            //MessageBox.Show(vm.pageModel_1.pageSize_Width.ToString());
         }
 
         private async void GetVideoImage(string inputPath, string outputPath)

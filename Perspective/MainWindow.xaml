@@ -486,7 +486,7 @@
         </Grid>
 
         <Grid Grid.Row="3" Grid.Column="1" Name="grid_mainPage">
-            <Border x:Name="border_PageBackground" Background="#FFEAD4B9" />
+            <Border x:Name="border_PageBackground" Background="#FFEAD4B9" Width="{Binding pageModel_1.pageSize_Width, Mode=OneWayToSource}"  SizeChanged="border_PageBackground_SizeChanged"/>
 
             <StackPanel x:Name="stk_mainPage" Orientation="Horizontal" Width="{Binding ActualWidth, ElementName=border_PageBackground}">
                 <pageTransitions:PageTransition      
