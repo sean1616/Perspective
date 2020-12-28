@@ -348,7 +348,8 @@ namespace Perspective.Functions
                             pathInfo = s,
                             DirOrFile = false,
                             updateTime = di.LastWriteTime,
-                            creationTime = di.CreationTime
+                            creationTime = di.CreationTime,
+                            fileboxSize_Width = vm.pageModel_1.fileboxSize_Width
                         });
                     }                      
                 }
@@ -447,8 +448,9 @@ namespace Perspective.Functions
                         updateTime = fi.LastWriteTime,
                         creationTime = fi.CreationTime,
                         DirOrFile = true,
-                        imgSource = LoadImage(path)
-                    };
+                        imgSource = LoadImage(path),
+                        fileboxSize_Width= vm.pageModel_1.fileboxSize_Width
+                };
                 }
                 else
                 {
@@ -460,7 +462,8 @@ namespace Perspective.Functions
                         pathInfo = path,
                         updateTime = fi.LastWriteTime,
                         creationTime = fi.CreationTime,
-                        DirOrFile = true
+                        DirOrFile = true,
+                        fileboxSize_Width = vm.pageModel_1.fileboxSize_Width
                     };
                 }
             }

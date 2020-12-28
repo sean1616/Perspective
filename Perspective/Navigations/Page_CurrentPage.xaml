@@ -24,7 +24,7 @@
 
     <Grid x:Name="grid_main" >    
         <ScrollViewer
-            Width="{Binding pageModel_1.pageSize_Width}"
+           
             x:Name="viewer"
             PreviewKeyDown="viewer_PreviewKeyDown">
             <StackPanel>
@@ -32,7 +32,6 @@
                     x:Name="itms_directories"
                     HorizontalAlignment="Left"
                     VerticalAlignment="Top"
-                    AllowDrop="True"
                     ItemsSource="{Binding list_DirDataModels}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
@@ -44,9 +43,6 @@
                             <uc:UC_FileBox
                                 Width="{Binding fileboxSize_Width}"
                                 Height="{Binding fileboxSize_Height}"
-                                PreviewMouseLeftButtonDown="UC_FileBox_PreviewMouseLeftButtonDown"
-                                PreviewMouseLeftButtonUp="UC_FileBox_PreviewMouseLeftButtonUp"
-                                Drop="UC_FileBox_Drop"
                                 MouseDoubleClick="UC_FileBox_MouseDoubleClick"
                                 Tbtn_Checked="tbtn_Checked"
                                 Tbtn_MouseEnter="UC_Tbtn_MouseEnter"

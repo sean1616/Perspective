@@ -789,6 +789,16 @@ namespace Perspective
 
             if (_isPage)
                 pageTransitionControl.ShowPage(_page_CurrentPage);
+
+            //foreach (DataModel dm in vm.list_DirDataModels)
+            //{
+            //    dm.fileboxSize_Width = vm.pageModel_1.fileboxSize_Width;
+            //}
+
+            //foreach (DataModel dm in vm.list_FileDataModels)
+            //{
+            //    dm.fileboxSize_Width = vm.pageModel_1.fileboxSize_Width;
+            //}
         }
 
         private void Border_MouseEnter(object sender, MouseEventArgs e)
@@ -1036,6 +1046,8 @@ namespace Perspective
                     }
                 }
                 catch { }
+
+               
             }
         }
 
@@ -1092,8 +1104,7 @@ namespace Perspective
                 _page_CurrentPage_2 = new Page_CurrentPage(vm);
                 _page_CurrentPage_2.Name = "page_2";
                 _page_CurrentPage_2.Width = border_PageBackground.ActualWidth / 2;
-                //_page_CurrentPage_2.grid_main.SetBinding(Grid.TagProperty, vm.pageModel_2.pageName);
-                //vm.pageModel_2.pageName = vm.path;
+
                 vm.unigrid_column = (int)Math.Truncate(pageTransitionControl.ActualWidth / 140);
                 if (vm.unigrid_column % 2 > 0)  //odd
                 {

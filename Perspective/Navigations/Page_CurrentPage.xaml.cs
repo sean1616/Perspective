@@ -41,7 +41,15 @@ namespace Perspective.Navigations
             this.DataContext = vm;
 
             pps = new PathProcess(vm);
+
+            Binding newBinding = new Binding();
+            //newBinding.Source = 500;
+            newBinding.Source = vm;
+            newBinding.Path = new PropertyPath("pageModel_1.pageSize_Width");
+            newBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+            viewer.SetBinding(ScrollViewer.WidthProperty, newBinding);
         }
+
         private void tbtn_Checked(object sender, RoutedEventArgs e)
         {
             ToggleButton uc = (ToggleButton)sender;
@@ -251,48 +259,11 @@ namespace Perspective.Navigations
             }
         }
 
-        private void UC_FileBox_PreviewMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            if (sender is UC_FileBox)
-            {
-                try
-                {
-                    UC_FileBox uc = (UC_FileBox)sender;
+    
 
-                    DataModel dm = (DataModel)uc.DataContext;
-                    dm.isChecked = !dm.isChecked;
-                }
-                catch { }
-            }
-        }
+      
 
-        private void UC_FileBox_PreviewMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if(sender is UC_FileBox)
-            {
-                UC_FileBox uc = (UC_FileBox)sender;
-                //uc.Opacity = 0.5;
-                DataModel dm = (DataModel)uc.DataContext;
-                vm.dm = dm;                             
-
-                vm.index_dragItem = vm.list_DirDataModels.IndexOf(dm);
-                //DragDrop.DoDragDrop(uc, uc.DataContext, DragDropEffects.Move);
-
-               
-            }
-           
-        }
-
-        private void UC_FileBox_Drop(object sender, DragEventArgs e)
-        {
-            UC_FileBox uc = (UC_FileBox)sender;
-            DataModel dm = (DataModel)uc.DataContext;
-            string s = dm.Name;
-            vm.index_dropItem = vm.list_DirDataModels.IndexOf(dm);
-
-            vm.list_DirDataModels.Remove(vm.dm);
-            vm.list_DirDataModels.Insert(vm.index_dropItem, vm.dm);
-        }
+        
 
         private void page_GotFocus(object sender, RoutedEventArgs e)
         {
